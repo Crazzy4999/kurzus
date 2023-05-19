@@ -13,6 +13,6 @@ type Supplier struct {
 	Name    string       `json:"name"`
 	Type    SupplierType `json:"type"`
 	Image   string       `json:"image"`
-	Opening string       `json:"opening"`
-	Closing string       `json:"closing"`
+	Opening string       `json:"workingHours.opening"`
+	Closing string       `json:"workingHours.closing"`
 }
