@@ -14,7 +14,7 @@ type Supplier struct {
 	Type         SupplierType `json:"type"`
 	Image        string       `json:"image"`
 	WorkingHours struct {
-		Opening string `json:"workingHours.opening"`
-		Closing string `json:"workingHours.closing"`
+		Opening string `json:"opening"`
+		Closing string `json:"closing"`
 	}
 }
