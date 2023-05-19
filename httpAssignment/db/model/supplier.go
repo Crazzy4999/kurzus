@@ -9,10 +9,12 @@ const (
 )
 
 type Supplier struct {
-	Id      int          `json:"id"`
-	Name    string       `json:"name"`
-	Type    SupplierType `json:"type"`
-	Image   string       `json:"image"`
-	Opening string       `json:"workingHours.opening"`
-	Closing string       `json:"workingHours.closing"`
+	Id           int          `json:"id"`
+	Name         string       `json:"name"`
+	Type         SupplierType `json:"type"`
+	Image        string       `json:"image"`
+	WorkingHours struct {
+		Opening string `json:"workingHours.opening"`
+		Closing string `json:"workingHours.closing"`
+	}
 }
