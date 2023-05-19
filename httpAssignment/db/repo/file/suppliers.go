@@ -9,9 +9,9 @@ import (
 	"os"
 )
 
-type SupplierRepository struct{}
+type SuppliersRepository struct{}
 
-func (s *SupplierRepository) GetAll() ([]model.Supplier, error) {
+func (s *SuppliersRepository) GetAll() ([]model.Supplier, error) {
 	suppliers := make([]model.Supplier, 0)
 	info, err := ioutil.ReadDir("data/suppliers")
 	if err != nil {

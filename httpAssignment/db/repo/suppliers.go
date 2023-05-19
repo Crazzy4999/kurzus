@@ -4,6 +4,6 @@ import (
 	"httpA/db/model"
 )
 
-type SupplierRepository interface {
+type SuppliersRepository interface {
 	GetAll() ([]model.Supplier, error)
 }
