@@ -1,12 +1,14 @@
 package router
 
 type Router struct {
-	Port string
+	Port   string
+	Params []parameter
 }
 
 type parameter string
 
-func parseURL(url string) []parameter {
+func (router *Router) parseURL(url string) []parameter {
+	router.Params = nil
 	recording := false
 	params := make([]parameter, 0)
 	param := ""
@@ -26,6 +28,7 @@ func parseURL(url string) []parameter {
 			continue
 		}
 	}
+	router.Params = params
 	return params
 }
 
