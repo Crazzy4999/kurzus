@@ -1,5 +1,7 @@
 package router
 
+import "fmt"
+
 type Router struct {
 	Port   string
 	Params []parameter
@@ -18,7 +20,7 @@ func (router *Router) parseURL(url string) []parameter {
 			recording = true
 			continue
 		}
-		if recording {
+		if recording && char != "/" {
 			param += char
 		}
 		if (char == "/" || index == len(url)-1) && param != "" {
@@ -37,7 +39,10 @@ func (router *Router) POST(url string) {
 }
 
 func (router *Router) GET(url string) {
-
+	router.parseURL(url)
+	for i, p := range router.Params {
+		fmt.Println(i, p)
+	}
 }
 
 func (router *Router) PUT(url string) {
