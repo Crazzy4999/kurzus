@@ -19,7 +19,7 @@ func parseURL(url string) []parameter {
 		if recording {
 			param += char
 		}
-		if char == "/" || index == len(url)-1 {
+		if (char == "/" || index == len(url)-1) && param != "" {
 			recording = false
 			params = append(params, parameter(param))
 			param = ""
