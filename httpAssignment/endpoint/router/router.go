@@ -5,16 +5,18 @@ import (
 	"net/http"
 )
 
-type Route struct {
+type route struct {
 	method  string
 	url     string
 	handler http.Handler
 }
 
+type parameter string
+
 type Router struct {
 	port   string
-	Params []parameter
-	Routes []Route
+	Params map[parameter]any
+	Routes []route
 }
 
 func NewRouter(port string) *Router {
@@ -27,8 +29,6 @@ func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// if serve http is implemented than we can serve pages based on a result
 	http.NotFound(w, r)
 }
-
-type parameter string
 
 func (router *Router) parseURL(url string) []parameter {
 	router.Params = nil
@@ -51,21 +51,24 @@ func (router *Router) parseURL(url string) []parameter {
 			continue
 		}
 	}
-	router.Params = params
 	return params
 }
 
-func (router *Router) GetParam(param parameter) parameter {
-	for _, p := range router.Params {
+func (router *Router) GetParam(param parameter) any {
+	for p, val := range router.Params {
 		if p == param {
-			return p
+			return val
 		}
 	}
 	return ""
 }
 
-func (router *Router) addRoute() {
-
+func (router *Router) addRoute(method, url string, f func(w http.ResponseWriter, r *http.Request)) {
+	router.Routes = append(router.Routes, route{
+		method:  method,
+		url:     url,
+		handler: http.HandlerFunc(f),
+	})
 }
 
 func (router *Router) POST(url string, f func(w http.ResponseWriter, r *http.Request)) {
