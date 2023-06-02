@@ -22,6 +22,8 @@ type Router struct {
 func NewRouter(port string) *Router {
 	router := new(Router)
 	router.port = port
+	router.Params = make(map[parameter]any)
+	router.Routes = make([]route, 0)
 	return router
 }
 
@@ -51,6 +53,14 @@ func (router *Router) parseURL(url string) []parameter {
 			continue
 		}
 	}
+
+	// Looks dumb need to populate the map with the keys
+	for _, p := range params {
+		if router.Params[p] == nil {
+			router.Params[p] = nil
+		}
+	}
+
 	return params
 }
 
