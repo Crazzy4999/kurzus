@@ -23,6 +23,7 @@ func (s *SuppliersRepository) GetAll() ([]model.Supplier, error) {
 		if err != nil {
 			fmt.Println(err)
 		}
+		defer content.Close()
 		bytes, err := io.ReadAll(content)
 		_ = json.Unmarshal(bytes, supplier)
 		if err != nil {

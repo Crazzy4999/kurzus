@@ -2,7 +2,7 @@ package router
 
 import (
 	"fmt"
-	"httpA/endpoint/middleware"
+	"httpA/endpoint/http/middleware"
 	"net/http"
 	"regexp"
 )
@@ -42,7 +42,7 @@ func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (router *Router) addRoute(method, regex string, f func(w http.ResponseWriter, r *http.Request), m middleware.Func) {
 	router.Routes = append(router.Routes, route{
 		method:  method,
-		regex:   regexp.MustCompile(fmt.Sprint("^%s$", regex)),
+		regex:   regexp.MustCompile(fmt.Sprintf("^%s$", regex)),
 		handler: http.HandlerFunc(f),
 		m:       m,
 	})
@@ -65,6 +65,33 @@ func (router *Router) DELETE(regexURL string, f func(w http.ResponseWriter, r *h
 }
 
 func (router *Router) Start() {
-	fmt.Printf("Server started on: localhost%s\n", router.port)
+	/*server := &http.Server{Handler: router}
+	_, err := net.Listen("tcp", "localhost"+router.port)
+	if err != nil {
+		panic("failed init listener")
+	}
+
+	go func() {
+		fmt.Printf("Server started on: localhost%s\n", router.port)
+
+		/*log.Fatal(server.ServeTLS(ln,
+			"localhost.pem",
+			"localhost-key.pem",
+		))//
+	}()
+
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	<-c
+
+	fmt.Println("Got interruption signal. Gracefully stopping the server")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := server.Shutdown(ctx); err != nil {
+		log.Fatal(err)
+	}*/
+
 	http.ListenAndServe(router.port, router)
 }
