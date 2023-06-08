@@ -1,13 +1,16 @@
 package api
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"httpA/db/model"
 	"httpA/endpoint/http/domain"
 	"httpA/endpoint/http/request"
 	"httpA/endpoint/http/response"
+	"io/ioutil"
 	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 )
@@ -61,9 +64,38 @@ func UpdateSupplier(w http.ResponseWriter, r *http.Request) {
 func GetAllSuppliersRefresh(w http.ResponseWriter, r *http.Request) {
 	resp, err := http.Get("https://foodapi.golang.nixdev.co/suppliers")
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
 	defer resp.Body.Close()
-	respBytes, err := json.Marshal(resp)
-	fmt.Println(string(respBytes))
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	type SuppliersJSONResponse struct {
+		Suppliers []model.Supplier `json:"suppliers"`
+	}
+
+	suppliersResp := new(SuppliersJSONResponse)
+	err = json.Unmarshal(body, suppliersResp)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, s := range suppliersResp.Suppliers {
+		supplierBytes, err := json.Marshal(s)
+		if err != nil {
+			panic(err)
+		}
+
+		filenName := fmt.Sprintf("data/suppliers/%d.json", s.Id)
+		file, err := os.OpenFile(filenName, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
+		if err != nil {
+			panic(err)
+		}
+		defer file.Close()
+		writer := bufio.NewWriter(file)
+		writer.WriteString(string(supplierBytes))
+		writer.Flush()
+	}
 }

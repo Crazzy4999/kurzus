@@ -66,7 +66,7 @@ func (router *Router) DELETE(regexURL string, f func(w http.ResponseWriter, r *h
 
 func (router *Router) Start() {
 	/*server := &http.Server{Handler: router}
-	_, err := net.Listen("tcp", "localhost"+router.port)
+	ln, err := net.Listen("tcp", "localhost"+router.port)
 	if err != nil {
 		panic("failed init listener")
 	}
