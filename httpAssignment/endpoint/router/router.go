@@ -1,10 +1,16 @@
 package router
 
 import (
+	"context"
 	"fmt"
 	"httpA/endpoint/http/middleware"
+	"log"
+	"net"
 	"net/http"
+	"os"
+	"os/signal"
 	"regexp"
+	"time"
 )
 
 type route struct {
@@ -65,7 +71,7 @@ func (router *Router) DELETE(regexURL string, f func(w http.ResponseWriter, r *h
 }
 
 func (router *Router) Start() {
-	/*server := &http.Server{Handler: router}
+	server := &http.Server{Handler: router}
 	ln, err := net.Listen("tcp", "localhost"+router.port)
 	if err != nil {
 		panic("failed init listener")
@@ -74,10 +80,10 @@ func (router *Router) Start() {
 	go func() {
 		fmt.Printf("Server started on: localhost%s\n", router.port)
 
-		/*log.Fatal(server.ServeTLS(ln,
+		log.Fatal(server.ServeTLS(ln,
 			"localhost.pem",
 			"localhost-key.pem",
-		))//
+		))
 	}()
 
 	c := make(chan os.Signal, 1)
@@ -91,7 +97,5 @@ func (router *Router) Start() {
 
 	if err := server.Shutdown(ctx); err != nil {
 		log.Fatal(err)
-	}*/
-
-	http.ListenAndServe(router.port, router)
+	}
 }
