@@ -1,12 +1,15 @@
 package middleware
 
 import (
+	"context"
 	config "hangryAPI/configs"
 	"hangryAPI/internal/service/token"
 	"net/http"
 )
 
 type Func func(handler http.Handler) http.Handler
+
+type contextKey string
 
 func CheckAccessTokenValidity(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -22,9 +25,12 @@ func CheckAccessTokenValidity(next http.Handler) http.Handler {
 			return
 		}
 
+		ctx := context.WithValue(r.Context(), contextKey("claims"), claims)
+		rctx := r.WithContext(ctx)
+
 		if claims != nil {
 			w.WriteHeader(http.StatusOK)
-			next.ServeHTTP(w, r)
+			next.ServeHTTP(w, rctx)
 			return
 		}
 	})
