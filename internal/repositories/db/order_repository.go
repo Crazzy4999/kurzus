@@ -1,11 +1,18 @@
 package db
 
-import "hangryAPI/internal/models"
+import (
+	"database/sql"
+	"hangryAPI/internal/models"
+)
 
-type OrderRepository struct{}
+type OrderRepository struct {
+	db *sql.DB
+}
 
-func NewOrderRepository() *OrderRepository {
-	return &OrderRepository{}
+func NewOrderRepository(db *sql.DB) *OrderRepository {
+	return &OrderRepository{
+		db: db,
+	}
 }
 
 func (or *OrderRepository) Create(o *models.Order) error {

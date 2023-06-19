@@ -1,11 +1,18 @@
 package db
 
-import "hangryAPI/internal/models"
+import (
+	"database/sql"
+	"hangryAPI/internal/models"
+)
 
-type DriverRepository struct{}
+type DriverRepository struct {
+	db *sql.DB
+}
 
-func NewDriverRepository() *DriverRepository {
-	return &DriverRepository{}
+func NewDriverRepository(db *sql.DB) *DriverRepository {
+	return &DriverRepository{
+		db: db,
+	}
 }
 
 func (dr *DriverRepository) Create(*models.Driver) error {

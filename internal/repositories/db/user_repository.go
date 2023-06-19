@@ -1,13 +1,18 @@
 package db
 
 import (
+	"database/sql"
 	"hangryAPI/internal/models"
 )
 
-type UserRepository struct{}
+type UserRepository struct {
+	db *sql.DB
+}
 
-func NewUserRepository() *UserRepository {
-	return &UserRepository{}
+func NewUserRepository(db *sql.DB) *UserRepository {
+	return &UserRepository{
+		db: db,
+	}
 }
 
 func (ur *UserRepository) Create(u *models.User) error {

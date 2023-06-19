@@ -1,11 +1,18 @@
 package db
 
-import "hangryAPI/internal/models"
+import (
+	"database/sql"
+	"hangryAPI/internal/models"
+)
 
-type SupplierRepository struct{}
+type SupplierRepository struct {
+	db *sql.DB
+}
 
-func NewSupplierRepository() *SupplierRepository {
-	return &SupplierRepository{}
+func NewSupplierRepository(db *sql.DB) *SupplierRepository {
+	return &SupplierRepository{
+		db: db,
+	}
 }
 
 func (sr *SupplierRepository) Create(s *models.Supplier) error {
