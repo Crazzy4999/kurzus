@@ -1,0 +1,31 @@
+ul {
+    display: flex;
+    height: 100%;
+}
+
+li {
+    display: grid;
+    margin: auto var(--h4-size);
+}
+
+.nav-item {
+    font-size: var(--p-size);
+    color: var(--main-color);
+}
+
+@media only screen and (hover: none) and (pointer: coarse) {
+    ul {
+        flex-direction: column;
+    }
+
+    li {
+        height: var(--h2-size);
+        margin: var(--p-size);
+    }
+
+    .nav-item {
+        font-size: var(--h4-size);
+        margin-block: auto;
+        margin-inline: auto 0;
+    }
+}
