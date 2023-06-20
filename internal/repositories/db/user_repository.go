@@ -3,13 +3,14 @@ package db
 import (
 	"database/sql"
 	"hangryAPI/internal/models"
+	repository "hangryAPI/internal/repositories"
 )
 
 type UserRepository struct {
 	db *sql.DB
 }
 
-func NewUserRepository(db *sql.DB) *UserRepository {
+func NewUserRepository(db *sql.DB) repository.UserRepositoryI {
 	return &UserRepository{
 		db: db,
 	}
