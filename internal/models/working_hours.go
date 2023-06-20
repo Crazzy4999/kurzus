@@ -1,4 +1,4 @@
-package model
+package models
 
 type WorkingHours struct {
 	Opening string `json:"opening"`
