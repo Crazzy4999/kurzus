@@ -1,18 +1,10 @@
 <script setup lang="ts">
 import CartImg from "@/assets/icons/8679184_shopping_basket_shop_icon.svg"
 import MenuImg from "@/assets/icons/134216_menu_lines_hamburger_icon.svg"
+import Sidebar from "@/components/Sidebar.vue"
 import { ref } from "vue";
 
 let toggleSidebar = ref(false)
-
-const emit = defineEmits<{
-    (event: "toggle", val: boolean): void
-}>()
-
-function toggle() {
-    toggleSidebar = ref(!toggleSidebar.value)
-    emit("toggle", toggleSidebar.value)
-}
 </script>
 
 <template>
@@ -46,11 +38,12 @@ function toggle() {
                 </li>
             </ul>
         </nav>
-        <button @click="toggle">
+        <button @click="toggleSidebar = !toggleSidebar">
             <!--Icon by Thimoty Miller - https://www.iconfinder.com/tmthymllr-->
             <img class="menu-img" :src="MenuImg" alt="menu">
         </button>
     </header>
+    <Sidebar :toggle="toggleSidebar"/>
 </template>
 
 <style scoped>
