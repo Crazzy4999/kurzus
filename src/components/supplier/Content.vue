@@ -7,35 +7,42 @@ let suppliers: supplierVal[] = [
 </script>
 
 <template>
-    <span class="suppliers-searchbar-container">
-        <span class="suppliers-searchbar-btn">
-            <!--Icon by Ionicons - https://www.iconfinder.com/iconsets/ionicons-->
-            <img class="suppliers-searchbar-img" src="@/assets/icons/211817_search_strong_icon.svg" alt="search">
+    <main class="main-container">
+        <span class="suppliers-searchbar-container">
+            <span class="suppliers-searchbar-btn">
+                <!--Icon by Ionicons - https://www.iconfinder.com/iconsets/ionicons-->
+                <img class="suppliers-searchbar-img" src="@/assets/icons/211817_search_strong_icon.svg" alt="search">
+            </span>
+            <input class="suppliers-searchbar" type="text" placeholder="I want to eat...">
         </span>
-        <input class="suppliers-searchbar" type="text" placeholder="I want to eat...">
-    </span>
-    <nav class="suppliers-toggle-container">
-        <label class="supplier-item-wrapper" for="restaurants">
-            <input class="supplier-toggle" type="radio" name="supplier" id="restaurants" checked>
-            <span class="supplier-item-name">Restaurants</span>
-        </label>
-        <label class="supplier-item-wrapper" for="cafes">
-            <input class="supplier-toggle" type="radio" name="supplier" id="cafes">
-            <span class="supplier-item-name">Cafés</span>
-        </label>
-        <label class="supplier-item-wrapper" for="markets">
-            <input class="supplier-toggle" type="radio" name="supplier" id="markets">
-            <span class="supplier-item-name">Markets</span>
-        </label>
-    </nav>
-    <section class="content-container">
-        <ul class="suppliers-container">
-            <Supplier v-for="s in suppliers" :name="s.name" :description="s.description" :img="s.img" :delivery-time="s.deliveryTime" :delivery-fee="s.deliveryFee"/>
-        </ul>
-    </section>
+        <nav class="suppliers-toggle-container">
+            <label class="supplier-item-wrapper" for="restaurants">
+                <input class="supplier-toggle" type="radio" name="supplier" id="restaurants" checked>
+                <span class="supplier-item-name">Restaurants</span>
+            </label>
+            <label class="supplier-item-wrapper" for="cafes">
+                <input class="supplier-toggle" type="radio" name="supplier" id="cafes">
+                <span class="supplier-item-name">Cafés</span>
+            </label>
+            <label class="supplier-item-wrapper" for="markets">
+                <input class="supplier-toggle" type="radio" name="supplier" id="markets">
+                <span class="supplier-item-name">Markets</span>
+            </label>
+        </nav>
+        <section class="content-container">
+            <ul class="suppliers-container">
+                <Supplier v-for="s in suppliers" :name="s.name" :description="s.description" :img="s.img" :delivery-time="s.deliveryTime" :delivery-fee="s.deliveryFee"/>
+            </ul>
+        </section>
+    </main>
 </template>
 
 <style scoped>
+.main-container {
+    width: 50%;
+    margin-inline: auto;
+}
+
 .suppliers-searchbar-container {
     display: flex;
     flex-direction: row-reverse;
@@ -102,14 +109,14 @@ let suppliers: supplierVal[] = [
 .supplier-item-name {
     cursor: pointer;
     text-align: center;
-    font-size: var(--p-size);
+    font-size: calc(var(--p-size) * 0.9);
     font-weight: bold;
     line-height: var(--h3-size);
     border: solid var(--border-size)  var(--second-hover);
     border-radius: var(--h3-size);
     background-color: var(--main-color);
     color: var(--second-color);
-    width: 50%;
+    width: 65%;
     margin: var(--p-size) auto;
     padding-inline: var(--p-size);
     transition: background-color var(--tran), color var(--tran);
@@ -129,6 +136,10 @@ let suppliers: supplierVal[] = [
 }
 
 @media only screen and (hover: none) and (pointer: coarse) {
+    .main-container {
+        width: 100%;
+    }
+
     .suppliers-toggle-container {
         z-index: 2;
         position: -webkit-sticky;
