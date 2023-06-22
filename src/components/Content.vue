@@ -3,9 +3,11 @@
 </script>
 
 <template>
-    <section>
+    <main>
+        <section>
         
-    </section>
+        </section>
+    </main>
 </template>
 
 <style scoped>

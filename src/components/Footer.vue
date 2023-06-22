@@ -9,5 +9,11 @@
 </template>
 
 <style scoped>
-
+    footer {
+        text-align: center;
+        font-size: var(--sub-p-size);
+        color: var(--settings-dark);
+        background-color: var(--settings-color);
+        padding: var(--p-size);
+    }
 </style>
