@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Supplier, { type supplierVal} from "@/components/supplier/Supplier.vue"
+import Supplier, { type supplierVal} from "@/components/suppliers/Supplier.vue"
 
 let suppliers: supplierVal[] = [
 

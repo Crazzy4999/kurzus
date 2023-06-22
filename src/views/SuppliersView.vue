@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SupplierContent from '@/components/supplier/Content.vue';
+import SupplierContent from '@/components/suppliers/Content.vue';
 import Header from '@/components/Header.vue';
 </script>
 
