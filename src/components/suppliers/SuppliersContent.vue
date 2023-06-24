@@ -38,10 +38,7 @@ let suppliers: supplierVal[] = [
 </template>
 
 <style scoped>
-.main-container {
-    width: 50%;
-    margin-inline: auto;
-}
+@import url("@/assets/contentLayout.css");
 
 .suppliers-searchbar-container {
     display: flex;
@@ -136,10 +133,6 @@ let suppliers: supplierVal[] = [
 }
 
 @media only screen and (hover: none) and (pointer: coarse) {
-    .main-container {
-        width: 100%;
-    }
-
     .suppliers-toggle-container {
         z-index: 2;
         position: -webkit-sticky;
