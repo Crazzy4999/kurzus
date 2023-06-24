@@ -8,6 +8,7 @@ import CategoriesView from "@/views/CategoriesView.vue"
 import SupplierView from "@/views/SupplierView.vue"
 import HistoryView from "@/views/HistoryView.vue"
 import CartView from "@/views/CartView.vue"
+import OrderView from "@/views/OrderView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -82,6 +83,14 @@ const router = createRouter({
       component: CartView,
       meta: {
         title: 'Hangry - Cart'
+      }
+    },
+    {
+      path: '/order',
+      name: 'order',
+      component: OrderView,
+      meta: {
+        title: 'Hangry - Order'
       }
     }
   ]
