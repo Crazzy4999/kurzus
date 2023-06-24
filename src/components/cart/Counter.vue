@@ -18,7 +18,7 @@ function restrictInput(e: KeyboardEvent) {
     <div class="counter-container">
         <button class="decrement common" @click="decrement">-</button>
         <span class="count-wrapper common">
-            <input class="count" type="text" :value="count" @keypress="(e) => restrictInput(e as KeyboardEvent)">
+            <input class="count" type="text" :value="count" @keypress="(e) => restrictInput(e)">
         </span>
         <button class="increment common" @click="count++">+</button>
     </div>
