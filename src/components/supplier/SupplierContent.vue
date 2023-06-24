@@ -20,7 +20,7 @@ function formatRatings() {
 
 }
 
-let categories: { subCategorie: { id: string, text: string }, products: productVal[] }[] = [
+let categories: { subCategorie: categorieVal, products: productVal[] }[] = [
     
 ]
 </script>
