@@ -5,7 +5,7 @@ import CategoriesFilter, { type categorie } from "@/components/categories/Catego
 import Supplier, { type supplierVal } from "@/components/suppliers/Supplier.vue"
 
 let categories: categorie[] = [
-
+    { id: "sushi", name: "sushi" }
 ]
 
 let suppliers: supplierVal[] = [

@@ -29,35 +29,6 @@
     flex-wrap: wrap;
 }
 
-.categorie-wrapper {
-    cursor: pointer;
-    display: flex;
-    border: solid var(--border-size) var(--second-color);
-    border-radius: var(--p-size);
-    margin: var(--sub-p-size);
-    padding: var(--tiny-size) var(--sub-p-size);
-    transition: background-color var(--tran);
-}
-
-.categorie-wrapper[checked="true"] {
-    background-color: var(--second-color);
-}
-
-.categorie-chbx {
-    display: none;
-}
-
-.categorie-name {
-    cursor: pointer;
-    font-size: var(--p-size);
-    color: var(--second-color);
-    transition: color var(--tran);
-}
-
-.categorie-wrapper[checked="true"] .categorie-name {
-    color: var(--main-color);
-}
-
 .categories-container-toggle {
     cursor: pointer;
     text-align: center;
