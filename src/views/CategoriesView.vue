@@ -27,5 +27,6 @@ let suppliers: supplierVal[] = [
 </template>
 
 <style scoped>
+@import url("@/assets/contentLayout.css");
 @import url("@/assets/categories.css");
 </style>
