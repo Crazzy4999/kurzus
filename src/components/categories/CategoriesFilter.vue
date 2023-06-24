@@ -13,8 +13,8 @@ defineProps<{
     <div class="filter-container">    
             <span class="categories-header">Filters</span>
             <div class="categories-container-wrapper" opened="false">
-                <ul class="categories-container" v-for="c in categories">
-                    <li class="categorie-wrapper">
+                <ul class="categories-container">
+                    <li class="categorie-wrapper" v-for="c in categories">
                         <input class="categorie-chbx" type="checkbox" :name="c.id" :id="c.id">
                         <label class="categorie-name" :for="c.id">{{ c.name }}</label>
                     </li>
