@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SearchBar from "@/components/searchbar/SearchBar.vue"
 import Supplier, { type supplierVal} from "@/components/suppliers/Supplier.vue"
 
 let suppliers: supplierVal[] = [
@@ -8,13 +9,8 @@ let suppliers: supplierVal[] = [
 
 <template>
     <main class="main-container">
-        <span class="suppliers-searchbar-container">
-            <span class="suppliers-searchbar-btn">
-                <!--Icon by Ionicons - https://www.iconfinder.com/iconsets/ionicons-->
-                <img class="suppliers-searchbar-img" src="@/assets/icons/211817_search_strong_icon.svg" alt="search">
-            </span>
-            <input class="suppliers-searchbar" type="text" placeholder="I want to eat...">
-        </span>
+        <SearchBar placeholder="I want to eat..."/>
+
         <nav class="suppliers-toggle-container">
             <label class="supplier-item-wrapper" for="restaurants">
                 <input class="supplier-toggle" type="radio" name="supplier" id="restaurants" checked>
@@ -39,49 +35,6 @@ let suppliers: supplierVal[] = [
 
 <style scoped>
 @import url("@/assets/contentLayout.css");
-
-.suppliers-searchbar-container {
-    display: flex;
-    flex-direction: row-reverse;
-    width: calc(100% - var(--sub-p-size) * 2);
-    margin: var(--p-size) auto;
-}
-
-.suppliers-searchbar {
-    position: relative;
-    font-size: var(--h4-size);
-    border: solid var(--border-size) var(--second-color);
-    color: var(--second-color);
-    width: 100%;
-    padding: var(--tiny-size) var(--sub-p-size);
-    transition: border var(--tran);
-}
-
-.suppliers-searchbar-btn {
-    cursor: pointer;
-    display: grid;
-    background-color: var(--second-color);
-    width: calc(var(--h4-size) * 2 + var(--border-size) * 2 + var(--sub-p-size));
-    height: 100%;
-    transition: background-color var(--tran);
-}
-
-.suppliers-searchbar-btn:hover {
-    background-color: var(--second-hover);
-}
-
-.suppliers-searchbar-btn:hover + .suppliers-searchbar {
-    border: solid var(--border-size) var(--second-hover);
-}
-
-.suppliers-searchbar-img {
-    width: 100%;
-    height: 100%;
-}
-
-
-
-
 
 .suppliers-toggle-container {
     display: flex;
