@@ -2,9 +2,13 @@
 import Counter from "@/components/cart/Counter.vue"
 import { ref, watch } from "vue";
 
-const props = defineProps<{
+export type productInfo = {
     name: string
     price: number
+}
+
+const props = defineProps<{
+    product: productInfo
 }>()
 
 const emit = defineEmits<{
@@ -14,15 +18,15 @@ const emit = defineEmits<{
 let count = ref(0)
 
 watch(count, (newVal, oldVal) => {
-    emit("total", newVal * props.price - oldVal * props.price)
+    emit("total", newVal * props.product.price - oldVal * props.product.price)
 })
 </script>
 
 <template>
     <div class="product">
         <span class="infos-container">
-            <span class="name">{{ name }}</span>
-            <div class="price">{{ price * count }} Ft</div>
+            <span class="name">{{ product.name }}</span>
+            <div class="price">{{ product.price * count }} Ft</div>
         </span>
         <Counter class="counter" @count="(val) => count = val"/>
     </div>
