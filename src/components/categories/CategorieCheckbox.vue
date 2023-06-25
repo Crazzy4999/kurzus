@@ -10,7 +10,7 @@ let checked = ref(false)
 </script>
 
 <template>
-    <li class="categorie-wrapper" :checked="checked">
+    <li class="categorie-wrapper" @click="checked = !checked" :checked="checked">
         <input class="categorie-chbx" type="checkbox" :name="categorie.id" :id="categorie.id">
         <label class="categorie-name" :for="categorie.id" @click="checked = !checked">{{ categorie.name }}</label>
     </li>
