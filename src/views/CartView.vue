@@ -20,7 +20,7 @@ let totalCost = ref(0)
                 <Product v-for="p in products" :product="p" @total="(t) => totalCost += t"/>
             </div>
             <div class="prices-container">
-                <div class="pricing">Total: {{ totalCost }}</div>
+                <div class="pricing">Subtotal: {{ totalCost }}</div>
                 <div class="pricing">Delivery fee: {{ deliveryFee === undefined ? "free" : deliveryFee }}</div>
                 <div class="total">Total: {{ totalCost + (deliveryFee === undefined ? 0 : deliveryFee) }}</div>
             </div>
