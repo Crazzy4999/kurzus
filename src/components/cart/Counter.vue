@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, type InputHTMLAttributes, type ReservedProps } from "vue"
+
+const emit = defineEmits<{
+    (event: "count", count: number): void
+}>()
 
 let count = ref(0)
 
@@ -7,20 +11,29 @@ function decrement() {
     if(0 <= count.value - 1) {
         count.value--
     }
+    emit("count", count.value)
 }
 
 function restrictInput(e: KeyboardEvent) {
-    if(!/\d/.test(e.key)) return e.preventDefault()
+    if(!/\d/.test(e.key) || e.key === "Enter") {
+        emit("count", count.value)
+        return e.preventDefault()
+    }
+}
+
+function increment() {
+    count.value++
+    emit("count", count.value)
 }
 </script>
 
 <template>
     <div class="counter-container">
-        <button class="decrement common" @click="decrement">-</button>
+        <button class="decrement common" @click.prevent="decrement">-</button>
         <span class="count-wrapper common">
             <input class="count" type="text" :value="count" @keypress="(e) => restrictInput(e)">
         </span>
-        <button class="increment common" @click="count++">+</button>
+        <button class="increment common" @click.prevent="increment">+</button>
     </div>
 </template>
 
@@ -34,7 +47,8 @@ function restrictInput(e: KeyboardEvent) {
     font-size: var(--p-size);
     font-weight: 750;
     color: var(--second-color);
-    border: calc(var(--sub-border-size) * 1.25) solid var(--settings-color)
+    border: calc(var(--sub-border-size) * 1.25) solid var(--settings-color);
+    transition: color var(--tran);
 }
 
 button {
@@ -69,5 +83,9 @@ button {
     border-top-right-radius: var(--sub-p-size);
     border-bottom-right-radius: var(--sub-p-size);
     padding-inline: var(--tiny-size) var(--sub-p-size);
+}
+
+.decrement:hover, .increment:hover {
+    color: var(--second-hover);
 }
 </style>
