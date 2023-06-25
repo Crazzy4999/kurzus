@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import AuthHeader from "@/components/AuthHeader.vue"
-import Product from "@/components/cart/Product.vue"
-import { ref } from "vue";
+import Product, { type productInfo } from "@/components/cart/Product.vue"
+import { ref } from "vue"
+import router from "@/router/index"
 
 defineProps<{
+    products: productInfo[]
     deliveryFee: number
 }>()
 
@@ -15,21 +17,14 @@ let totalCost = ref(0)
     <div class="main-wrapper">
         <form>
             <div class="inner-wrapper">
-                <Product name="Pizza Pizza Pizza Pizza Pizza Pizza Pizza Pizza Pizza Pizza Pizza Pizza Pizza Pizza" :price="3000" @total="(t) => totalCost += t"/>
-                <Product name="PizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizza" :price="3000" @total="(t) => totalCost += t"/>
-                <Product name="Pizza Pizza Pizza Pizza" :price="3000" @total="(t) => totalCost += t"/>
-                <Product name="PizzaPizzaPizzaPizzaPizza" :price="3000" @total="(t) => totalCost += t"/>
-                <Product name="Pizza Pizza Pizza Pizza Pizza Pizza Pizza Pizza Pizza Pizza Pizza Pizza Pizza Pizza" :price="3000" @total="(t) => totalCost += t"/>
-                <Product name="PizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizzaPizza" :price="3000" @total="(t) => totalCost += t"/>
-                <Product name="Pizza Pizza Pizza Pizza" :price="3000" @total="(t) => totalCost += t"/>
-                <Product name="PizzaPizzaPizzaPizzaPizza" :price="3000" @total="(t) => totalCost += t"/>
-                <div class="prices-container">
-                    <div class="pricing">Total: {{ totalCost }}</div>
-                    <div class="pricing">Delivery fee: {{ deliveryFee }}</div>
-                    <div class="total">Total: {{ totalCost + deliveryFee }}</div>
-                </div>
+                <Product v-for="p in products" :product="p" @total="(t) => totalCost += t"/>
             </div>
-            <button @click.prevent="">Checkout</button>
+            <div class="prices-container">
+                <div class="pricing">Total: {{ totalCost }}</div>
+                <div class="pricing">Delivery fee: {{ deliveryFee === undefined ? "free" : deliveryFee }}</div>
+                <div class="total">Total: {{ totalCost + (deliveryFee === undefined ? 0 : deliveryFee) }}</div>
+            </div>
+            <button @click.prevent="router.push('/order')">Checkout</button>
         </form>
     </div>
 </template>
@@ -37,7 +32,7 @@ let totalCost = ref(0)
 <style scoped>
 .main-wrapper {
     display: flex;
-    height: calc(100% - var(--h1-size) - var(--sub-border-size));
+    height: fit-content;
 }
 
 form {
@@ -49,13 +44,12 @@ form {
     width: 25%;
     height: min-content;
     margin: auto;
+    margin-block: var(--h1-size);
     padding-block: var(--h4-size);
 }
 
 .inner-wrapper {
     position: relative;
-    overflow-y: scroll;
-    max-height: calc(var(--h1-size) * 6);
     margin-inline: var(--h3-size);
 }
 
@@ -67,6 +61,7 @@ form {
     border-top: solid calc(var(--tiny-size) * 0.5) var(--settings-color);
     padding-top: var(--p-size);
     margin-top: var(--h3-size);
+    margin-inline: var(--h3-size);
 }
 
 .pricing {
@@ -94,10 +89,6 @@ button:hover {
 }
 
 @media only screen and (hover: none) and (pointer: coarse) {
-    .main-wrapper {
-        height: calc(100% - var(--h1-size) - var(--border-size) * 2);
-    }
-
     form {
         width: 75%;
     }
