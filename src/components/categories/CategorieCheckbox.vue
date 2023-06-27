@@ -22,6 +22,7 @@ let checked = ref(false)
 }
 
 .categorie-name {
+    user-select: none;
     cursor: pointer;
     font-size: var(--p-size);
     color: var(--second-color);
