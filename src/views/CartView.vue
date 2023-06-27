@@ -19,12 +19,13 @@ let totalCost = ref(0)
             <div class="inner-wrapper">
                 <Product v-for="p in products" :product="p" @total="(t) => totalCost += t"/>
             </div>
-            <div class="prices-container">
+            <div v-if="totalCost !== 0" class="prices-container">
                 <div class="pricing">Subtotal: {{ totalCost }}</div>
                 <div class="pricing">Delivery fee: {{ deliveryFee === undefined ? "free" : deliveryFee }}</div>
                 <div class="total">Total: {{ totalCost + (deliveryFee === undefined ? 0 : deliveryFee) }}</div>
             </div>
-            <button @click.prevent="router.push('/order')">Checkout</button>
+            <div v-if="totalCost === 0" class="empty-cart">Your cart is empty</div>
+            <button :empty="totalCost === 0" :disabled="totalCost === 0" @click.prevent="router.push('/order')">Checkout</button>
         </form>
     </div>
 </template>
@@ -73,19 +74,36 @@ form {
     font-weight: bold;
 }
 
+.empty-cart {
+    text-align: center;
+    font-size: var(--h4-size);
+    color: var(--second-color);
+}
+
 button {
     cursor: pointer;
     font-size: var(--h4-size);
     border-radius: var(--p-size);
-    background-color: var(--second-color);
     color: var(--main-color);
     padding: var(--sub-p-size) var(--p-size);
     margin: var(--h4-size) auto;
     transition: background-color var(--tran);
 }
 
-button:hover {
+button[empty=false] {
+    background-color: var(--second-color);
+}
+
+button[empty=true] {
+    background-color: var(--settings-color);
+}
+
+button[empty=false]:hover {
     background-color: var(--second-hover);
+}
+
+button[empty=true]:hover {
+    background-color: var(--settings-dark);
 }
 
 @media only screen and (hover: none) and (pointer: coarse) {
