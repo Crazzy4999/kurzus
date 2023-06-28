@@ -74,7 +74,7 @@ func (sr *SupplierRepository) GetSupplierByID(id int) (*models.Supplier, error) 
 }
 
 func (sr *SupplierRepository) Update(s *models.Supplier) error {
-	stmt, err := sr.db.Prepare("UPDATE suppliers SET address_id = $1, image = $2, name = $3, type = $4, opening = $5, closing = $6 WHERE supplier.id = $7")
+	stmt, err := sr.db.Prepare("UPDATE suppliers SET address_id = $1, image = $2, name = $3, type = $4, opening = $5, closing = $6 WHERE suppliers.id = $7")
 	if err != nil {
 		return errors.New("couldn't prepare statement for updating supplier")
 	}
@@ -88,7 +88,7 @@ func (sr *SupplierRepository) Update(s *models.Supplier) error {
 }
 
 func (sr *SupplierRepository) Delete(id int) error {
-	stmt, err := sr.db.Prepare("DELETE FROM suppliers WHERE supplier.id = $1")
+	stmt, err := sr.db.Prepare("DELETE FROM suppliers WHERE suppliers.id = $1")
 	if err != nil {
 		return errors.New("couldn't prepare statement for deleting supplier")
 	}
