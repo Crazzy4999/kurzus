@@ -23,7 +23,7 @@ func (ur *UserRepository) Create(u *models.User) error {
 		return errors.New("couldn't prepare statment to insert new user")
 	}
 
-	user, _ := ur.GetUserByEmail(u.Email)
+	user, _ := ur.GetUserByID(u.ID)
 	if user != nil {
 		return errors.New("user already exist with this email")
 	}
@@ -64,21 +64,21 @@ func (ur *UserRepository) GetAll() ([]*models.User, error) {
 	return users, nil
 }
 
-func (ur *UserRepository) GetUserByEmail(email string) (*models.User, error) {
-	stmt, err := ur.db.Prepare("SELECT id, address_id, first_name, last_name, email, password FROM users WHERE users.email = $1")
+func (ur *UserRepository) GetUserByID(id int) (*models.User, error) {
+	stmt, err := ur.db.Prepare("SELECT id, address_id, first_name, last_name, email, password FROM users WHERE users.id = $1")
 	if err != nil {
-		return nil, errors.New("couldn't prepare statement to get user by email")
+		return nil, errors.New("couldn't prepare statement to get user by id")
 	}
 
-	var user models.User
+	user := &models.User{}
 
-	row := stmt.QueryRow(email)
+	row := stmt.QueryRow(id)
 	err = row.Scan(&user.ID, &user.Address, &user.FirstName, &user.LastName, &user.Email, &user.Password)
 	if err != nil {
 		return nil, err
 	}
 
-	return &user, nil
+	return user, nil
 }
 
 func (ur *UserRepository) Update(u *models.User) error {

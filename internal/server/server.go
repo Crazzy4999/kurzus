@@ -26,6 +26,7 @@ func Start() {
 	router.POST("/login", authHandler.Login, nil)
 	router.POST("/signup", authHandler.SignUp, nil)
 	router.GET("/refresh", authHandler.Refresh, middleware.CheckAccessTokenValidity)
+	router.POST("/suppliers", nil, middleware.CheckAccessTokenValidity) //Create new supplier
 	router.GET("/suppliers", nil, middleware.CheckAccessTokenValidity)
 	router.GET("/suppliers/\\d+", nil, middleware.CheckAccessTokenValidity)
 	router.GET("/categories", nil, middleware.CheckAccessTokenValidity)
