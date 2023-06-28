@@ -13,6 +13,7 @@ func Start() {
 	cfg := config.NewConfig()
 	router := router.NewRouter()
 	db := dbrepo.GetDB()
+	defer db.Close()
 
 	/*dr := dbrepo.NewDriverRepository(db)
 	or := dbrepo.NewOrderRepository(db)
