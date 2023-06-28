@@ -1,7 +1,8 @@
 package request
 
 type SignUpRequest struct {
-	Name          string `json:"name"`
+	FirstName     string `json:"firstName"`
+	LastName      string `json:"lastName"`
 	Email         string `json:"email"`
 	Password      string `json:"password"`
 	PasswordAgain string `json:"passwordAgain"`

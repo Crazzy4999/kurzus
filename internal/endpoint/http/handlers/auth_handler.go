@@ -98,9 +98,10 @@ func (h *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user := &models.User{
-		Name:     req.Name,
-		Email:    req.Email,
-		Password: string(password),
+		FirstName: req.FirstName,
+		LastName:  req.LastName,
+		Email:     req.Email,
+		Password:  string(password),
 	}
 
 	h.userRepo.Create(user)
