@@ -3,14 +3,13 @@ package db
 import (
 	"database/sql"
 	"hangryAPI/internal/models"
-	repository "hangryAPI/internal/repositories"
 )
 
 type UserRepository struct {
 	db *sql.DB
 }
 
-func NewUserRepository(db *sql.DB) repository.UserRepositoryI {
+func NewUserRepository(db *sql.DB) *UserRepository {
 	return &UserRepository{
 		db: db,
 	}
@@ -24,7 +23,7 @@ func (ur *UserRepository) GetAll() ([]*models.User, error) {
 	return nil, nil
 }
 
-func (ur *UserRepository) GetUserByID(id int) (*models.User, error) {
+func (ur *UserRepository) GetUserByEmail(email string) (*models.User, error) {
 	return nil, nil
 }
 

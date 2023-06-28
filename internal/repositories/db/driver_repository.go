@@ -3,14 +3,13 @@ package db
 import (
 	"database/sql"
 	"hangryAPI/internal/models"
-	repository "hangryAPI/internal/repositories"
 )
 
 type DriverRepository struct {
 	db *sql.DB
 }
 
-func NewDriverRepository(db *sql.DB) repository.DriverRepositoryI {
+func NewDriverRepository(db *sql.DB) *DriverRepository {
 	return &DriverRepository{
 		db: db,
 	}

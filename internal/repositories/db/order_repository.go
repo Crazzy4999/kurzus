@@ -3,14 +3,13 @@ package db
 import (
 	"database/sql"
 	"hangryAPI/internal/models"
-	repository "hangryAPI/internal/repositories"
 )
 
 type OrderRepository struct {
 	db *sql.DB
 }
 
-func NewOrderRepository(db *sql.DB) repository.OrderRepositoryI {
+func NewOrderRepository(db *sql.DB) *OrderRepository {
 	return &OrderRepository{
 		db: db,
 	}
