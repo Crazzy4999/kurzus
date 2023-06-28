@@ -19,7 +19,7 @@ func Start() {
 	sr := dbrepo.NewSupplierRepository(db)*/
 	ur := dbrepo.NewUserRepository(db)
 
-	authHandler := handler.NewAuthHandler(&ur, cfg)
+	authHandler := handler.NewAuthHandler(ur, cfg)
 
 	router.GET("/", nil, nil)
 	router.POST("/login", authHandler.Login, nil)
