@@ -104,7 +104,10 @@ func (h *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
 		Password:  string(password),
 	}
 
-	h.userRepo.Create(user)
+	if err = h.userRepo.Create(user); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
 }

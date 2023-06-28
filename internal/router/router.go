@@ -27,7 +27,9 @@ func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if route.url.MatchString(r.URL.Path) && route.method == r.Method {
 			if route.m != nil {
 				route.m(route.handler).ServeHTTP(w, r)
+				return
 			}
+			route.handler.ServeHTTP(w, r)
 		} else if route.url.MatchString(r.URL.Path) && route.method != r.Method {
 			http.Error(w, fmt.Sprintf("Only %s method is allowed for route %s", route.method, r.URL.Path), http.StatusBadRequest)
 		}

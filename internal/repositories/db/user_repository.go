@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"errors"
 	"hangryAPI/internal/models"
 )
 
@@ -16,6 +17,16 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 }
 
 func (ur *UserRepository) Create(u *models.User) error {
+	stmt, err := ur.db.Prepare("INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4);")
+	if err != nil {
+		return errors.New("couldn't prepare statment to insert new user")
+	}
+
+	_, err = stmt.Exec(u.FirstName, u.LastName, u.Email, u.Password)
+	if err != nil {
+		return errors.New("insert into users failed")
+	}
+
 	return nil
 }
 
