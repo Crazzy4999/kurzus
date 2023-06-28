@@ -1,12 +1,12 @@
 package models
 
 type Order struct {
-	Id           int     `json:"id"`
-	UserId       int     `json:"userId"`
-	SupplierId   int     `json:"supplierId"`
-	DriverId     int     `json:"driverId"`
-	AddressId    int     `json:"addressId"`
-	StatusId     int     `json:"statusId"`
+	ID           int     `json:"id"`
+	UserID       int     `json:"userID"`
+	SupplierID   int     `json:"supplierID"`
+	DriverID     int     `json:"driverID"`
+	AddressID    int     `json:"addressID"`
+	StatusID     int     `json:"statusID"`
 	Comment      string  `json:"comment"`
 	DeliveryFee  float32 `json:"deliveryFee"`
 	DeliveryTime string  `json:"deliveryTime"`
