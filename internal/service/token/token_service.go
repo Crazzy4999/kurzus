@@ -2,6 +2,7 @@ package token
 
 import (
 	config "hangryAPI/configs"
+	"net/http"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -38,4 +39,12 @@ func GetTokenFromBearerString(bearerString string) string {
 	}
 
 	return token
+}
+
+func (s *TokenService) GetClaims(r *http.Request, secret string) (*JwtCustomClaims, error) {
+	authHeader := r.Header.Get("Authorization")
+	tokenString := GetTokenFromBearerString(authHeader)
+
+	claims, err := s.ValidateToken(tokenString, secret)
+	return claims, err
 }
