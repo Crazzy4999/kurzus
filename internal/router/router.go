@@ -24,7 +24,7 @@ func NewRouter() *Router {
 
 func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	for _, route := range router.routes {
-		if route.url.MatchString(r.URL.Path) && route.method == r.Method {
+		if route.url.MatchString(r.URL.String()) && route.method == r.Method {
 			if route.m != nil {
 				route.m(route.handler).ServeHTTP(w, r)
 				return

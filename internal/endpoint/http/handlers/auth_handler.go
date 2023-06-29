@@ -75,7 +75,7 @@ func (h *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if req.Password != req.PasswordAgain {
-		http.Error(w, "Passwords doesn't match!", http.StatusBadRequest)
+		http.Error(w, "passwords doesn't match", http.StatusBadRequest)
 		return
 	}
 
@@ -87,14 +87,14 @@ func (h *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
 
 	for _, user := range users {
 		if user.Email == req.Email {
-			http.Error(w, "Email already in use!", http.StatusBadRequest)
+			http.Error(w, "email already in use", http.StatusBadRequest)
 			return
 		}
 	}
 
 	password, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
-		http.Error(w, "Couldn't generate password!", http.StatusBadRequest)
+		http.Error(w, "couldn't generate password", http.StatusBadRequest)
 		return
 	}
 
@@ -118,7 +118,7 @@ func (h *AuthHandler) Refresh(w http.ResponseWriter, r *http.Request) {
 
 	claims, err := tokenService.GetClaims(r, h.cfg.RefreshSecret)
 	if err != nil {
-		http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+		http.Error(w, "invalid credentials", http.StatusUnauthorized)
 		return
 	}
 
@@ -185,4 +185,45 @@ func (h *AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "passwords doesn't match", http.StatusBadRequest)
 		return
 	}
+
+	user, err := h.userRepo.GetUserByEmail(req.Email)
+	if err != nil {
+		http.Error(w, "getting user failed", http.StatusBadRequest)
+		return
+	}
+
+	resetKey := r.URL.Query().Get("reset_key")
+	if err != nil {
+		http.Error(w, "bad url, missing reset_key", http.StatusBadRequest)
+		return
+	}
+
+	tokenService := token.NewTokenService(h.cfg)
+	// TODO: fix invalid signature (invalid here in go, on jwt website it's fine for some reason)
+	claims, err := tokenService.ValidateResetToken(resetKey)
+	if err != nil {
+		http.Error(w, "invalid credentials claims", http.StatusUnauthorized)
+		return
+	}
+
+	if user.ID != claims.ID {
+		http.Error(w, "invalid credentials", http.StatusUnauthorized)
+		return
+	}
+
+	password, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		http.Error(w, "couldn't generate password", http.StatusBadRequest)
+		return
+	}
+
+	user.Password = string(password)
+
+	err = h.userRepo.Update(user)
+	if err != nil {
+		http.Error(w, "reseting password for user failed", http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
