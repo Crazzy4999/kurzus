@@ -77,7 +77,7 @@ func (or *OrderRepository) GetOrderByID(id int) (*models.Order, error) {
 func (or *OrderRepository) Update(o *models.Order) error {
 	stmt, err := or.db.Prepare("UPDATE orders SET status_id = $1, note = $2 WHERE orders.id = $3")
 	if err != nil {
-		return errors.New("couldn't prepare staement for updating order")
+		return errors.New("couldn't prepare statement for updating order")
 	}
 
 	_, err = stmt.Exec(o.StatusID, o.Note, o.ID)
@@ -96,7 +96,7 @@ func (or *OrderRepository) Delete(id int) error {
 
 	_, err = stmt.Exec(id)
 	if err != nil {
-		return errors.New("deleting order by id failed")
+		return errors.New("deleting order failed")
 	}
 
 	return nil

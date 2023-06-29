@@ -98,12 +98,12 @@ func (ur *UserRepository) Update(u *models.User) error {
 func (ur *UserRepository) Delete(id int) error {
 	stmt, err := ur.db.Prepare("DELETE FROM users WHERE users.id = $1")
 	if err != nil {
-		return errors.New("couldn't prepare statement for deleting user by id")
+		return errors.New("couldn't prepare statement for deleting user")
 	}
 
 	_, err = stmt.Exec(id)
 	if err != nil {
-		return errors.New("deleting user by id failed")
+		return errors.New("deleting user failed")
 	}
 
 	return nil

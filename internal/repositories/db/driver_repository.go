@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"errors"
 	"hangryAPI/internal/models"
 )
 
@@ -15,22 +16,86 @@ func NewDriverRepository(db *sql.DB) *DriverRepository {
 	}
 }
 
-func (dr *DriverRepository) Create(*models.Driver) error {
+func (dr *DriverRepository) Create(d *models.Driver) error {
+	stmt, err := dr.db.Prepare("INSERT INTO drivers (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)")
+	if err != nil {
+		return errors.New("couldn't prepare statement for creating driver")
+	}
+
+	_, err = stmt.Exec(d.FirstName, d.LastName, d.Email, d.Password)
+	if err != nil {
+		return errors.New("creating driver failed")
+	}
+
 	return nil
 }
 
 func (dr *DriverRepository) GetAll() ([]*models.Driver, error) {
-	return nil, nil
+	stmt, err := dr.db.Prepare("SELECT id, first_name, last_name, email, password FROM drivers")
+	if err != nil {
+		return nil, errors.New("couldn't prepare statement for getting all drivers")
+	}
+
+	rows, err := stmt.Query()
+	if err != nil {
+		return nil, errors.New("getting all drivers failed")
+	}
+	defer rows.Close()
+
+	var drivers []*models.Driver
+	for rows.Next() {
+		driver := &models.Driver{}
+		err = rows.Scan()
+		if err == sql.ErrNoRows {
+			return nil, nil
+		} else if err != nil {
+			return nil, errors.New("types mismatch during the scanning")
+		}
+		drivers = append(drivers, driver)
+	}
+	return drivers, nil
 }
 
-func (dr *DriverRepository) GetDriverByID(int) (*models.Driver, error) {
-	return nil, nil
+func (dr *DriverRepository) GetDriverByID(id int) (*models.Driver, error) {
+	stmt, err := dr.db.Prepare("SELECT id, first_name, last_name, email, password FROM drivers WHERE drivers.id = $1")
+	if err != nil {
+		return nil, errors.New("couldn't prepare statement for getting all drivers")
+	}
+
+	driver := &models.Driver{}
+	row := stmt.QueryRow(id)
+	err = row.Scan(&driver.ID, &driver.FirstName, &driver.LastName, &driver.Email, &driver.Password)
+	if err != nil {
+		return nil, errors.New("getting driver by id failed")
+	}
+
+	return driver, nil
 }
 
-func (dr *DriverRepository) Update(*models.Driver) error {
+func (dr *DriverRepository) Update(d *models.Driver) error {
+	stmt, err := dr.db.Prepare("UPDATE drivers SET first_name = $1, last_name = $2, password = $3 WHERE drivers.id = $4")
+	if err != nil {
+		return errors.New("couldn't prepare statement for updating driver")
+	}
+
+	_, err = stmt.Exec(d.FirstName, d.LastName, d.Password, d.ID)
+	if err != nil {
+		return errors.New("updating driver failed")
+	}
+
 	return nil
 }
 
-func (dr *DriverRepository) Delete(int) error {
+func (dr *DriverRepository) Delete(id int) error {
+	stmt, err := dr.db.Prepare("DELETE FROM drivers WHERE drivers.id = $1")
+	if err != nil {
+		return errors.New("couldn't prepare statement for deleting driver")
+	}
+
+	_, err = stmt.Exec(id)
+	if err != nil {
+		return errors.New("deleting driver failed")
+	}
+
 	return nil
 }
