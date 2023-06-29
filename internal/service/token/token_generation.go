@@ -25,3 +25,7 @@ func (s *TokenService) GenerateAccessToken(userID int) (string, error) {
 func (s *TokenService) GenerateRefreshToken(userID int) (string, error) {
 	return s.GenerateToken(s.cfg.RefreshSecret, s.cfg.RefreshLifetime, userID)
 }
+
+func (s *TokenService) GenerateResetToken(userID int) (string, error) {
+	return s.GenerateToken(s.cfg.ResetSecret, s.cfg.ResetLifetime, userID)
+}

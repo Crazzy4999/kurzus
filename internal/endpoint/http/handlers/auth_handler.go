@@ -7,6 +7,7 @@ import (
 	"hangryAPI/internal/endpoint/http/responses"
 	"hangryAPI/internal/models"
 	"hangryAPI/internal/repositories/db"
+	"hangryAPI/internal/service/email"
 	"hangryAPI/internal/service/token"
 	"net/http"
 
@@ -142,10 +143,46 @@ func (h *AuthHandler) Refresh(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resp)
 }
 
+func (h *AuthHandler) GetPasswordResetKey(w http.ResponseWriter, r *http.Request) {
+	req := new(request.GetResetKeyRequest)
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	user, err := h.userRepo.GetUserByEmail(req.Email)
+	if err != nil {
+		http.Error(w, "user doesn't exist with this email", http.StatusBadRequest)
+		return
+	}
+
+	tokenService := token.NewTokenService(h.cfg)
+
+	resetString, err := tokenService.GenerateRefreshToken(user.ID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	emailService := email.NewEmailService(h.cfg, "smtp.gmail.com", "587")
+	err = emailService.SendResetEmail(req.Email, "Subject: Password reset for Hangry Food Delivery\n", "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n", "internal/service/email/reset_password_email.html", resetString)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
 func (h *AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 	req := new(request.ResetPasswordRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if req.Password != req.PasswordAgain {
+		http.Error(w, "passwords doesn't match", http.StatusBadRequest)
 		return
 	}
 }

@@ -25,6 +25,8 @@ func Start() {
 	router.GET("/", nil, nil)
 	router.POST("/login", authHandler.Login, nil)
 	router.POST("/signup", authHandler.SignUp, nil)
+	router.POST("/reset", authHandler.GetPasswordResetKey, nil)
+	router.POST("/reset?reset_key=\\.+", nil, nil)
 	router.GET("/refresh", authHandler.Refresh, middleware.CheckAccessTokenValidity)
 	router.POST("/suppliers", nil, middleware.CheckAccessTokenValidity) //Create new supplier
 	router.GET("/suppliers", nil, middleware.CheckAccessTokenValidity)

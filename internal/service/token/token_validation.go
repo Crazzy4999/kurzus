@@ -29,3 +29,7 @@ func (s *TokenService) ValidateAccessToken(tokenString string) (*JwtCustomClaims
 func (s *TokenService) ValidateRefreshToken(tokenString string) (*JwtCustomClaims, error) {
 	return s.ValidateToken(tokenString, s.cfg.RefreshSecret)
 }
+
+func (s *TokenService) ValidateResetToken(tokenString string) (*JwtCustomClaims, error) {
+	return s.ValidateToken(tokenString, s.cfg.ResetSecret)
+}

@@ -75,7 +75,7 @@ func (ur *UserRepository) GetUserByEmail(email string) (*models.User, error) {
 	row := stmt.QueryRow(email)
 	err = row.Scan(&user.ID, &user.Address, &user.FirstName, &user.LastName, &user.Email, &user.Password)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("getting user by email failed")
 	}
 
 	return &user, nil
@@ -92,7 +92,7 @@ func (ur *UserRepository) GetUserByID(id int) (*models.User, error) {
 	row := stmt.QueryRow(id)
 	err = row.Scan(&user.ID, &user.Address, &user.FirstName, &user.LastName, &user.Email, &user.Password)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("getting user by id failed")
 	}
 
 	return user, nil

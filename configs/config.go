@@ -9,11 +9,15 @@ import (
 )
 
 type Config struct {
-	Port            string
-	AccessSecret    string
-	RefreshSecret   string
-	AccessLifetime  uint
-	RefreshLifetime uint
+	Port                    string
+	AccessSecret            string
+	RefreshSecret           string
+	ResetSecret             string
+	AccessLifetime          uint
+	RefreshLifetime         uint
+	ResetLifetime           uint
+	EmailingAccountEmail    string
+	EmailingAccountPassword string
 
 	DatabaseUser     string
 	DatabasePassword string
@@ -39,15 +43,20 @@ func NewConfig() *Config {
 
 	AccessLifetime := STOI("ACCESS_LIFETIME")
 	RefreshLifetime := STOI("REFRESH_LIFETIME")
+	ResetLifetime := STOI("RESET_LIFETIME")
 
 	DatabasePort := STOI("DATABASE_PORT")
 
 	return &Config{
-		Port:            os.Getenv("PORT"),
-		AccessSecret:    os.Getenv("ACCESS_SECRET"),
-		RefreshSecret:   os.Getenv("REFRESH_SECRET"),
-		AccessLifetime:  uint(AccessLifetime),
-		RefreshLifetime: uint(RefreshLifetime),
+		Port:                    os.Getenv("PORT"),
+		AccessSecret:            os.Getenv("ACCESS_SECRET"),
+		RefreshSecret:           os.Getenv("REFRESH_SECRET"),
+		ResetSecret:             os.Getenv("RESET_SECRET"),
+		AccessLifetime:          uint(AccessLifetime),
+		RefreshLifetime:         uint(RefreshLifetime),
+		ResetLifetime:           uint(ResetLifetime),
+		EmailingAccountEmail:    os.Getenv("EMAILING_ACCOUNT_EMAIL"),
+		EmailingAccountPassword: os.Getenv("EMAILING_ACCOUNT_PASSWORD"),
 
 		DatabaseUser:     os.Getenv("DATABASE_USER"),
 		DatabasePassword: os.Getenv("DATABASE_PASSWORD"),
