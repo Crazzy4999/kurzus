@@ -64,6 +64,23 @@ func (ur *UserRepository) GetAll() ([]*models.User, error) {
 	return users, nil
 }
 
+func (ur *UserRepository) GetUserByEmail(email string) (*models.User, error) {
+	stmt, err := ur.db.Prepare("SELECT id, address_id, first_name, last_name, email, password FROM users WHERE users.email = $1")
+	if err != nil {
+		return nil, errors.New("couldn't prepare statement to get user by email")
+	}
+
+	var user models.User
+
+	row := stmt.QueryRow(email)
+	err = row.Scan(&user.ID, &user.Address, &user.FirstName, &user.LastName, &user.Email, &user.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
 func (ur *UserRepository) GetUserByID(id int) (*models.User, error) {
 	stmt, err := ur.db.Prepare("SELECT id, address_id, first_name, last_name, email, password FROM users WHERE users.id = $1")
 	if err != nil {
