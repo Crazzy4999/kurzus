@@ -9,12 +9,12 @@ const (
 )
 
 type Supplier struct {
-	ID           int            `json:"id"`
-	Address      sql.NullString `json:"address"`
-	Image        string         `json:"image"`
-	Name         string         `json:"name"`
-	Email        string         `json:"email"`
-	Password     string         `json:"password"`
-	Type         string         `json:"type"`
-	WorkingHours WorkingHours   `json:"workingHours"`
+	ID           int           `json:"id"`
+	Address      sql.NullInt64 `json:"address"`
+	Image        string        `json:"image"`
+	Name         string        `json:"name"`
+	Email        string        `json:"email"`
+	Password     string        `json:"password"`
+	Type         string        `json:"type"`
+	WorkingHours WorkingHours  `json:"workingHours"`
 }

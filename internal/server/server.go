@@ -21,6 +21,7 @@ func Start() {
 	ur := dbrepo.NewUserRepository(db)
 
 	authHandler := handler.NewAuthHandler(ur, cfg)
+	userHandler := handler.NewUserHandler(ur, cfg)
 
 	router.GET("/", nil, nil)
 	router.POST("/login", authHandler.Login, nil)
@@ -28,6 +29,8 @@ func Start() {
 	router.POST("/reset", authHandler.GetPasswordResetKey, nil)
 	router.PUT("/reset\\?reset_key=.+", authHandler.ResetPassword, nil)
 	router.GET("/refresh", authHandler.Refresh, middleware.CheckAccessTokenValidity)
+	router.GET("/profile", userHandler.GetProfile, nil)
+	router.PUT("/profile", userHandler.UpdateProfile, nil)
 	router.POST("/suppliers", nil, middleware.CheckAccessTokenValidity) //Create new supplier
 	router.GET("/suppliers", nil, middleware.CheckAccessTokenValidity)
 	router.GET("/suppliers/\\d+", nil, middleware.CheckAccessTokenValidity)

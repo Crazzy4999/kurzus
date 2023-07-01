@@ -1,12 +1,9 @@
-package models
+package request
 
 import "database/sql"
 
-type User struct {
-	ID        int           `json:"id"`
+type UserRequest struct {
 	Address   sql.NullInt64 `json:"address"`
 	FirstName string        `json:"firstName"`
 	LastName  string        `json:"lastName"`
-	Email     string        `json:"email"`
-	Password  string        `json:"password"`
 }
