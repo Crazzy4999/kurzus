@@ -69,12 +69,12 @@ func (h *UserHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 
 	updatedUser := models.User{
 		ID:        user.ID,
-		Address:   req.Address,
 		FirstName: req.FirstName,
 		LastName:  req.LastName,
 		Email:     user.Email,
 		Password:  user.Password,
 	}
+	updatedUser.Address.Int64 = req.Address
 
 	err = h.userRepo.Update(&updatedUser)
 	if err != nil {

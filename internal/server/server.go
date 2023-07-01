@@ -19,9 +19,11 @@ func Start() {
 	or := dbrepo.NewOrderRepository(db)
 	sr := dbrepo.NewSupplierRepository(db)*/
 	ur := dbrepo.NewUserRepository(db)
+	ar := dbrepo.NewAddressRepository(db)
 
 	authHandler := handler.NewAuthHandler(ur, cfg)
 	userHandler := handler.NewUserHandler(ur, cfg)
+	addressHandler := handler.NewAddressHandler(ar, cfg)
 
 	router.GET("/", nil, nil)
 	router.POST("/login", authHandler.Login, nil)
@@ -31,6 +33,7 @@ func Start() {
 	router.GET("/refresh", authHandler.Refresh, middleware.CheckTokenValidity)
 	router.GET("/profile", userHandler.GetProfile, middleware.CheckTokenValidity)
 	router.PUT("/profile", userHandler.UpdateProfile, middleware.CheckTokenValidity)
+	router.POST("/address", addressHandler.AddAddress, middleware.CheckTokenValidity)
 	router.POST("/suppliers", nil, middleware.CheckTokenValidity) //Create new supplier
 	router.GET("/suppliers", nil, middleware.CheckTokenValidity)
 	router.GET("/suppliers/\\d+", nil, middleware.CheckTokenValidity)
