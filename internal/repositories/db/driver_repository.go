@@ -45,7 +45,7 @@ func (dr *DriverRepository) GetAll() ([]*models.Driver, error) {
 	var drivers []*models.Driver
 	for rows.Next() {
 		driver := &models.Driver{}
-		err = rows.Scan()
+		err = rows.Scan(&driver.ID, &driver.FirstName, &driver.LastName, &driver.Email, &driver.Password)
 		if err == sql.ErrNoRows {
 			return nil, nil
 		} else if err != nil {
