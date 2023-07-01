@@ -11,15 +11,12 @@ type Func func(handler http.Handler) http.Handler
 
 type contextKey string
 
-func CheckAccessTokenValidity(next http.Handler) http.Handler {
+func CheckTokenValidity(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cfg := config.NewConfig()
 		tokenService := token.NewTokenService(cfg)
 
-		authHeader := r.Header.Get("Authorization")
-		tokenString := token.GetTokenFromBearerString(authHeader)
-
-		claims, err := tokenService.ValidateAccessToken(tokenString)
+		claims, err := tokenService.GetClaims(r, cfg.RefreshSecret)
 		if err != nil {
 			http.Redirect(w, r, "/login", http.StatusUnauthorized)
 			return

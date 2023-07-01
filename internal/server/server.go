@@ -28,16 +28,16 @@ func Start() {
 	router.POST("/signup", authHandler.SignUp, nil)
 	router.POST("/reset", authHandler.GetPasswordResetKey, nil)
 	router.PUT("/reset\\?reset_key=.+", authHandler.ResetPassword, nil)
-	router.GET("/refresh", authHandler.Refresh, middleware.CheckAccessTokenValidity)
+	router.GET("/refresh", authHandler.Refresh, middleware.CheckTokenValidity)
 	router.GET("/profile", userHandler.GetProfile, nil)
 	router.PUT("/profile", userHandler.UpdateProfile, nil)
-	router.POST("/suppliers", nil, middleware.CheckAccessTokenValidity) //Create new supplier
-	router.GET("/suppliers", nil, middleware.CheckAccessTokenValidity)
-	router.GET("/suppliers/\\d+", nil, middleware.CheckAccessTokenValidity)
-	router.GET("/categories", nil, middleware.CheckAccessTokenValidity)
-	router.GET("/cart", nil, middleware.CheckAccessTokenValidity)
-	router.POST("/order", nil, middleware.CheckAccessTokenValidity)
-	router.GET("/history", nil, middleware.CheckAccessTokenValidity)
+	router.POST("/suppliers", nil, middleware.CheckTokenValidity) //Create new supplier
+	router.GET("/suppliers", nil, middleware.CheckTokenValidity)
+	router.GET("/suppliers/\\d+", nil, middleware.CheckTokenValidity)
+	router.GET("/categories", nil, middleware.CheckTokenValidity)
+	router.GET("/cart", nil, middleware.CheckTokenValidity)
+	router.POST("/order", nil, middleware.CheckTokenValidity)
+	router.GET("/history", nil, middleware.CheckTokenValidity)
 
 	http.ListenAndServe(cfg.Port, router)
 }
