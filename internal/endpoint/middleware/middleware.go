@@ -4,12 +4,11 @@ import (
 	"context"
 	config "hangryAPI/configs"
 	"hangryAPI/internal/service/token"
+	"hangryAPI/internal/util"
 	"net/http"
 )
 
 type Func func(handler http.Handler) http.Handler
-
-type contextKey string
 
 func CheckTokenValidity(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -22,11 +21,10 @@ func CheckTokenValidity(next http.Handler) http.Handler {
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), contextKey("claims"), claims)
+		ctx := context.WithValue(r.Context(), util.ContextKey("claims"), claims)
 		rctx := r.WithContext(ctx)
 
 		if claims != nil {
-			w.WriteHeader(http.StatusOK)
 			next.ServeHTTP(w, rctx)
 			return
 		}

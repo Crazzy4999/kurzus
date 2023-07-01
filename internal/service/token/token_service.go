@@ -1,7 +1,9 @@
 package token
 
 import (
+	"errors"
 	config "hangryAPI/configs"
+	"hangryAPI/internal/util"
 	"net/http"
 	"strings"
 
@@ -47,4 +49,12 @@ func (s *TokenService) GetClaims(r *http.Request, secret string) (*JwtCustomClai
 
 	claims, err := s.ValidateToken(tokenString, secret)
 	return claims, err
+}
+
+func GetClaimsFromContext(r *http.Request) (*JwtCustomClaims, error) {
+	claims, ok := r.Context().Value(util.ContextKey("claims")).(JwtCustomClaims)
+	if !ok {
+		return nil, errors.New("type assertion failed")
+	}
+	return &claims, nil
 }
