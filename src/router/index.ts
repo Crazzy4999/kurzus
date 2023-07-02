@@ -3,6 +3,7 @@ import HomeView from "@/views/HomeView.vue"
 import LoginView from "@/views/LoginView.vue"
 import SignUpView from "@/views/SignUpView.vue"
 import ProfileView from "@/views/ProfileView.vue"
+import ResetView from "@/views/ResetView.vue"
 import SuppliersView from "@/views/SuppliersView.vue"
 import CategoriesView from "@/views/CategoriesView.vue"
 import SupplierView from "@/views/SupplierView.vue"
@@ -43,6 +44,14 @@ const router = createRouter({
       component: ProfileView,
       meta: {
         title: 'Hangry - Profile'
+      }
+    },
+    {
+      path: '/reset',
+      name: 'reset',
+      component: ResetView,
+      meta: {
+        title: 'Hangry - Reset Password'
       }
     },
     {

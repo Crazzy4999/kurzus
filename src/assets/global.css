@@ -7,6 +7,7 @@
     --settings-dark: #888;
     --warn-color: #fa0;
     --error-color: #e00;
+    --modal-background: #0007;
 
     --h1-size: 5vw;
     --h2-size: calc(var(--h1-size) * 0.75);

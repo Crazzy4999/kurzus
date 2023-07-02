@@ -1,0 +1,28 @@
+.block-screen {
+    z-index: 100;
+    cursor: default;
+    position: absolute;
+    display: grid;
+    background-color: var(--modal-background);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.modal-body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--main-color);
+    width: 25%;
+    box-shadow: 0 0 var(--tiny-size) 1px var(--second-color);
+    padding-block: var(--h4-size);
+    margin: auto;
+}
+
+@media only screen and (hover: none) and (pointer: coarse) {
+    .modal-body {
+        width: 100%;
+    }
+}
