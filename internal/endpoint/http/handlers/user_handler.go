@@ -3,7 +3,7 @@ package handler
 import (
 	"encoding/json"
 	config "hangryAPI/configs"
-	request "hangryAPI/internal/endpoint/http/requests"
+	request "hangryAPI/internal/endpoint/http/requests/user"
 	"hangryAPI/internal/endpoint/http/responses"
 	"hangryAPI/internal/models"
 	"hangryAPI/internal/repositories/db"
