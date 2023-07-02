@@ -17,12 +17,12 @@ func NewOrderRepository(db *sql.DB) *OrderRepository {
 }
 
 func (or *OrderRepository) Create(o *models.Order) error {
-	stmt, err := or.db.Prepare("INSERT INTO orders (user_id, suppiler_id, driver_id, address_id, status_id, note, delivery_fee, created_at, delivered_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)")
+	stmt, err := or.db.Prepare("INSERT INTO orders (user_id, suppiler_id, driver_id, status_id, note, delivery_fee, created_at, delivered_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)")
 	if err != nil {
 		return errors.New("couldn't prepare statenemt to create order")
 	}
 
-	_, err = stmt.Exec(o.UserID, o.SupplierID, o.DriverID, o.AddressID, o.StatusID, o.Note, o.DeliveryFee, o.CreatedAt, o.DeliveredAt)
+	_, err = stmt.Exec(o.UserID, o.SupplierID, o.DriverID, o.StatusID, o.Note, o.DeliveryFee, o.CreatedAt, o.DeliveredAt)
 	if err != nil {
 		return errors.New("insert into orders failed")
 	}
@@ -31,7 +31,7 @@ func (or *OrderRepository) Create(o *models.Order) error {
 }
 
 func (or *OrderRepository) GetAll() ([]*models.Order, error) {
-	stmt, err := or.db.Prepare("SELECT id, user_id, suppiler_id, driver_id, address_id, status_id, note, delivery_fee, created_at, delivered_at FROM orders")
+	stmt, err := or.db.Prepare("SELECT id, user_id, suppiler_id, driver_id, status_id, note, delivery_fee, created_at, delivered_at FROM orders")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement to getting all orders")
 	}
@@ -45,7 +45,7 @@ func (or *OrderRepository) GetAll() ([]*models.Order, error) {
 	var orders []*models.Order
 	for rows.Next() {
 		order := &models.Order{}
-		err = rows.Scan(&order.ID, &order.UserID, &order.SupplierID, &order.DriverID, &order.AddressID, &order.StatusID, &order.Note, &order.DeliveryFee, &order.CreatedAt, &order.DeliveredAt)
+		err = rows.Scan(&order.ID, &order.UserID, &order.SupplierID, &order.DriverID, &order.StatusID, &order.Note, &order.DeliveryFee, &order.CreatedAt, &order.DeliveredAt)
 		if err == sql.ErrNoRows {
 			return nil, nil
 		} else if err != nil {
@@ -58,7 +58,7 @@ func (or *OrderRepository) GetAll() ([]*models.Order, error) {
 }
 
 func (or *OrderRepository) GetOrderByID(id int) (*models.Order, error) {
-	stmt, err := or.db.Prepare("SELECT id, user_id, suppiler_id, driver_id, address_id, status_id, note, delivery_fee, created_at, delivered_at FROM orders WHERE orders.id = $1")
+	stmt, err := or.db.Prepare("SELECT id, user_id, suppiler_id, driver_id, status_id, note, delivery_fee, created_at, delivered_at FROM orders WHERE orders.id = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting order by id")
 	}
@@ -66,7 +66,7 @@ func (or *OrderRepository) GetOrderByID(id int) (*models.Order, error) {
 	order := &models.Order{}
 
 	row := stmt.QueryRow(id)
-	err = row.Scan(&order.ID, &order.UserID, &order.SupplierID, &order.DriverID, &order.AddressID, &order.StatusID, &order.Note, &order.DeliveryFee, &order.CreatedAt, &order.DeliveredAt)
+	err = row.Scan(&order.ID, &order.UserID, &order.SupplierID, &order.DriverID, &order.StatusID, &order.Note, &order.DeliveryFee, &order.CreatedAt, &order.DeliveredAt)
 	if err != nil {
 		return nil, errors.New("getting order by id failed")
 	}
