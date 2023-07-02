@@ -34,6 +34,7 @@ func Start() {
 	router.GET("/profile", userHandler.GetProfile, middleware.CheckTokenValidity)
 	router.PUT("/profile", userHandler.UpdateProfile, middleware.CheckTokenValidity)
 	router.POST("/address", addressHandler.AddAddress, middleware.CheckTokenValidity)
+	router.PUT("/address", addressHandler.UpdateAddress, middleware.CheckTokenValidity)
 	router.POST("/suppliers", nil, middleware.CheckTokenValidity) //Create new supplier
 	router.GET("/suppliers", nil, middleware.CheckTokenValidity)
 	router.GET("/suppliers/\\d+", nil, middleware.CheckTokenValidity)
