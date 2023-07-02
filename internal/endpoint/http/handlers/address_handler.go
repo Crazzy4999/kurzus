@@ -59,3 +59,28 @@ func (h *AddressHandler) AddAddress(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+func (h *AddressHandler) UpdateAddress(w http.ResponseWriter, r *http.Request) {
+	req := new(request.AddressRequest)
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	address := &models.Address{
+		City:        req.City,
+		Street:      req.Street,
+		HouseNumber: req.HouseNumber,
+		ZipCode:     req.ZipCode,
+		FloorNumber: sql.NullString{String: req.FloorNumber, Valid: req.FloorNumber != ""},
+		Apartment:   sql.NullString{String: req.Apartment, Valid: req.Apartment != ""},
+	}
+
+	err := h.addressRepo.Update(address)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
