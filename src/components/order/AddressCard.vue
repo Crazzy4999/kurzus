@@ -10,26 +10,45 @@ defineProps<{
 let editing = ref(false)
 let deleting = ref(false)
 
+function controlScroll(val: boolean) {
+    window.scrollTo(0, 0)
+    if(val) {
+        window.onscroll = () => window.scrollTo(0, 0)
+        document.body.classList.add("modal-open")
+    } else {
+        window.onscroll = () => {}
+        document.body.classList.remove("modal-open")
+    }
+}
+
 watch(editing, (newVal, oldVal) => {
-    if(newVal) document.body.classList.add("modal-open")
-    else document.body.classList.remove("modal-open")
+    controlScroll(newVal)
 })
 
 watch(deleting, (newVal, oldVal) => {
-    if(newVal) document.body.classList.add("modal-open")
-    else document.body.classList.remove("modal-open")
+    controlScroll(newVal)
 })
 </script>
 
 <template>
     <li class="address-list-item">
-        <input class="address-radio" type="radio" name="selected-address" id="" :checked="checked">
-        <span class="address-container">
-            <div class="address-text">{{ address.street }} {{ address.houseNumber }} {{ address.floorNumber }} {{ address.apartment }}</div>
-            <div class="address-text">{{ address.zipCode }} {{ address.city }}</div>
+        <span class="separator-container">
+            <input class="address-radio" type="radio" name="selected-address" id="" :checked="checked">
+            <span class="address-container">
+                <div class="address-text">{{ address.street }} {{ address.houseNumber }} {{ address.floorNumber }} {{ address.apartment }}</div>
+                <div class="address-text">{{ address.zipCode }} {{ address.city }}</div>
+            </span>
         </span>
-        <button @click.prevent="editing = !editing">Edit</button>
-        <button @click.prevent="deleting = !deleting">Delete</button>
+        <span class="separator-container">
+            <button class="action-btn" @click.prevent="editing = !editing">
+                <!--Icon made by https://www.flaticon.com/authors/freepik-->
+                <img class="btn-img" src="@/assets/icons/editing.png" alt="edit">
+            </button>
+            <button class="action-btn" @click.prevent="deleting = !deleting">
+                <!--Icon made by https://www.flaticon.com/authors/freepik-->
+                <img class="btn-img" src="@/assets/icons/bin.png" alt="delete">
+            </button>
+        </span>
         <div v-if="editing" class="block-screen">
             <div class="modal-body">
                 <h3 class="title">Edit address</h3>
@@ -40,8 +59,8 @@ watch(deleting, (newVal, oldVal) => {
                 <input class="edit-input" type="text" placeholder="Floor number">
                 <input class="edit-input" type="text" placeholder="Apartment">
                 <span class="btn-container">
-                    <button class="action-btn" @click.prevent="editing = !editing">Cancel</button>
-                    <button class="action-btn" @click.prevent="">Edit</button>
+                    <button class="modal-btn" @click.prevent="editing = !editing">Cancel</button>
+                    <button class="modal-btn" @click.prevent="">Edit</button>
                 </span>
             </div>
         </div>
@@ -63,6 +82,7 @@ body.modal-open {
 .address-list-item {
     cursor: pointer;
     display: flex;
+    justify-content: space-between;
     border: var(--sub-border-size) solid var(--second-color);
     padding-block: var(--sub-p-size);
     margin-block: var(--sub-p-size);
@@ -71,6 +91,10 @@ body.modal-open {
 
 .address-list-item:hover {
     box-shadow: 0 0 var(--tiny-size) 1px var(--second-color);
+}
+
+.separator-container {
+    display: flex;
 }
 
 .address-radio {
@@ -115,7 +139,19 @@ body.modal-open {
     color: var(--second-hover);
 }
 
+.action-btn {
+    cursor: pointer;
+    width: var(--h4-size);
+    height: var(--h4-size);
+    margin: auto var(--sub-p-size);
+}
+
+.btn-img {
+    width: 100%;
+}
+
 .title {
+    color: var(--second-color);
     margin: var(--sub-p-size) auto;
 }
 
@@ -139,7 +175,7 @@ body.modal-open {
     display: flex;
 }
 
-.action-btn {
+.modal-btn {
     cursor: pointer;
     font-size: var(--p-size);
     border-radius: var(--sub-p-size);
@@ -151,7 +187,7 @@ body.modal-open {
     transition: background-color var(--tran);
 }
 
-.action-btn:hover {
+.modal-btn:hover {
     background-color: var(--second-hover);
 }
 
