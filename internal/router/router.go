@@ -23,6 +23,8 @@ func NewRouter() *Router {
 }
 
 func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
 	for _, route := range router.routes {
 		if route.url.MatchString(r.URL.String()) && route.method == r.Method {
 			if route.m != nil {
