@@ -194,7 +194,7 @@ func (h *AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 
 	resetKey := r.URL.Query().Get("reset_key")
 	if err != nil {
-		http.Error(w, "bad url, missing reset_key", http.StatusBadRequest)
+		http.Error(w, "bad url, missing reset key", http.StatusBadRequest)
 		return
 	}
 
@@ -202,7 +202,7 @@ func (h *AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 	// TODO: fix invalid signature (invalid here in go, on jwt website it's fine for some reason)
 	claims, err := tokenService.ValidateResetToken(resetKey)
 	if err != nil {
-		http.Error(w, "invalid credentials claims", http.StatusUnauthorized)
+		http.Error(w, "invalid credentials", http.StatusUnauthorized)
 		return
 	}
 
