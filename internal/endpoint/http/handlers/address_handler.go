@@ -45,7 +45,8 @@ func (h *AddressHandler) AddAddress(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, a := range addresses {
-		if address == a {
+		a.ID = 0
+		if *address == *a {
 			w.WriteHeader(http.StatusOK)
 			return
 		}
@@ -67,6 +68,12 @@ func (h *AddressHandler) UpdateAddress(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	addresses, err := h.addressRepo.GetAll()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	address := &models.Address{
 		City:        req.City,
 		Street:      req.Street,
@@ -76,13 +83,25 @@ func (h *AddressHandler) UpdateAddress(w http.ResponseWriter, r *http.Request) {
 		Apartment:   sql.NullString{String: req.Apartment, Valid: req.Apartment != ""},
 	}
 
-	err := h.addressRepo.Update(address)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+	for _, a := range addresses {
+		savedID := a.ID
+		a.ID = 0
+
+		if a == address {
+			a.ID = savedID
+
+			err := h.addressRepo.Update(address)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			w.WriteHeader(http.StatusOK)
+			return
+		}
 	}
 
-	w.WriteHeader(http.StatusOK)
+	http.Error(w, "couldn't find address", http.StatusBadRequest)
 }
 
 /*func (h *AddressHandler) RemoveAddress(w http.ResponseWriter, r *http.Request) {
