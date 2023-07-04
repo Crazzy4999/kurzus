@@ -68,8 +68,8 @@ func (repo *UsersAddressesRepository) GetAddressesForUserByID(id int) ([]*models
 
 	var userAddresses []*models.Address
 	for _, address := range addresses {
-		for _, address_id := range address_ids {
-			if address_id == &address.ID {
+		for _, id := range address_ids {
+			if id == &address.ID {
 				userAddresses = append(userAddresses, address)
 			}
 		}
