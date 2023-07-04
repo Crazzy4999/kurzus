@@ -16,8 +16,8 @@ func NewAddressRepository(db *sql.DB) *AddressRepository {
 	}
 }
 
-func (ar *AddressRepository) Create(a *models.Address) error {
-	stmt, err := ar.db.Prepare("INSERT INTO addresses (city, street, house_number, zip_code, floor_number, apartment) VALUES ($1, $2, $3, $4, $5, $6)")
+func (repo *AddressRepository) Create(a *models.Address) error {
+	stmt, err := repo.db.Prepare("INSERT INTO addresses (city, street, house_number, zip_code, floor_number, apartment) VALUES ($1, $2, $3, $4, $5, $6)")
 	if err != nil {
 		return errors.New("couldn't prepare statement to create address")
 	}
@@ -30,8 +30,8 @@ func (ar *AddressRepository) Create(a *models.Address) error {
 	return nil
 }
 
-func (ar *AddressRepository) GetAll() ([]*models.Address, error) {
-	stmt, err := ar.db.Prepare("SELECT id, city, street, house_number, zip_code, floor_number, apartment FROM addresses")
+func (repo *AddressRepository) GetAll() ([]*models.Address, error) {
+	stmt, err := repo.db.Prepare("SELECT id, city, street, house_number, zip_code, floor_number, apartment FROM addresses")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement to create address")
 	}
@@ -57,8 +57,8 @@ func (ar *AddressRepository) GetAll() ([]*models.Address, error) {
 	return addresses, nil
 }
 
-func (ar *AddressRepository) GetAddressByID(id int) (*models.Address, error) {
-	stmt, err := ar.db.Prepare("SELECT id, city, street, house_number, zip_code, floor_number, apartment FROM addresses WHERE addresses.id = $1")
+func (repo *AddressRepository) GetAddressByID(id int) (*models.Address, error) {
+	stmt, err := repo.db.Prepare("SELECT id, city, street, house_number, zip_code, floor_number, apartment FROM addresses WHERE addresses.id = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement to create address")
 	}
@@ -73,8 +73,8 @@ func (ar *AddressRepository) GetAddressByID(id int) (*models.Address, error) {
 	return address, nil
 }
 
-func (ar *AddressRepository) Update(a *models.Address) error {
-	stmt, err := ar.db.Prepare("UPDATE addresses SET city = $1, street = $2, house_number = $3, zip_code = $4, floor_number = $5, apartment = $6 WHERE addresses.id = $7")
+func (repo *AddressRepository) Update(a *models.Address) error {
+	stmt, err := repo.db.Prepare("UPDATE addresses SET city = $1, street = $2, house_number = $3, zip_code = $4, floor_number = $5, apartment = $6 WHERE addresses.id = $7")
 	if err != nil {
 		return errors.New("couldn't prepare statement to update address")
 	}
@@ -87,8 +87,8 @@ func (ar *AddressRepository) Update(a *models.Address) error {
 	return nil
 }
 
-func (ar *AddressRepository) Delete(id int) error {
-	stmt, err := ar.db.Prepare("DELETE FROM addresses WHERE addresses.id = $1")
+func (repo *AddressRepository) Delete(id int) error {
+	stmt, err := repo.db.Prepare("DELETE FROM addresses WHERE addresses.id = $1")
 	if err != nil {
 		return errors.New("couldn't prepare statement to delete address")
 	}

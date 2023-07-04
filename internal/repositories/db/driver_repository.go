@@ -16,8 +16,8 @@ func NewDriverRepository(db *sql.DB) *DriverRepository {
 	}
 }
 
-func (dr *DriverRepository) Create(d *models.Driver) error {
-	stmt, err := dr.db.Prepare("INSERT INTO drivers (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)")
+func (repo *DriverRepository) Create(d *models.Driver) error {
+	stmt, err := repo.db.Prepare("INSERT INTO drivers (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)")
 	if err != nil {
 		return errors.New("couldn't prepare statement for creating driver")
 	}
@@ -30,8 +30,8 @@ func (dr *DriverRepository) Create(d *models.Driver) error {
 	return nil
 }
 
-func (dr *DriverRepository) GetAll() ([]*models.Driver, error) {
-	stmt, err := dr.db.Prepare("SELECT id, first_name, last_name, email, password FROM drivers")
+func (repo *DriverRepository) GetAll() ([]*models.Driver, error) {
+	stmt, err := repo.db.Prepare("SELECT id, first_name, last_name, email, password FROM drivers")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting all drivers")
 	}
@@ -56,8 +56,8 @@ func (dr *DriverRepository) GetAll() ([]*models.Driver, error) {
 	return drivers, nil
 }
 
-func (dr *DriverRepository) GetDriverByID(id int) (*models.Driver, error) {
-	stmt, err := dr.db.Prepare("SELECT id, first_name, last_name, email, password FROM drivers WHERE drivers.id = $1")
+func (repo *DriverRepository) GetDriverByID(id int) (*models.Driver, error) {
+	stmt, err := repo.db.Prepare("SELECT id, first_name, last_name, email, password FROM drivers WHERE drivers.id = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting all drivers")
 	}
@@ -72,8 +72,8 @@ func (dr *DriverRepository) GetDriverByID(id int) (*models.Driver, error) {
 	return driver, nil
 }
 
-func (dr *DriverRepository) Update(d *models.Driver) error {
-	stmt, err := dr.db.Prepare("UPDATE drivers SET first_name = $1, last_name = $2, password = $3 WHERE drivers.id = $4")
+func (repo *DriverRepository) Update(d *models.Driver) error {
+	stmt, err := repo.db.Prepare("UPDATE drivers SET first_name = $1, last_name = $2, password = $3 WHERE drivers.id = $4")
 	if err != nil {
 		return errors.New("couldn't prepare statement for updating driver")
 	}
@@ -86,8 +86,8 @@ func (dr *DriverRepository) Update(d *models.Driver) error {
 	return nil
 }
 
-func (dr *DriverRepository) Delete(id int) error {
-	stmt, err := dr.db.Prepare("DELETE FROM drivers WHERE drivers.id = $1")
+func (repo *DriverRepository) Delete(id int) error {
+	stmt, err := repo.db.Prepare("DELETE FROM drivers WHERE drivers.id = $1")
 	if err != nil {
 		return errors.New("couldn't prepare statement for deleting driver")
 	}

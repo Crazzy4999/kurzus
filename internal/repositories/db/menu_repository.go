@@ -16,8 +16,8 @@ func NewMenuRepository(db *sql.DB) *MenuRepository {
 	}
 }
 
-func (mr *MenuRepository) Create(m *models.Menu) error {
-	stmt, err := mr.db.Prepare("INSERT INTO menus (supplier_id, categorie_id, image, price) VALUES ($1, $2, $3, $4)")
+func (repo *MenuRepository) Create(m *models.Menu) error {
+	stmt, err := repo.db.Prepare("INSERT INTO menus (supplier_id, categorie_id, image, price) VALUES ($1, $2, $3, $4)")
 	if err != nil {
 		return errors.New("couldn't prepare statement to create menu")
 	}
@@ -30,8 +30,8 @@ func (mr *MenuRepository) Create(m *models.Menu) error {
 	return nil
 }
 
-func (mr *MenuRepository) GetAll() ([]*models.Menu, error) {
-	stmt, err := mr.db.Prepare("SELECT id, supplier_id, categorie_id, image, price FROM menus")
+func (repo *MenuRepository) GetAll() ([]*models.Menu, error) {
+	stmt, err := repo.db.Prepare("SELECT id, supplier_id, categorie_id, image, price FROM menus")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting all menus")
 	}
@@ -57,8 +57,8 @@ func (mr *MenuRepository) GetAll() ([]*models.Menu, error) {
 	return menus, nil
 }
 
-func (mr *MenuRepository) GetMenuByID(id int) (*models.Menu, error) {
-	stmt, err := mr.db.Prepare("SELECT id, supplier_id, categorie_id, image, price FROM menus WHERE menus.id = $1")
+func (repo *MenuRepository) GetMenuByID(id int) (*models.Menu, error) {
+	stmt, err := repo.db.Prepare("SELECT id, supplier_id, categorie_id, image, price FROM menus WHERE menus.id = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting all menus")
 	}
@@ -74,8 +74,8 @@ func (mr *MenuRepository) GetMenuByID(id int) (*models.Menu, error) {
 	return menu, nil
 }
 
-func (mr *MenuRepository) Update(m *models.Menu) error {
-	stmt, err := mr.db.Prepare("UPDATE menus SET image = $1, price = $2 WHERE menus.id = $3")
+func (repo *MenuRepository) Update(m *models.Menu) error {
+	stmt, err := repo.db.Prepare("UPDATE menus SET image = $1, price = $2 WHERE menus.id = $3")
 	if err != nil {
 		return errors.New("couldn't prepare statement for updating menu")
 	}
@@ -88,8 +88,8 @@ func (mr *MenuRepository) Update(m *models.Menu) error {
 	return nil
 }
 
-func (mr *MenuRepository) Delete(id int) error {
-	stmt, err := mr.db.Prepare("DELETE FROM menus WHERE menus.id = $1")
+func (repo *MenuRepository) Delete(id int) error {
+	stmt, err := repo.db.Prepare("DELETE FROM menus WHERE menus.id = $1")
 	if err != nil {
 		return errors.New("couldn't prepare statement to delete menu")
 	}

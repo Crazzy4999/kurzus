@@ -17,13 +17,13 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 	}
 }
 
-func (ur *UserRepository) Create(u *models.User) error {
-	stmt, err := ur.db.Prepare("INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)")
+func (repo *UserRepository) Create(u *models.User) error {
+	stmt, err := repo.db.Prepare("INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)")
 	if err != nil {
 		return errors.New("couldn't prepare statment to insert new user")
 	}
 
-	user, _ := ur.GetUserByID(u.ID)
+	user, _ := repo.GetUserByID(u.ID)
 	if user != nil {
 		return errors.New("user already exist with this email")
 	}
@@ -37,8 +37,8 @@ func (ur *UserRepository) Create(u *models.User) error {
 	return nil
 }
 
-func (ur *UserRepository) GetAll() ([]*models.User, error) {
-	stmt, err := ur.db.Prepare("SELECT id, address_id, first_name, last_name, email, password FROM users")
+func (repo *UserRepository) GetAll() ([]*models.User, error) {
+	stmt, err := repo.db.Prepare("SELECT id, address_id, first_name, last_name, email, password FROM users")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement to get all users")
 	}
@@ -64,8 +64,8 @@ func (ur *UserRepository) GetAll() ([]*models.User, error) {
 	return users, nil
 }
 
-func (ur *UserRepository) GetUserByEmail(email string) (*models.User, error) {
-	stmt, err := ur.db.Prepare("SELECT id, address_id, first_name, last_name, email, password FROM users WHERE users.email = $1")
+func (repo *UserRepository) GetUserByEmail(email string) (*models.User, error) {
+	stmt, err := repo.db.Prepare("SELECT id, address_id, first_name, last_name, email, password FROM users WHERE users.email = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement to get user by email")
 	}
@@ -81,8 +81,8 @@ func (ur *UserRepository) GetUserByEmail(email string) (*models.User, error) {
 	return &user, nil
 }
 
-func (ur *UserRepository) GetUserByID(id int) (*models.User, error) {
-	stmt, err := ur.db.Prepare("SELECT id, address_id, first_name, last_name, email, password FROM users WHERE users.id = $1")
+func (repo *UserRepository) GetUserByID(id int) (*models.User, error) {
+	stmt, err := repo.db.Prepare("SELECT id, address_id, first_name, last_name, email, password FROM users WHERE users.id = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement to get user by id")
 	}
@@ -98,8 +98,8 @@ func (ur *UserRepository) GetUserByID(id int) (*models.User, error) {
 	return user, nil
 }
 
-func (ur *UserRepository) Update(u *models.User) error {
-	stmt, err := ur.db.Prepare("UPDATE users SET address_id = $2, first_name = $1, last_name = $3, password = $4 WHERE users.id = $5")
+func (repo *UserRepository) Update(u *models.User) error {
+	stmt, err := repo.db.Prepare("UPDATE users SET address_id = $2, first_name = $1, last_name = $3, password = $4 WHERE users.id = $5")
 	if err != nil {
 		return errors.New("couldn't prepare statement for updating user")
 	}
@@ -112,8 +112,8 @@ func (ur *UserRepository) Update(u *models.User) error {
 	return nil
 }
 
-func (ur *UserRepository) Delete(id int) error {
-	stmt, err := ur.db.Prepare("DELETE FROM users WHERE users.id = $1")
+func (repo *UserRepository) Delete(id int) error {
+	stmt, err := repo.db.Prepare("DELETE FROM users WHERE users.id = $1")
 	if err != nil {
 		return errors.New("couldn't prepare statement for deleting user")
 	}

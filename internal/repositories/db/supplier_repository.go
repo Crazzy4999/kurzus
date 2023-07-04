@@ -16,8 +16,8 @@ func NewSupplierRepository(db *sql.DB) *SupplierRepository {
 	}
 }
 
-func (sr *SupplierRepository) Create(s *models.Supplier) error {
-	stmt, err := sr.db.Prepare("INSERT INTO suppliers (type, image, name, email, password, opening, closing) VALUES ($1, $2, $3, $4, $5, $6, $7)")
+func (repo *SupplierRepository) Create(s *models.Supplier) error {
+	stmt, err := repo.db.Prepare("INSERT INTO suppliers (type, image, name, email, password, opening, closing) VALUES ($1, $2, $3, $4, $5, $6, $7)")
 	if err != nil {
 		return errors.New("couldn't prepare statement for creating supplier")
 	}
@@ -29,8 +29,8 @@ func (sr *SupplierRepository) Create(s *models.Supplier) error {
 	return nil
 }
 
-func (sr *SupplierRepository) GetAll() ([]*models.Supplier, error) {
-	stmt, err := sr.db.Prepare("SELECT id, address_id, image, name, email, password, type, opening, closing FROM suppliers")
+func (repo *SupplierRepository) GetAll() ([]*models.Supplier, error) {
+	stmt, err := repo.db.Prepare("SELECT id, address_id, image, name, email, password, type, opening, closing FROM suppliers")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting all suppliers")
 	}
@@ -56,8 +56,8 @@ func (sr *SupplierRepository) GetAll() ([]*models.Supplier, error) {
 	return suppliers, nil
 }
 
-func (sr *SupplierRepository) GetSupplierByID(id int) (*models.Supplier, error) {
-	stmt, err := sr.db.Prepare("SELECT id, address_id, type, image, name, email, password, opening, closing FROM suppliers WHERE suppliers.id = $1")
+func (repo *SupplierRepository) GetSupplierByID(id int) (*models.Supplier, error) {
+	stmt, err := repo.db.Prepare("SELECT id, address_id, type, image, name, email, password, opening, closing FROM suppliers WHERE suppliers.id = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting supplier by id")
 	}
@@ -73,8 +73,8 @@ func (sr *SupplierRepository) GetSupplierByID(id int) (*models.Supplier, error) 
 	return supplier, nil
 }
 
-func (sr *SupplierRepository) Update(s *models.Supplier) error {
-	stmt, err := sr.db.Prepare("UPDATE suppliers SET address_id = $1, type = $2, image = $3, name = $4, opening = $5, closing = $6 WHERE suppliers.id = $7")
+func (repo *SupplierRepository) Update(s *models.Supplier) error {
+	stmt, err := repo.db.Prepare("UPDATE suppliers SET address_id = $1, type = $2, image = $3, name = $4, opening = $5, closing = $6 WHERE suppliers.id = $7")
 	if err != nil {
 		return errors.New("couldn't prepare statement for updating supplier")
 	}
@@ -87,8 +87,8 @@ func (sr *SupplierRepository) Update(s *models.Supplier) error {
 	return nil
 }
 
-func (sr *SupplierRepository) Delete(id int) error {
-	stmt, err := sr.db.Prepare("DELETE FROM suppliers WHERE suppliers.id = $1")
+func (repo *SupplierRepository) Delete(id int) error {
+	stmt, err := repo.db.Prepare("DELETE FROM suppliers WHERE suppliers.id = $1")
 	if err != nil {
 		return errors.New("couldn't prepare statement for deleting supplier")
 	}
