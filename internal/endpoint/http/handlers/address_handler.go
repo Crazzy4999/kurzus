@@ -1,12 +1,12 @@
 package handler
 
 import (
-	"database/sql"
 	"encoding/json"
 	config "hangryAPI/configs"
 	request "hangryAPI/internal/endpoint/http/requests"
 	"hangryAPI/internal/models"
 	"hangryAPI/internal/repositories/db"
+	"hangryAPI/internal/util"
 	"net/http"
 )
 
@@ -40,8 +40,8 @@ func (h *AddressHandler) AddAddress(w http.ResponseWriter, r *http.Request) {
 		Street:      req.Street,
 		HouseNumber: req.HouseNumber,
 		ZipCode:     req.ZipCode,
-		FloorNumber: sql.NullString{String: req.FloorNumber, Valid: req.FloorNumber != ""},
-		Apartment:   sql.NullString{String: req.Apartment, Valid: req.Apartment != ""},
+		FloorNumber: util.NullString(req.FloorNumber),
+		Apartment:   util.NullString(req.Apartment),
 	}
 
 	for _, a := range addresses {
@@ -91,8 +91,8 @@ func (h *AddressHandler) UpdateAddress(w http.ResponseWriter, r *http.Request) {
 		Street:      req.Street,
 		HouseNumber: req.HouseNumber,
 		ZipCode:     req.ZipCode,
-		FloorNumber: sql.NullString{String: req.FloorNumber, Valid: req.FloorNumber != ""},
-		Apartment:   sql.NullString{String: req.Apartment, Valid: req.Apartment != ""},
+		FloorNumber: util.NullString(req.FloorNumber),
+		Apartment:   util.NullString(req.Apartment),
 	}
 
 	for _, a := range addresses {
@@ -128,8 +128,8 @@ func (h *AddressHandler) UpdateAddress(w http.ResponseWriter, r *http.Request) {
 		Street:      req.Street,
 		HouseNumber: req.HouseNumber,
 		ZipCode:     req.ZipCode,
-		FloorNumber: sql.NullString{String: req.FloorNumber, Valid: req.FloorNumber != ""},
-		Apartment:   sql.NullString{String: req.Apartment, Valid: req.Apartment != ""},
+		FloorNumber: util.NullString(req.FloorNumber),
+		Apartment:   util.NullString(req.Apartment),
 	}
 
 	addresses, err := h.addressRepo.GetAll()
