@@ -87,7 +87,7 @@ func (h *AddressHandler) UpdateAddress(w http.ResponseWriter, r *http.Request) {
 		savedID := a.ID
 		a.ID = 0
 
-		if a == address {
+		if *a == *address {
 			a.ID = savedID
 
 			err := h.addressRepo.Update(address)
