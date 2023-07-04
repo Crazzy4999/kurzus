@@ -3,9 +3,9 @@ package models
 import "database/sql"
 
 const (
-	RESTAURANT  = "restaurant"
-	SUPERMARKET = "supermarket"
-	COFFEE_SHOP = "coffee_shop"
+	RESTAURANT = iota + 1
+	SUPERMARKET
+	COFFEE_SHOP
 )
 
 type Supplier struct {
