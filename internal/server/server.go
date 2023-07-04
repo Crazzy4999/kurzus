@@ -26,15 +26,21 @@ func Start() {
 	addressHandler := handler.NewAddressHandler(ar, cfg)
 
 	router.GET("/", nil, nil)
+
 	router.POST("/login", authHandler.Login, nil)
 	router.POST("/signup", authHandler.SignUp, nil)
 	router.POST("/reset", authHandler.GetPasswordResetKey, nil)
 	router.PUT("/reset\\?reset_key=.+", authHandler.ResetPassword, nil)
 	router.GET("/refresh", authHandler.Refresh, middleware.CheckTokenValidity)
+
 	router.GET("/profile", userHandler.GetProfile, middleware.CheckTokenValidity)
 	router.PUT("/profile", userHandler.UpdateProfile, middleware.CheckTokenValidity)
+
 	router.POST("/address", addressHandler.AddAddress, middleware.CheckTokenValidity)
+	//router.GET("/address", addressHandler.GetAddresses, middleware.CheckTokenValidity)
 	router.PUT("/address", addressHandler.UpdateAddress, middleware.CheckTokenValidity)
+	//router.DELETE("/address", addressHandler.RemoveAddress, middleware.CheckTokenValidity)
+
 	router.POST("/suppliers", nil, middleware.CheckTokenValidity) //Create new supplier
 	router.GET("/suppliers", nil, middleware.CheckTokenValidity)
 	router.GET("/suppliers/\\d+", nil, middleware.CheckTokenValidity)

@@ -61,6 +61,18 @@ func (h *AddressHandler) AddAddress(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+/*func (h *AddressHandler) GetAddresses(w http.ResponseWriter, r *http.Request) {
+	claims, err := token.GetClaimsFromContext(r)
+	if err != nil {
+		http.Error(w, "invalid credentials", http.StatusUnauthorized)
+		return
+	}
+
+
+
+	w.WriteHeader(http.StatusOK)
+}*/
+
 func (h *AddressHandler) UpdateAddress(w http.ResponseWriter, r *http.Request) {
 	req := new(request.AddressRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
