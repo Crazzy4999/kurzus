@@ -1,6 +1,6 @@
 package models
 
-type UserAddressIDPair struct {
+type UsersAddressesIDPair struct {
 	UserID    int `json:"userId"`
 	AddressID int `json:"addressId"`
 }

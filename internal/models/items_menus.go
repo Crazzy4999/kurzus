@@ -1,6 +1,6 @@
 package models
 
-type ItemsMenus struct {
+type ItemsMenusIDPair struct {
 	ItemID int `json:"itemId"`
 	MenuID int `json:"menuId"`
 }
