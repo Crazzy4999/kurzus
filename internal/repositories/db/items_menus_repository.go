@@ -16,7 +16,7 @@ func NewItemsMenusRepository(db *sql.DB) *ItemsMenusRepository {
 	}
 }
 
-func (repo *ItemsMenusRepository) Create(im *models.ItemsMenus) error {
+func (repo *ItemsMenusRepository) Create(im *models.ItemsMenusIDPair) error {
 	stmt, err := repo.db.Prepare("INSERT INTO items_menus (item_id, menu_id) VALUES ($1, $2)")
 	if err != nil {
 		return errors.New("couldn't prepare statement to create items_menus record")
@@ -41,12 +41,6 @@ func (repo *ItemsMenusRepository) GetItemsByMenuID(id int) ([]*models.Item, erro
 		return nil, errors.New("")
 	}
 
-	itemRepo := NewItemRepository(repo.db)
-	items, err := itemRepo.GetAll()
-	if err != nil {
-		return nil, errors.New("getting all items failed")
-	}
-
 	var itemIds []*int
 	for rows.Next() {
 		itemId := 0
@@ -57,6 +51,13 @@ func (repo *ItemsMenusRepository) GetItemsByMenuID(id int) ([]*models.Item, erro
 			return nil, errors.New("types mismatch during the scanning")
 		}
 		itemIds = append(itemIds, &itemId)
+	}
+
+	itemRepo := NewItemRepository(repo.db)
+
+	items, err := itemRepo.GetAll()
+	if err != nil {
+		return nil, errors.New("getting all items failed")
 	}
 
 	var menuItems []*models.Item

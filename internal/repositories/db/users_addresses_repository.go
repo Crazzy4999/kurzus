@@ -16,7 +16,7 @@ func NewUsersAddressesRepository(db *sql.DB) *UsersAddressesRepository {
 	}
 }
 
-func (repo *UsersAddressesRepository) Create(ua *models.UserAddressIDPair) error {
+func (repo *UsersAddressesRepository) Create(ua *models.UsersAddressesIDPair) error {
 	stmt, err := repo.db.Prepare("INSERT INTO users_addresses (user_id, address_id) VALUES ($1, $2)")
 	if err != nil {
 		return errors.New("couldn't prepare statement to create users_addresses record")
@@ -42,13 +42,6 @@ func (repo *UsersAddressesRepository) GetAddressesForUserByID(id int) ([]*models
 	}
 	defer rows.Close()
 
-	addressRepo := NewAddressRepository(repo.db)
-
-	addresses, err := addressRepo.GetAll()
-	if err != nil {
-		return nil, errors.New("getting addresses failed")
-	}
-
 	var address_ids []*int
 	for rows.Next() {
 		address_id := 0
@@ -64,6 +57,13 @@ func (repo *UsersAddressesRepository) GetAddressesForUserByID(id int) ([]*models
 			return nil, errors.New("scan failed on address")
 		}
 		address_ids = append(address_ids, &address_id)
+	}
+
+	addressRepo := NewAddressRepository(repo.db)
+
+	addresses, err := addressRepo.GetAll()
+	if err != nil {
+		return nil, errors.New("getting addresses failed")
 	}
 
 	var userAddresses []*models.Address
