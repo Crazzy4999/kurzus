@@ -37,12 +37,6 @@ func (h *AddressHandler) AddAddress(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	addresses, err := h.addressRepo.GetAll()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
 	address := &models.Address{
 		City:        req.City,
 		Street:      req.Street,
@@ -52,15 +46,7 @@ func (h *AddressHandler) AddAddress(w http.ResponseWriter, r *http.Request) {
 		Apartment:   util.NullString(req.Apartment),
 	}
 
-	for _, a := range addresses {
-		a.ID = 0
-		if *address == *a {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-	}
-
-	err = h.addressRepo.Create(address)
+	err := h.addressRepo.Create(address)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
