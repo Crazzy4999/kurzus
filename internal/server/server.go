@@ -22,7 +22,7 @@ func Start() {
 	ar := dbrepo.NewAddressRepository(db)
 
 	authHandler := handler.NewAuthHandler(ur, cfg)
-	userHandler := handler.NewUserHandler(ur, cfg)
+	userHandler := handler.NewUserHandler(ur, ar, cfg)
 	addressHandler := handler.NewAddressHandler(ar, cfg)
 
 	router.GET("/", nil, nil)
@@ -35,6 +35,7 @@ func Start() {
 
 	router.GET("/profile", userHandler.GetProfile, middleware.CheckTokenValidity)
 	router.PUT("/profile", userHandler.UpdateProfile, middleware.CheckTokenValidity)
+	router.DELETE("/profile", userHandler.DeleteProfile, middleware.CheckTokenValidity)
 
 	router.POST("/address", addressHandler.AddAddress, middleware.CheckTokenValidity)
 	router.GET("/address", addressHandler.GetAddressesByUserID, middleware.CheckTokenValidity)

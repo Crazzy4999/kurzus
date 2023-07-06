@@ -12,14 +12,16 @@ import (
 )
 
 type UserHandler struct {
-	userRepo *db.UserRepository
-	cfg      *config.Config
+	userRepo    *db.UserRepository
+	addressRepo *db.AddressRepository
+	cfg         *config.Config
 }
 
-func NewUserHandler(userRepo *db.UserRepository, cfg *config.Config) *UserHandler {
+func NewUserHandler(userRepo *db.UserRepository, addressRepo *db.AddressRepository, cfg *config.Config) *UserHandler {
 	return &UserHandler{
-		userRepo: userRepo,
-		cfg:      cfg,
+		userRepo:    userRepo,
+		addressRepo: addressRepo,
+		cfg:         cfg,
 	}
 }
 
@@ -82,4 +84,39 @@ func (h *UserHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *UserHandler) DeleteProfile(w http.ResponseWriter, r *http.Request) {
+	claims, err := token.GetClaimsFromContext(r)
+	if err != nil {
+		http.Error(w, "invalid credentials", http.StatusUnauthorized)
+		return
+	}
+
+	addresses, err := h.addressRepo.GetAll()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	for _, a := range addresses {
+		if a.UserID == claims.ID {
+			err = h.addressRepo.Delete(a.ID)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			err = h.userRepo.Delete(claims.ID)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+	}
+
+	http.Error(w, "something went wrong", http.StatusBadRequest)
 }
