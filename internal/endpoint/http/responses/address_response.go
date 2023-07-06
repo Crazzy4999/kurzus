@@ -1,6 +1,7 @@
 package responses
 
 type AddressResponse struct {
+	ID          int    `json:"id"`
 	City        string `json:"city"`
 	Street      string `json:"street"`
 	HouseNumber string `json:"houseNumber"`
