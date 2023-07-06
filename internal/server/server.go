@@ -52,8 +52,23 @@ func Start() {
 	router.PUT("/suppliers", supplierHandler.UpdateSupplier, middleware.CheckTokenValidity)
 	router.DELETE("/suppliers", supplierHandler.RemoveSupplier, middleware.CheckTokenValidity)
 
+	router.POST("/categories", nil, middleware.CheckTokenValidity)
 	router.GET("/categories", nil, middleware.CheckTokenValidity)
-	router.GET("/cart", nil, middleware.CheckTokenValidity)
+	router.DELETE("/categories", nil, middleware.CheckTokenValidity)
+
+	router.POST("/item", nil, middleware.CheckTokenValidity)
+	router.GET("/item", nil, middleware.CheckTokenValidity)
+	router.DELETE("/item", nil, middleware.CheckTokenValidity)
+
+	router.POST("/menu", nil, middleware.CheckTokenValidity)
+	router.GET("/menu", nil, middleware.CheckTokenValidity)
+	router.PUT("/menu", nil, middleware.CheckTokenValidity)
+	router.DELETE("/menu", nil, middleware.CheckTokenValidity)
+
+	router.POST("/ordermenu", nil, middleware.CheckTokenValidity)
+	router.GET("/ordermenu", nil, middleware.CheckTokenValidity)
+	router.PUT("/ordermenu", nil, middleware.CheckTokenValidity)
+	router.DELETE("/ordermenu", nil, middleware.CheckTokenValidity)
 
 	router.POST("/order", orderHandler.MakeOrder, middleware.CheckTokenValidity)
 	router.GET("/orders", orderHandler.GetOrders, middleware.CheckTokenValidity)
