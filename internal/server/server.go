@@ -16,14 +16,16 @@ func Start() {
 	defer db.Close()
 
 	/*dr := dbrepo.NewDriverRepository(db)
-	or := dbrepo.NewOrderRepository(db)
-	sr := dbrepo.NewSupplierRepository(db)*/
+	or := dbrepo.NewOrderRepository(db)*/
 	ur := dbrepo.NewUserRepository(db)
 	ar := dbrepo.NewAddressRepository(db)
+	sr := dbrepo.NewSupplierRepository(db)
+	str := dbrepo.NewSupplierTypesRepository(db)
 
 	authHandler := handler.NewAuthHandler(ur, cfg)
 	userHandler := handler.NewUserHandler(ur, ar, cfg)
-	addressHandler := handler.NewAddressHandler(ar, cfg)
+	addressHandler := handler.NewAddressHandler(ar)
+	supplierHandler := handler.NewSupplierHandler(sr, str)
 
 	router.GET("/", nil, nil)
 
@@ -42,9 +44,10 @@ func Start() {
 	router.PUT("/address", addressHandler.UpdateAddress, middleware.CheckTokenValidity)
 	router.DELETE("/address", addressHandler.RemoveAddress, middleware.CheckTokenValidity)
 
-	router.POST("/suppliers", nil, middleware.CheckTokenValidity) //Create new supplier
-	router.GET("/suppliers", nil, middleware.CheckTokenValidity)
-	router.GET("/suppliers/\\d+", nil, middleware.CheckTokenValidity)
+	router.POST("/suppliers", supplierHandler.AddSupplier, middleware.CheckTokenValidity)
+	router.GET("/suppliers", supplierHandler.GetSuppliers, middleware.CheckTokenValidity)
+	router.PUT("/suppliers", supplierHandler.UpdateSupplier, middleware.CheckTokenValidity)
+	router.DELETE("/suppliers", supplierHandler.RemoveSupplier, middleware.CheckTokenValidity)
 
 	router.GET("/categories", nil, middleware.CheckTokenValidity)
 	router.GET("/cart", nil, middleware.CheckTokenValidity)

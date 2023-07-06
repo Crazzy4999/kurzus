@@ -30,7 +30,7 @@ func (repo *SupplierRepository) Create(s *models.Supplier) error {
 }
 
 func (repo *SupplierRepository) GetAll() ([]*models.Supplier, error) {
-	stmt, err := repo.db.Prepare("SELECT id, address_id, image, name, email, password, type, opening, closing FROM suppliers")
+	stmt, err := repo.db.Prepare("SELECT id, type, image, name, email, password, opening, closing FROM suppliers")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting all suppliers")
 	}
@@ -44,7 +44,7 @@ func (repo *SupplierRepository) GetAll() ([]*models.Supplier, error) {
 	var suppliers []*models.Supplier
 	for rows.Next() {
 		supplier := &models.Supplier{}
-		err = rows.Scan(&supplier.Address, &supplier.Type, &supplier.Image, &supplier.Name, &supplier.Email, &supplier.Password, &supplier.WorkingHours.Opening, &supplier.WorkingHours.Closing)
+		err = rows.Scan(&supplier.Type, &supplier.Image, &supplier.Name, &supplier.Email, &supplier.Password, &supplier.WorkingHours.Opening, &supplier.WorkingHours.Closing)
 		if err == sql.ErrNoRows {
 			return nil, nil
 		} else if err != nil {
@@ -57,7 +57,7 @@ func (repo *SupplierRepository) GetAll() ([]*models.Supplier, error) {
 }
 
 func (repo *SupplierRepository) GetSupplierByID(id int) (*models.Supplier, error) {
-	stmt, err := repo.db.Prepare("SELECT id, address_id, type, image, name, email, password, opening, closing FROM suppliers WHERE suppliers.id = $1")
+	stmt, err := repo.db.Prepare("SELECT id, type, image, name, email, password, opening, closing FROM suppliers WHERE suppliers.id = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting supplier by id")
 	}
@@ -65,7 +65,7 @@ func (repo *SupplierRepository) GetSupplierByID(id int) (*models.Supplier, error
 	supplier := &models.Supplier{}
 
 	row := stmt.QueryRow(id)
-	err = row.Scan(&supplier.ID, &supplier.Address, &supplier.Type, &supplier.Image, &supplier.Name, &supplier.Email, &supplier.Password, &supplier.WorkingHours.Opening, &supplier.WorkingHours.Closing)
+	err = row.Scan(&supplier.ID, &supplier.Type, &supplier.Image, &supplier.Name, &supplier.Email, &supplier.Password, &supplier.WorkingHours.Opening, &supplier.WorkingHours.Closing)
 	if err != nil {
 		return nil, errors.New("getting supplier by id failed")
 	}
@@ -74,12 +74,12 @@ func (repo *SupplierRepository) GetSupplierByID(id int) (*models.Supplier, error
 }
 
 func (repo *SupplierRepository) Update(s *models.Supplier) error {
-	stmt, err := repo.db.Prepare("UPDATE suppliers SET address_id = $1, type = $2, image = $3, name = $4, opening = $5, closing = $6 WHERE suppliers.id = $7")
+	stmt, err := repo.db.Prepare("UPDATE suppliers SET type = $1, image = $2, name = $3, opening = $4, closing = $5 WHERE suppliers.id = $6")
 	if err != nil {
 		return errors.New("couldn't prepare statement for updating supplier")
 	}
 
-	_, err = stmt.Exec(s.Address, s.Type, s.Image, s.Name, s.WorkingHours.Opening, s.WorkingHours.Closing, s.ID)
+	_, err = stmt.Exec(s.Type, s.Image, s.Name, s.WorkingHours.Opening, s.WorkingHours.Closing, s.ID)
 	if err != nil {
 		return errors.New("updating supplier failed")
 	}

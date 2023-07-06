@@ -4,8 +4,8 @@ import "hangryAPI/internal/models"
 
 type SupplierResponse struct {
 	ID           int                 `json:"id"`
+	Type         string              `json:"type"`
 	Image        string              `json:"image"`
 	Name         string              `json:"name"`
-	Type         string              `json:"type"`
 	WorkingHours models.WorkingHours `json:"workingHours"`
 }

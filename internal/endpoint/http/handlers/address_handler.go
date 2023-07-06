@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	config "hangryAPI/configs"
 	request "hangryAPI/internal/endpoint/http/requests"
 	"hangryAPI/internal/endpoint/http/responses"
 	"hangryAPI/internal/models"
@@ -14,13 +13,11 @@ import (
 
 type AddressHandler struct {
 	addressRepo *db.AddressRepository
-	cfg         *config.Config
 }
 
-func NewAddressHandler(addressRepo *db.AddressRepository, cfg *config.Config) *AddressHandler {
+func NewAddressHandler(addressRepo *db.AddressRepository) *AddressHandler {
 	return &AddressHandler{
 		addressRepo: addressRepo,
-		cfg:         cfg,
 	}
 }
 
@@ -133,4 +130,6 @@ func (h *AddressHandler) RemoveAddress(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	w.WriteHeader(http.StatusOK)
 }

@@ -106,17 +106,14 @@ func (h *UserHandler) DeleteProfile(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
-
-			err = h.userRepo.Delete(claims.ID)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-
-			w.WriteHeader(http.StatusOK)
-			return
 		}
 	}
 
-	http.Error(w, "something went wrong", http.StatusBadRequest)
+	err = h.userRepo.Delete(claims.ID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
