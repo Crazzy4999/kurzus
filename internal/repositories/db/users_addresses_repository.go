@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"hangryAPI/internal/models"
 )
 
@@ -42,7 +43,7 @@ func (repo *UsersAddressesRepository) GetAddressesForUserByID(id int) ([]*models
 	}
 	defer rows.Close()
 
-	var address_ids []*int
+	var address_ids []int
 	for rows.Next() {
 		address_id := 0
 
@@ -56,9 +57,10 @@ func (repo *UsersAddressesRepository) GetAddressesForUserByID(id int) ([]*models
 		if address_id == 0 {
 			return nil, errors.New("scan failed on address")
 		}
-		address_ids = append(address_ids, &address_id)
+		address_ids = append(address_ids, address_id)
 	}
 
+	fmt.Println(address_ids)
 	addressRepo := NewAddressRepository(repo.db)
 
 	addresses, err := addressRepo.GetAll()
@@ -69,7 +71,7 @@ func (repo *UsersAddressesRepository) GetAddressesForUserByID(id int) ([]*models
 	var userAddresses []*models.Address
 	for _, address := range addresses {
 		for _, id := range address_ids {
-			if id == &address.ID {
+			if id == address.ID {
 				userAddresses = append(userAddresses, address)
 			}
 		}

@@ -41,7 +41,7 @@ func (repo *ItemsMenusRepository) GetItemsByMenuID(id int) ([]*models.Item, erro
 		return nil, errors.New("")
 	}
 
-	var itemIds []*int
+	var itemIds []int
 	for rows.Next() {
 		itemId := 0
 		err = rows.Scan(&itemId)
@@ -50,7 +50,7 @@ func (repo *ItemsMenusRepository) GetItemsByMenuID(id int) ([]*models.Item, erro
 		} else if err != nil {
 			return nil, errors.New("types mismatch during the scanning")
 		}
-		itemIds = append(itemIds, &itemId)
+		itemIds = append(itemIds, itemId)
 	}
 
 	itemRepo := NewItemRepository(repo.db)
@@ -63,7 +63,7 @@ func (repo *ItemsMenusRepository) GetItemsByMenuID(id int) ([]*models.Item, erro
 	var menuItems []*models.Item
 	for _, item := range items {
 		for _, id := range itemIds {
-			if id == &item.ID {
+			if id == item.ID {
 				menuItems = append(menuItems, item)
 			}
 		}

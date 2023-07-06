@@ -42,7 +42,7 @@ func (repo *OrderMenusRepository) GetMenusByOrderID(id int) ([]*models.Menu, err
 	}
 	defer rows.Close()
 
-	var menuIds []*int
+	var menuIds []int
 	for rows.Next() {
 		menuId := 0
 		err = rows.Scan(&menuId)
@@ -51,7 +51,7 @@ func (repo *OrderMenusRepository) GetMenusByOrderID(id int) ([]*models.Menu, err
 		} else if err != nil {
 			return nil, errors.New("types mismatch during the scanning")
 		}
-		menuIds = append(menuIds, &menuId)
+		menuIds = append(menuIds, menuId)
 	}
 
 	menuRepo := NewMenuRepository(repo.db)
@@ -64,7 +64,7 @@ func (repo *OrderMenusRepository) GetMenusByOrderID(id int) ([]*models.Menu, err
 	var orderMenus []*models.Menu
 	for _, menu := range menus {
 		for _, id := range menuIds {
-			if id == &menu.ID {
+			if id == menu.ID {
 				orderMenus = append(orderMenus, menu)
 			}
 		}
