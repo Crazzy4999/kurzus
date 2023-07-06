@@ -3,7 +3,6 @@ package db
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"hangryAPI/internal/models"
 )
 
@@ -60,7 +59,6 @@ func (repo *UsersAddressesRepository) GetAddressesForUserByID(id int) ([]*models
 		address_ids = append(address_ids, address_id)
 	}
 
-	fmt.Println(address_ids)
 	addressRepo := NewAddressRepository(repo.db)
 
 	addresses, err := addressRepo.GetAll()
@@ -81,7 +79,7 @@ func (repo *UsersAddressesRepository) GetAddressesForUserByID(id int) ([]*models
 }
 
 func (repo *UsersAddressesRepository) DeleteByUserID(id int) error {
-	stmt, err := repo.db.Prepare("DELETE FROM users_addresses WHERE users_address.user_id = $1")
+	stmt, err := repo.db.Prepare("DELETE FROM users_addresses WHERE users_addresses.user_id = $1")
 	if err != nil {
 		return errors.New("couldn't prepare statement to delete address/es by user id")
 	}
@@ -95,7 +93,7 @@ func (repo *UsersAddressesRepository) DeleteByUserID(id int) error {
 }
 
 func (repo *UsersAddressesRepository) DeleteByAddressID(id int) error {
-	stmt, err := repo.db.Prepare("DELETE FROM users_addresses WHERE users_address.address_id = $1")
+	stmt, err := repo.db.Prepare("DELETE FROM users_addresses WHERE users_addresses.address_id = $1")
 	if err != nil {
 		return errors.New("couldn't prepare statement to delete address by address id")
 	}

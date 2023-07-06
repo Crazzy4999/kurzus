@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"hangryAPI/internal/models"
 )
 
@@ -95,6 +96,7 @@ func (repo *AddressRepository) Delete(id int) error {
 
 	_, err = stmt.Exec(id)
 	if err != nil {
+		fmt.Println(err)
 		return errors.New("deleting address failed")
 	}
 
