@@ -36,10 +36,10 @@ func Start() {
 	router.GET("/profile", userHandler.GetProfile, middleware.CheckTokenValidity)
 	router.PUT("/profile", userHandler.UpdateProfile, middleware.CheckTokenValidity)
 
-	/*router.POST("/address", addressHandler.AddAddress, middleware.CheckTokenValidity)
-	router.GET("/address/\\d+", addressHandler.GetAddressByID, middleware.CheckTokenValidity)
+	router.POST("/address", addressHandler.AddAddress, middleware.CheckTokenValidity)
+	router.GET("/address", addressHandler.GetAddressesByUserID, middleware.CheckTokenValidity)
 	router.PUT("/address", addressHandler.UpdateAddress, middleware.CheckTokenValidity)
-	router.DELETE("/address", addressHandler.RemoveAddress, middleware.CheckTokenValidity)*/
+	router.DELETE("/address", addressHandler.RemoveAddress, middleware.CheckTokenValidity)
 
 	router.POST("/suppliers", nil, middleware.CheckTokenValidity) //Create new supplier
 	router.GET("/suppliers", nil, middleware.CheckTokenValidity)

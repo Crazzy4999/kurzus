@@ -3,8 +3,8 @@ package models
 import "database/sql"
 
 type Address struct {
-	ID          int64          `json:"id"`
-	UserID      int64          `json:"userID"`
+	ID          int            `json:"id"`
+	UserID      int            `json:"userID"`
 	IsActive    bool           `json:"isActive"`
 	City        string         `json:"city"`
 	Street      string         `json:"street"`

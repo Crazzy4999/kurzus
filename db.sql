@@ -50,15 +50,6 @@ CREATE TABLE suppliers (
     REFERENCES supplier_types(id)
 );
 
-CREATE TABLE users_addresses (
-    user_id INTEGER NOT NULL,
-    address_id INTEGER NOT NULL,
-    CONSTRAINT fk_user_id FOREIGN KEY (user_id)
-    REFERENCES users(id),
-    CONSTRAINT fk_address_id FOREIGN KEY (address_id)
-    REFERENCES addresses(id)
-);
-
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
     name VARCHAR(128) NOT NULL

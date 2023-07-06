@@ -88,7 +88,7 @@ func (repo *AddressRepository) Update(a *models.Address) error {
 	return nil
 }
 
-func (repo *AddressRepository) Delete(id int64) error {
+func (repo *AddressRepository) Delete(id int) error {
 	stmt, err := repo.db.Prepare("DELETE FROM addresses WHERE addresses.id = $1")
 	if err != nil {
 		return errors.New("couldn't prepare statement to delete address")
