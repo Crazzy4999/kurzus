@@ -52,9 +52,9 @@ func (s *TokenService) GetClaims(r *http.Request, secret string) (*JwtCustomClai
 }
 
 func GetClaimsFromContext(r *http.Request) (*JwtCustomClaims, error) {
-	claims, ok := r.Context().Value(util.ContextKey("claims")).(JwtCustomClaims)
+	claims, ok := r.Context().Value(util.ContextKey("claims")).(*JwtCustomClaims)
 	if !ok {
 		return nil, errors.New("type assertion failed")
 	}
-	return &claims, nil
+	return claims, nil
 }
