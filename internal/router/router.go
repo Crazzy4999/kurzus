@@ -33,8 +33,6 @@ func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 			route.handler.ServeHTTP(w, r)
 			return
-		} else if route.url.MatchString(r.URL.Path) && route.method != r.Method {
-			http.Error(w, fmt.Sprintf("Only %s method is allowed for route %s", route.method, r.URL.Path), http.StatusBadRequest)
 		}
 	}
 }
