@@ -15,17 +15,20 @@ func Start() {
 	db := dbrepo.GetDB()
 	defer db.Close()
 
-	/*dr := dbrepo.NewDriverRepository(db)
-	or := dbrepo.NewOrderRepository(db)*/
+	//dr := dbrepo.NewDriverRepository(db)
 	ur := dbrepo.NewUserRepository(db)
 	ar := dbrepo.NewAddressRepository(db)
 	sr := dbrepo.NewSupplierRepository(db)
 	str := dbrepo.NewSupplierTypesRepository(db)
+	or := dbrepo.NewOrderRepository(db)
+	omr := dbrepo.NewOrderMenusRepository(db)
+	osr := dbrepo.NewOrderStatusRepository(db)
 
 	authHandler := handler.NewAuthHandler(ur, cfg)
 	userHandler := handler.NewUserHandler(ur, ar, cfg)
 	addressHandler := handler.NewAddressHandler(ar)
 	supplierHandler := handler.NewSupplierHandler(sr, str)
+	orderHandler := handler.NewOrderHandler(or, omr, osr)
 
 	router.GET("/", nil, nil)
 
@@ -51,7 +54,11 @@ func Start() {
 
 	router.GET("/categories", nil, middleware.CheckTokenValidity)
 	router.GET("/cart", nil, middleware.CheckTokenValidity)
-	router.POST("/order", nil, middleware.CheckTokenValidity)
+
+	router.POST("/order", orderHandler.MakeOrder, middleware.CheckTokenValidity)
+	router.GET("/orders", orderHandler.GetOrders, middleware.CheckTokenValidity)
+	router.PUT("/order", orderHandler.UpdateOrder, middleware.CheckTokenValidity)
+
 	router.GET("/history", nil, middleware.CheckTokenValidity)
 
 	http.ListenAndServe(cfg.Port, router)
