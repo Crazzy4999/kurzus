@@ -1,22 +1,23 @@
 CREATE TABLE addresses (
     id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    is_active BOOLEAN NOT NULL,
     city VARCHAR(64) NOT NULL,
     street VARCHAR(64) NOT NULL,
     house_number VARCHAR(64) NOT NULL,
     zip_code VARCHAR(64) NOT NULL,
     floor_number VARCHAR(64),
-    apartment VARCHAR(64)
+    apartment VARCHAR(64),
+    CONSTRAINT fk_user_id FOREIGN KEY (user_id)
+    REFERENCES users(id)
 );
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    address_id INTEGER,
     first_name VARCHAR(64) NOT NULL,
     last_name VARCHAR(64) NOT NULL,
     email VARCHAR(64) NOT NULL,
-    password VARCHAR(64) NOT NULL,
-    CONSTRAINT fk_address_id FOREIGN KEY (address_id)
-    REFERENCES addresses(id)
+    password VARCHAR(64) NOT NULL
 );
 
 CREATE TABLE drivers (

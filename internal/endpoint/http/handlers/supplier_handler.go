@@ -21,3 +21,11 @@ func NewSupplierHandler(supplierRepo *db.SupplierRepository, cfg *config.Config)
 func (h *SupplierHandler) AddSupplier(w http.ResponseWriter, r *http.Request) {
 
 }
+
+func (h *SupplierHandler) UpdateSupplier(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func (h *SupplierHandler) RemoveSupplier(w http.ResponseWriter, r *http.Request) {
+
+}

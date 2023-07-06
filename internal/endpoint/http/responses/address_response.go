@@ -1,7 +1,9 @@
 package responses
 
 type AddressResponse struct {
-	ID          int    `json:"id"`
+	ID          int64  `json:"id"`
+	UserID      int64  `json:"userID"`
+	IsActive    bool   `json:"isActive"`
 	City        string `json:"city"`
 	Street      string `json:"street"`
 	HouseNumber string `json:"houseNumber"`

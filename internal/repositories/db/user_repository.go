@@ -38,7 +38,7 @@ func (repo *UserRepository) Create(u *models.User) error {
 }
 
 func (repo *UserRepository) GetAll() ([]*models.User, error) {
-	stmt, err := repo.db.Prepare("SELECT id, address_id, first_name, last_name, email, password FROM users")
+	stmt, err := repo.db.Prepare("SELECT id, first_name, last_name, email, password FROM users")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement to get all users")
 	}
@@ -52,7 +52,7 @@ func (repo *UserRepository) GetAll() ([]*models.User, error) {
 	var users []*models.User
 	for rows.Next() {
 		user := &models.User{}
-		err = rows.Scan(&user.ID, &user.Address, &user.FirstName, &user.LastName, &user.Email, &user.Password)
+		err = rows.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.Password)
 		if err == sql.ErrNoRows {
 			return nil, nil
 		} else if err != nil {
@@ -65,7 +65,7 @@ func (repo *UserRepository) GetAll() ([]*models.User, error) {
 }
 
 func (repo *UserRepository) GetUserByEmail(email string) (*models.User, error) {
-	stmt, err := repo.db.Prepare("SELECT id, address_id, first_name, last_name, email, password FROM users WHERE users.email = $1")
+	stmt, err := repo.db.Prepare("SELECT id, first_name, last_name, email, password FROM users WHERE users.email = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement to get user by email")
 	}
@@ -73,7 +73,7 @@ func (repo *UserRepository) GetUserByEmail(email string) (*models.User, error) {
 	var user models.User
 
 	row := stmt.QueryRow(email)
-	err = row.Scan(&user.ID, &user.Address, &user.FirstName, &user.LastName, &user.Email, &user.Password)
+	err = row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.Password)
 	if err != nil {
 		return nil, errors.New("getting user by email failed")
 	}
@@ -82,7 +82,7 @@ func (repo *UserRepository) GetUserByEmail(email string) (*models.User, error) {
 }
 
 func (repo *UserRepository) GetUserByID(id int) (*models.User, error) {
-	stmt, err := repo.db.Prepare("SELECT id, address_id, first_name, last_name, email, password FROM users WHERE users.id = $1")
+	stmt, err := repo.db.Prepare("SELECT id, first_name, last_name, email, password FROM users WHERE users.id = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement to get user by id")
 	}
@@ -90,7 +90,7 @@ func (repo *UserRepository) GetUserByID(id int) (*models.User, error) {
 	user := &models.User{}
 
 	row := stmt.QueryRow(id)
-	err = row.Scan(&user.ID, &user.Address, &user.FirstName, &user.LastName, &user.Email, &user.Password)
+	err = row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.Password)
 	if err != nil {
 		return nil, errors.New("getting user by id failed")
 	}
@@ -99,13 +99,14 @@ func (repo *UserRepository) GetUserByID(id int) (*models.User, error) {
 }
 
 func (repo *UserRepository) Update(u *models.User) error {
-	stmt, err := repo.db.Prepare("UPDATE users SET address_id = $2, first_name = $1, last_name = $3, password = $4 WHERE users.id = $5")
+	stmt, err := repo.db.Prepare("UPDATE users SET first_name = $1, last_name = $2, password = $3 WHERE users.id = $4")
 	if err != nil {
 		return errors.New("couldn't prepare statement for updating user")
 	}
 
-	_, err = stmt.Exec(u.Address, u.FirstName, u.LastName, u.Password, u.ID)
+	_, err = stmt.Exec(u.FirstName, u.LastName, u.Password, u.ID)
 	if err != nil {
+		fmt.Println(err)
 		return errors.New("updating user failed")
 	}
 
