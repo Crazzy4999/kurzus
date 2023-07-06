@@ -35,7 +35,6 @@ CREATE TABLE supplier_types (
 
 CREATE TABLE suppliers (
     id SERIAL PRIMARY KEY,
-    address_id INTEGER,
     type INTEGER NOT NULL,
     image VARCHAR(1024) NOT NULL,
     name VARCHAR(64) NOT NULL,
@@ -44,8 +43,6 @@ CREATE TABLE suppliers (
     password VARCHAR(64) NOT NULL,
     opening VARCHAR(5) NOT NULL,
     closing VARCHAR(5) NOT NULL,
-    CONSTRAINT fk_address_id FOREIGN KEY (address_id)
-    REFERENCES addresses(id),
     CONSTRAINT fk_type FOREIGN KEY (type)
     REFERENCES supplier_types(id)
 );
@@ -62,9 +59,9 @@ CREATE TABLE menus (
     categorie_id INTEGER NOT NULL,
     price DECIMAL DEFAULT 1.0,
     CONSTRAINT fk_supplier_id FOREIGN KEY (supplier_id)
-    REFERENCES suppliers(id),
+    REFERENCES suppliers(id) ON DELETE CASCADE,
     CONSTRAINT fk_categorie_id FOREIGN KEY (categorie_id)
-    REFERENCES categories(id)
+    REFERENCES categories(id) ON DELETE CASCADE
 );
 
 
@@ -77,9 +74,9 @@ CREATE TABLE items_menus (
     item_id INTEGER NOT NULL,
     menu_id INTEGER NOT NULL,
     CONSTRAINT fk_item_id FOREIGN KEY (item_id)
-    REFERENCES items(id),
+    REFERENCES items(id) ON DELETE CASCADE,
     CONSTRAINT fk_menu_id FOREIGN KEY (menu_id)
-    REFERENCES menus(id)
+    REFERENCES menus(id) ON DELETE CASCADE
 );
 
 CREATE TABLE order_status (
@@ -98,9 +95,9 @@ CREATE TABLE orders (
     created_at TIMESTAMPTZ DEFAULT NOW(),
     delivered_at TIMESTAMPTZ DEFAULT '0001-01-01 00:00:00+00',
     CONSTRAINT fk_user_id FOREIGN KEY (user_id)
-    REFERENCES users(id),
+    REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT fk_supplier_id FOREIGN KEY (supplier_id)
-    REFERENCES suppliers(id),
+    REFERENCES suppliers(id) ON DELETE CASCADE,
     CONSTRAINT fk_driver_id FOREIGN KEY (driver_id)
     REFERENCES drivers(id),
     CONSTRAINT fk_status_id FOREIGN KEY (status_id)
@@ -112,7 +109,7 @@ CREATE TABLE orders_menus (
     menu_id INTEGER NOT NULL,
     quantity INTEGER NOT NULL DEFAULT 1,
     CONSTRAINT fk_order_id FOREIGN KEY (order_id)
-    REFERENCES orders(id),
+    REFERENCES orders(id) ON DELETE CASCADE,
     CONSTRAINT fk_menu_id FOREIGN KEY (menu_id)
-    REFERENCES menus(id)
+    REFERENCES menus(id) ON DELETE CASCADE
 );
