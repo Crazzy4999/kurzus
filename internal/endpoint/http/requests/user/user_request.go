@@ -1,7 +1,7 @@
 package request
 
 type UserRequest struct {
-	Address   int64  `json:"address"`
+	Address   int    `json:"address"`
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 }
