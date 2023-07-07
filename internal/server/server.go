@@ -64,16 +64,19 @@ func Start() {
 	router.GET("/item", itemHandler.GetItems, middleware.CheckTokenValidity)
 	router.DELETE("/item", itemHandler.RemoveItem, middleware.CheckTokenValidity)
 
+	//from menus link to items_menus
 	router.POST("/menu", nil, middleware.CheckTokenValidity)
 	router.GET("/menu", nil, middleware.CheckTokenValidity)
 	router.PUT("/menu", nil, middleware.CheckTokenValidity)
 	router.DELETE("/menu", nil, middleware.CheckTokenValidity)
 
+	//from orders_menus link to menus
 	router.POST("/ordermenu", nil, middleware.CheckTokenValidity)
 	router.GET("/ordermenu", nil, middleware.CheckTokenValidity)
 	router.PUT("/ordermenu", nil, middleware.CheckTokenValidity)
 	router.DELETE("/ordermenu", nil, middleware.CheckTokenValidity)
 
+	//from orders link to orders_menus
 	router.POST("/order", orderHandler.MakeOrder, middleware.CheckTokenValidity)
 	router.GET("/orders", orderHandler.GetOrders, middleware.CheckTokenValidity)
 	router.PUT("/order", orderHandler.UpdateOrder, middleware.CheckTokenValidity)
