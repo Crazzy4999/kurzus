@@ -1,0 +1,112 @@
+Table users {
+  id integer [primary key]
+  first_name varchar(64) [ NOT NULL ]
+  last_name varchar(64) [ NOT NULL ]
+  email varchar(64) [ NOT NULL ]
+  password varchar(64) [ NOT NULL ]
+}
+
+Table driver {
+  id integer [primary key]
+  first_name varchar(64) [ NOT NULL ]
+  last_name varchar(64) [ NOT NULL ]
+  email varchar(64) [ NOT NULL ]
+  password varchar(64) [ NOT NULL ]
+}
+
+Table suppliers {
+  id integer [primary key]
+  address_id integer [ NOT NULL ]
+  type integer [ NOT NULL ]
+  image varchar(1024) [ NOT NULL ]
+  name varchar(64) [ NOT NULL ]
+  email varchar(64) [ NOT NULL ]
+  password varchar(64) [ NOT NULL ]
+  opening varchar(5) [ NOT NULL ]
+  closing varchar(5) [ NOT NULL ]
+}
+
+Table supplier_types {
+  id integer [primary key]
+  type_name varchar(32) [ NOT NULL ]
+}
+
+Ref: suppliers.type - supplier_types.id
+
+Table addresses {
+  id integer [primary key]
+  user_id integer [ NOT NULL ]
+  is_active boolean [ NOT NULL ]
+  city varchar(64) [ NOT NULL ]
+  street varchar(64) [ NOT NULL ]
+  house_number varchar(64) [ NOT NULL ]
+  zip_code varchar(64) [ NOT NULL ]
+  floor_number varchar(64)
+  apartment varchar(64)
+}
+
+Ref: users.id < addresses.user_id
+
+Table categories {
+  id integer [primary key]
+  name varchar(32) [ NOT NULL ] 
+}
+
+Table menus {
+  id integer [primary key]
+  image varchar(1024) [ NOT NULL ]
+  supplier_id integer [ NOT NULL ]
+  categorie_id integer [ NOT NULL ]
+  price integer [ note: "DEFAULTs to 0" ]
+}
+
+Ref: menus.supplier_id > suppliers.id
+
+Ref: menus.categorie_id > categories.id
+
+Table items {
+  id integer [primary key]
+  ingredient varchar(128) [ NOT NULL ]
+}
+
+Table items_menus {
+  item_id integer [ NOT NULL ]
+  menu_id integer [ NOT NULL ]
+}
+
+Ref: items.id < items_menus.item_id
+Ref: menus.id < items_menus.menu_id
+
+Table order_status {
+  id integer [ primary key ]
+  status varchar(32)
+}
+
+Table orders {
+  id integer [ primary key ]
+  user_id integer [ NOT NULL ]
+  supplier_id integer [ NOT NULL ]
+  driver_id integer [ NOT NULL ]
+  status_id integer [ NOT NULL ]
+  note varchar(512)
+  delivery_fee float [ note: "DEFAULTs to 0" ]
+  created_at timestamp [ NOT NULL ]
+  delivered_at timestamp [ note: "DEFAULTs to 0" ]
+}
+
+Ref: orders.user_id - users.id
+
+Ref: orders.supplier_id - suppliers.id
+
+Ref: orders.status_id - order_status.id
+
+Ref: orders.driver_id - driver.id
+
+Table orders_menus {
+  order_id integer [ NOT NULL ]
+  menu_id integer [ NOT NULL ]
+  quantity integer [ note: "DEFAULTs to 1" ]
+}
+
+Ref: orders.id - orders_menus.order_id
+Ref: menus.id < orders_menus.menu_id
