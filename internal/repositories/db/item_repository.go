@@ -16,13 +16,13 @@ func NewItemRepository(db *sql.DB) *ItemRepository {
 	}
 }
 
-func (repo *ItemRepository) Create(m *models.Item) error {
-	stmt, err := repo.db.Prepare("INSERT INTO items (menu_id, ingredient) VALUES ($1, $2)")
+func (repo *ItemRepository) Create(i *models.Item) error {
+	stmt, err := repo.db.Prepare("INSERT INTO items (ingredient) VALUES ($1)")
 	if err != nil {
 		return errors.New("couldn't prepare statment to create item")
 	}
 
-	_, err = stmt.Exec(m.MenuId, m.Ingerdient)
+	_, err = stmt.Exec(i.Ingerdient)
 	if err != nil {
 		return errors.New("creating item failed")
 	}
@@ -31,7 +31,7 @@ func (repo *ItemRepository) Create(m *models.Item) error {
 }
 
 func (repo *ItemRepository) GetAll() ([]*models.Item, error) {
-	stmt, err := repo.db.Prepare("SELECT id, menu_id, ingredient FROM items")
+	stmt, err := repo.db.Prepare("SELECT id, ingredient FROM items")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting all items")
 	}
@@ -45,7 +45,7 @@ func (repo *ItemRepository) GetAll() ([]*models.Item, error) {
 	var items []*models.Item
 	for rows.Next() {
 		item := &models.Item{}
-		err = rows.Scan(&item.ID, &item.MenuId, &item.Ingerdient)
+		err = rows.Scan(&item.ID, &item.Ingerdient)
 		if err == sql.ErrNoRows {
 			return nil, nil
 		} else if err != nil {
@@ -58,7 +58,7 @@ func (repo *ItemRepository) GetAll() ([]*models.Item, error) {
 }
 
 func (repo *ItemRepository) GetItemByID(id int) (*models.Item, error) {
-	stmt, err := repo.db.Prepare("SELECT id, menu_id, ingredient FROM items WHERE items.id = $1")
+	stmt, err := repo.db.Prepare("SELECT id, ingredient FROM items WHERE items.id = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting item by id")
 	}
@@ -66,7 +66,7 @@ func (repo *ItemRepository) GetItemByID(id int) (*models.Item, error) {
 	item := &models.Item{}
 
 	row := stmt.QueryRow(id)
-	err = row.Scan(&item.ID, &item.MenuId, &item.Ingerdient)
+	err = row.Scan(&item.ID, &item.Ingerdient)
 	if err != nil {
 		return nil, errors.New("getting item by id failed")
 	}
@@ -74,13 +74,13 @@ func (repo *ItemRepository) GetItemByID(id int) (*models.Item, error) {
 	return item, nil
 }
 
-func (repo *ItemRepository) Update(m *models.Item) error {
-	stmt, err := repo.db.Prepare("UPDATE items SET menu_id = $1, ingredient = $2 WHERE items.id = $3")
+func (repo *ItemRepository) Update(i *models.Item) error {
+	stmt, err := repo.db.Prepare("UPDATE items SET ingredient = $1 WHERE items.id = $2")
 	if err != nil {
 		return errors.New("couldn't prepare statement to update item")
 	}
 
-	_, err = stmt.Exec(m.MenuId, m.Ingerdient, m.ID)
+	_, err = stmt.Exec(i.Ingerdient, i.ID)
 	if err != nil {
 		return errors.New("updating item failed")
 	}

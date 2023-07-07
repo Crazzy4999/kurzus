@@ -1,6 +1,6 @@
-package models
+package request
 
-type Item struct {
+type ItemRequest struct {
 	ID         int    `json:"id"`
 	Ingerdient string `json:"ingredient"`
 }
