@@ -30,6 +30,33 @@ func (repo *CategoriesRepository) Create(c *models.Category) error {
 	return nil
 }
 
+func (repo *CategoriesRepository) GetCategorieAll() ([]*models.Category, error) {
+	stmt, err := repo.db.Prepare("SELECT id, name FROM categories")
+	if err != nil {
+		return nil, errors.New("couldn't prepare statement to get all categories")
+	}
+
+	rows, err := stmt.Query()
+	if err != nil {
+		return nil, errors.New("getting all categories failed")
+	}
+	defer rows.Close()
+
+	var categories []*models.Category
+	for rows.Next() {
+		category := &models.Category{}
+		err := rows.Scan(&category.ID, &category.Name)
+		if err == sql.ErrNoRows {
+			return nil, nil
+		} else if err != nil {
+			return nil, errors.New("types mismatch during scanning")
+		}
+		categories = append(categories, category)
+	}
+
+	return categories, nil
+}
+
 func (repo *CategoriesRepository) GetCategorieByID(id int) (*models.Category, error) {
 	stmt, err := repo.db.Prepare("SELECT id, name FROM categories WHERE categories.id = $1")
 	if err != nil {

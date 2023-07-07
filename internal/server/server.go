@@ -23,6 +23,7 @@ func Start() {
 	or := dbrepo.NewOrderRepository(db)
 	omr := dbrepo.NewOrderMenusRepository(db)
 	osr := dbrepo.NewOrderStatusRepository(db)
+	cr := dbrepo.NewCategoriesRepository(db)
 	ir := dbrepo.NewItemRepository(db)
 
 	authHandler := handler.NewAuthHandler(ur, cfg)
@@ -30,6 +31,7 @@ func Start() {
 	addressHandler := handler.NewAddressHandler(ar)
 	supplierHandler := handler.NewSupplierHandler(sr, str)
 	orderHandler := handler.NewOrderHandler(or, omr, osr)
+	categoryHandler := handler.NewCategoryHandler(cr)
 	itemHandler := handler.NewItemHandler(ir)
 
 	router.GET("/", nil, nil)
@@ -54,9 +56,9 @@ func Start() {
 	router.PUT("/suppliers", supplierHandler.UpdateSupplier, middleware.CheckTokenValidity)
 	router.DELETE("/suppliers", supplierHandler.RemoveSupplier, middleware.CheckTokenValidity)
 
-	router.POST("/categories", nil, middleware.CheckTokenValidity)
-	router.GET("/categories", nil, middleware.CheckTokenValidity)
-	router.DELETE("/categories", nil, middleware.CheckTokenValidity)
+	router.POST("/categories", categoryHandler.AddCategory, middleware.CheckTokenValidity)
+	router.GET("/categories", categoryHandler.GetCategories, middleware.CheckTokenValidity)
+	router.DELETE("/categories", categoryHandler.RemoveCategory, middleware.CheckTokenValidity)
 
 	router.POST("/item", itemHandler.AddItem, middleware.CheckTokenValidity)
 	router.GET("/item", itemHandler.GetItems, middleware.CheckTokenValidity)
