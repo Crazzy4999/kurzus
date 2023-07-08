@@ -15,9 +15,9 @@ func Start() {
 	db := dbrepo.GetDB()
 	defer db.Close()
 
-	//dr := dbrepo.NewDriverRepository(db)
 	ur := dbrepo.NewUserRepository(db)
 	ar := dbrepo.NewAddressRepository(db)
+	dr := dbrepo.NewDriverRepository(db)
 	sr := dbrepo.NewSupplierRepository(db)
 	str := dbrepo.NewSupplierTypesRepository(db)
 	or := dbrepo.NewOrderRepository(db)
@@ -31,6 +31,7 @@ func Start() {
 	authHandler := handler.NewAuthHandler(ur, cfg)
 	userHandler := handler.NewUserHandler(ur, ar, cfg)
 	addressHandler := handler.NewAddressHandler(ar)
+	driverHandler := handler.NewDriverHandler(dr)
 	supplierHandler := handler.NewSupplierHandler(sr, str)
 	orderHandler := handler.NewOrderHandler(or, osr)
 	categoryHandler := handler.NewCategoryHandler(cr)
@@ -54,6 +55,11 @@ func Start() {
 	router.GET("/address", addressHandler.GetAddressesByUserID, middleware.CheckTokenValidity)
 	router.PUT("/address", addressHandler.UpdateAddress, middleware.CheckTokenValidity)
 	router.DELETE("/address", addressHandler.RemoveAddress, middleware.CheckTokenValidity)
+
+	router.POST("/driver", driverHandler.AddDriver, middleware.CheckTokenValidity)
+	router.GET("/drivers", driverHandler.GetDrivers, middleware.CheckTokenValidity)
+	router.PUT("/driver", driverHandler.UpdateDriver, middleware.CheckTokenValidity)
+	router.DELETE("/driver", driverHandler.RemoveDriver, middleware.CheckTokenValidity)
 
 	router.POST("/supplier", supplierHandler.AddSupplier, middleware.CheckTokenValidity)
 	router.GET("/suppliers", supplierHandler.GetSuppliers, middleware.CheckTokenValidity)

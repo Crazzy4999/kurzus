@@ -1,0 +1,109 @@
+package handler
+
+import (
+	"encoding/json"
+	request "hangryAPI/internal/endpoint/http/requests"
+	"hangryAPI/internal/endpoint/http/responses"
+	"hangryAPI/internal/models"
+	"hangryAPI/internal/repositories/db"
+	"net/http"
+)
+
+type DriverHandler struct {
+	driverRepo *db.DriverRepository
+}
+
+func NewDriverHandler(driverRepo *db.DriverRepository) *DriverHandler {
+	return &DriverHandler{
+		driverRepo: driverRepo,
+	}
+}
+
+func (h *DriverHandler) AddDriver(w http.ResponseWriter, r *http.Request) {
+	req := new(request.DriverRequest)
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	driver := &models.Driver{
+		ID:        req.ID,
+		FirstName: req.FirstName,
+		LastName:  req.LastName,
+		Email:     req.Email,
+		Password:  req.Password,
+	}
+
+	err := h.driverRepo.Create(driver)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *DriverHandler) GetDrivers(w http.ResponseWriter, r *http.Request) {
+	drivers, err := h.driverRepo.GetAll()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	driversResponse := &responses.DriverCollectionResponse{}
+
+	for _, driver := range drivers {
+		driverResponse := &responses.DriverResponse{
+			ID:        driver.ID,
+			FirstName: driver.FirstName,
+			LastName:  driver.LastName,
+			Email:     driver.Email,
+			Password:  driver.Password,
+		}
+
+		driversResponse.Drivers = append(driversResponse.Drivers, driverResponse)
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(driversResponse)
+}
+
+func (h *DriverHandler) UpdateDriver(w http.ResponseWriter, r *http.Request) {
+	req := new(request.DriverRequest)
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	driver := &models.Driver{
+		ID:        req.ID,
+		FirstName: req.FirstName,
+		LastName:  req.LastName,
+		Email:     req.Email,
+		Password:  req.Password,
+	}
+
+	err := h.driverRepo.Update(driver)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *DriverHandler) RemoveDriver(w http.ResponseWriter, r *http.Request) {
+	req := new(request.DriverRequest)
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err := h.driverRepo.Delete(req.ID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
