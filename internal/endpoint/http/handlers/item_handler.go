@@ -10,12 +10,14 @@ import (
 )
 
 type ItemHandler struct {
-	itemRepo *db.ItemRepository
+	itemRepo       *db.ItemRepository
+	itemsMenusRepo *db.ItemsMenusRepository
 }
 
-func NewItemHandler(itemRepo *db.ItemRepository) *ItemHandler {
+func NewItemHandler(itemRepo *db.ItemRepository, itemsMenusRepo *db.ItemsMenusRepository) *ItemHandler {
 	return &ItemHandler{
-		itemRepo: itemRepo,
+		itemRepo:       itemRepo,
+		itemsMenusRepo: itemsMenusRepo,
 	}
 }
 
@@ -57,8 +59,8 @@ func (h *ItemHandler) GetItems(w http.ResponseWriter, r *http.Request) {
 		itemsResponse.Items = append(itemsResponse.Items, itemResponse)
 	}
 
-	json.NewEncoder(w).Encode(itemsResponse)
 	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(itemsResponse)
 }
 
 func (h *ItemHandler) RemoveItem(w http.ResponseWriter, r *http.Request) {
@@ -69,6 +71,12 @@ func (h *ItemHandler) RemoveItem(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err := h.itemRepo.Delete(req.ID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = h.itemsMenusRepo.DeleteByItemID(req.ID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

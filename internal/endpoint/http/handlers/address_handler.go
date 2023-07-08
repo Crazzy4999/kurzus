@@ -86,8 +86,8 @@ func (h *AddressHandler) GetAddressesByUserID(w http.ResponseWriter, r *http.Req
 		}
 	}
 
-	json.NewEncoder(w).Encode(addressesResponse)
 	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(addressesResponse)
 }
 
 func (h *AddressHandler) UpdateAddress(w http.ResponseWriter, r *http.Request) {

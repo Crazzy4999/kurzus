@@ -87,6 +87,7 @@ func (h *SupplierHandler) GetSuppliers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(suppliersResponse)
 }
 
 func (h *SupplierHandler) UpdateSupplier(w http.ResponseWriter, r *http.Request) {

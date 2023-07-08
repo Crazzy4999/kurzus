@@ -25,6 +25,8 @@ func Start() {
 	osr := dbrepo.NewOrderStatusRepository(db)
 	cr := dbrepo.NewCategoriesRepository(db)
 	ir := dbrepo.NewItemRepository(db)
+	imr := dbrepo.NewItemsMenusRepository(db)
+	mr := dbrepo.NewMenuRepository(db)
 
 	authHandler := handler.NewAuthHandler(ur, cfg)
 	userHandler := handler.NewUserHandler(ur, ar, cfg)
@@ -32,7 +34,8 @@ func Start() {
 	supplierHandler := handler.NewSupplierHandler(sr, str)
 	orderHandler := handler.NewOrderHandler(or, omr, osr)
 	categoryHandler := handler.NewCategoryHandler(cr)
-	itemHandler := handler.NewItemHandler(ir)
+	itemHandler := handler.NewItemHandler(ir, imr)
+	menuHandler := handler.NewMenuHandler(mr, imr)
 
 	router.GET("/", nil, nil)
 
@@ -51,24 +54,23 @@ func Start() {
 	router.PUT("/address", addressHandler.UpdateAddress, middleware.CheckTokenValidity)
 	router.DELETE("/address", addressHandler.RemoveAddress, middleware.CheckTokenValidity)
 
-	router.POST("/suppliers", supplierHandler.AddSupplier, middleware.CheckTokenValidity)
+	router.POST("/supplier", supplierHandler.AddSupplier, middleware.CheckTokenValidity)
 	router.GET("/suppliers", supplierHandler.GetSuppliers, middleware.CheckTokenValidity)
-	router.PUT("/suppliers", supplierHandler.UpdateSupplier, middleware.CheckTokenValidity)
-	router.DELETE("/suppliers", supplierHandler.RemoveSupplier, middleware.CheckTokenValidity)
+	router.PUT("/supplier", supplierHandler.UpdateSupplier, middleware.CheckTokenValidity)
+	router.DELETE("/supplier", supplierHandler.RemoveSupplier, middleware.CheckTokenValidity)
 
-	router.POST("/categories", categoryHandler.AddCategory, middleware.CheckTokenValidity)
+	router.POST("/category", categoryHandler.AddCategory, middleware.CheckTokenValidity)
 	router.GET("/categories", categoryHandler.GetCategories, middleware.CheckTokenValidity)
-	router.DELETE("/categories", categoryHandler.RemoveCategory, middleware.CheckTokenValidity)
+	router.DELETE("/category", categoryHandler.RemoveCategory, middleware.CheckTokenValidity)
 
 	router.POST("/item", itemHandler.AddItem, middleware.CheckTokenValidity)
-	router.GET("/item", itemHandler.GetItems, middleware.CheckTokenValidity)
+	router.GET("/items", itemHandler.GetItems, middleware.CheckTokenValidity)
 	router.DELETE("/item", itemHandler.RemoveItem, middleware.CheckTokenValidity)
 
 	//from menus link to items_menus
-	router.POST("/menu", nil, middleware.CheckTokenValidity)
-	router.GET("/menu", nil, middleware.CheckTokenValidity)
-	router.PUT("/menu", nil, middleware.CheckTokenValidity)
-	router.DELETE("/menu", nil, middleware.CheckTokenValidity)
+	router.POST("/menu", menuHandler.AddMenu, middleware.CheckTokenValidity)
+	router.GET("/menus", menuHandler.GetMenus, middleware.CheckTokenValidity)
+	router.DELETE("/menu", menuHandler.RemoveMenu, middleware.CheckTokenValidity)
 
 	//from orders_menus link to menus
 	router.POST("/ordermenu", nil, middleware.CheckTokenValidity)
