@@ -7,6 +7,5 @@ type OrderRequest struct {
 	DriverID    int    `json:"driverID"`
 	StatusID    int    `json:"statusID"`
 	Note        string `json:"note"`
-	CreatedAt   string `json:"createdAt"`
 	DeliveredAt string `json:"deliveredAt"`
 }

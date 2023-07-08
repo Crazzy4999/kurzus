@@ -17,12 +17,12 @@ func NewOrderRepository(db *sql.DB) *OrderRepository {
 }
 
 func (repo *OrderRepository) Create(o *models.Order) error {
-	stmt, err := repo.db.Prepare("INSERT INTO orders (user_id, suppiler_id, driver_id, status_id, note, created_at, delivered_at) VALUES ($1, $2, $3, $4, $5, $6, $7)")
+	stmt, err := repo.db.Prepare("INSERT INTO orders (user_id, suppiler_id, driver_id, status_id, note, delivered_at) VALUES ($1, $2, $3, $4, $5, $6)")
 	if err != nil {
 		return errors.New("couldn't prepare statenemt to create order")
 	}
 
-	_, err = stmt.Exec(o.UserID, o.SupplierID, o.DriverID, o.StatusID, o.Note, o.CreatedAt, o.DeliveredAt)
+	_, err = stmt.Exec(o.UserID, o.SupplierID, o.DriverID, o.StatusID, o.Note, o.DeliveredAt)
 	if err != nil {
 		return errors.New("insert into orders failed")
 	}

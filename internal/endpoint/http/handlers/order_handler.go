@@ -36,7 +36,6 @@ func (h *OrderHandler) MakeOrder(w http.ResponseWriter, r *http.Request) {
 		DriverID:    req.DriverID,
 		StatusID:    req.StatusID,
 		Note:        util.NullString(req.Note),
-		CreatedAt:   req.CreatedAt,
 		DeliveredAt: req.DeliveredAt,
 	}
 
