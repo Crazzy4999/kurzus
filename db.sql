@@ -41,7 +41,7 @@ CREATE TABLE suppliers (
     last_name VARCHAR(64) NOT NULL,
     email VARCHAR(64) NOT NULL,
     password VARCHAR(64) NOT NULL,
-    delivery_fee DECIMAL NOT NULL,
+    delivery_fee DECIMAL DEFAULT 0,
     opening VARCHAR(5) NOT NULL,
     closing VARCHAR(5) NOT NULL,
     CONSTRAINT fk_type FOREIGN KEY (type)
