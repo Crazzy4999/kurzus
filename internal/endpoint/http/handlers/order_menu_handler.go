@@ -22,7 +22,7 @@ func NewOrderMenuHandler(orderMenuRepo *db.OrderMenusRepository) *OrderMenuHandl
 func (h *OrderMenuHandler) AddOrderMenu(w http.ResponseWriter, r *http.Request) {
 	req := new(request.OrderMenuRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -34,7 +34,7 @@ func (h *OrderMenuHandler) AddOrderMenu(w http.ResponseWriter, r *http.Request) 
 
 	err := h.orderMenuRepo.Create(orderMenu)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, CREATING_ORDER_MENU_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -44,13 +44,13 @@ func (h *OrderMenuHandler) AddOrderMenu(w http.ResponseWriter, r *http.Request) 
 func (h *OrderMenuHandler) GetOrderMenus(w http.ResponseWriter, r *http.Request) {
 	req := new(request.OrderMenuRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	menus, err := h.orderMenuRepo.GetMenusByOrderID(req.OrderID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, GET_ALL_MENU_BY_ORDER_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -75,13 +75,13 @@ func (h *OrderMenuHandler) GetOrderMenus(w http.ResponseWriter, r *http.Request)
 func (h *OrderMenuHandler) UpdateOrderMenu(w http.ResponseWriter, r *http.Request) {
 	req := new(request.OrderMenuRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	err := h.orderMenuRepo.UpdateByOrderID(req.OrderID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, UPDATING_ORDER_MENU_BY_ORDER_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -91,13 +91,13 @@ func (h *OrderMenuHandler) UpdateOrderMenu(w http.ResponseWriter, r *http.Reques
 func (h *OrderMenuHandler) RemoveOrderMenu(w http.ResponseWriter, r *http.Request) {
 	req := new(request.OrderMenuRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	err := h.orderMenuRepo.DeleteByOrderID(req.OrderID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, DELETING_ORDER_MENU_BY_ORDER_FAILED, http.StatusBadRequest)
 		return
 	}
 

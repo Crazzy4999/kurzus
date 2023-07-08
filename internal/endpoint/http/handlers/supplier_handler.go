@@ -24,7 +24,7 @@ func NewSupplierHandler(supplierRepo *db.SupplierRepository, supplierTypesRepo *
 func (h *SupplierHandler) AddSupplier(w http.ResponseWriter, r *http.Request) {
 	req := new(request.SupplierRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -40,20 +40,20 @@ func (h *SupplierHandler) AddSupplier(w http.ResponseWriter, r *http.Request) {
 
 	suppliers, err := h.supplierRepo.GetAll()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusOK)
+		http.Error(w, GET_ALL_SUPPLIER_FAILED, http.StatusOK)
 		return
 	}
 
 	for _, s := range suppliers {
 		if s.Email == supplier.Email {
-			http.Error(w, "supplier already exists", http.StatusBadRequest)
+			http.Error(w, SUPPLIER_EXISTS, http.StatusBadRequest)
 			return
 		}
 	}
 
 	err = h.supplierRepo.Create(supplier)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, CREATING_SUPPLIER_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -63,7 +63,7 @@ func (h *SupplierHandler) AddSupplier(w http.ResponseWriter, r *http.Request) {
 func (h *SupplierHandler) GetSuppliers(w http.ResponseWriter, r *http.Request) {
 	suppliers, err := h.supplierRepo.GetAll()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, GET_ALL_SUPPLIER_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -72,7 +72,7 @@ func (h *SupplierHandler) GetSuppliers(w http.ResponseWriter, r *http.Request) {
 	for _, s := range suppliers {
 		supplierType, err := h.supplierTypesRepo.GetTypeByID(s.Type)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, GET_SUPPLIER_TYPE_FAILED, http.StatusBadRequest)
 			return
 		}
 
@@ -95,7 +95,7 @@ func (h *SupplierHandler) GetSuppliers(w http.ResponseWriter, r *http.Request) {
 func (h *SupplierHandler) UpdateSupplier(w http.ResponseWriter, r *http.Request) {
 	req := new(request.SupplierRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -112,7 +112,7 @@ func (h *SupplierHandler) UpdateSupplier(w http.ResponseWriter, r *http.Request)
 
 	err := h.supplierRepo.Update(supplier)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, UPDATING_SUPPLIER_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -122,13 +122,13 @@ func (h *SupplierHandler) UpdateSupplier(w http.ResponseWriter, r *http.Request)
 func (h *SupplierHandler) RemoveSupplier(w http.ResponseWriter, r *http.Request) {
 	req := new(request.SupplierRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	err := h.supplierRepo.Delete(req.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, DELETING_SUPPLIER_FAILED, http.StatusBadRequest)
 		return
 	}
 

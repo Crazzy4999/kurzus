@@ -24,7 +24,7 @@ func NewItemHandler(itemRepo *db.ItemRepository, itemsMenusRepo *db.ItemsMenusRe
 func (h *ItemHandler) AddItem(w http.ResponseWriter, r *http.Request) {
 	req := new(request.ItemRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -34,7 +34,7 @@ func (h *ItemHandler) AddItem(w http.ResponseWriter, r *http.Request) {
 
 	err := h.itemRepo.Create(item)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, CREATING_ITEM_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -44,7 +44,7 @@ func (h *ItemHandler) AddItem(w http.ResponseWriter, r *http.Request) {
 func (h *ItemHandler) GetItems(w http.ResponseWriter, r *http.Request) {
 	items, err := h.itemRepo.GetAll()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, GET_ALL_ITEM_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -66,19 +66,19 @@ func (h *ItemHandler) GetItems(w http.ResponseWriter, r *http.Request) {
 func (h *ItemHandler) RemoveItem(w http.ResponseWriter, r *http.Request) {
 	req := new(request.ItemRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	err := h.itemRepo.Delete(req.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, DELETING_ITEM_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	err = h.itemsMenusRepo.DeleteByItemID(req.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, DELETING_MENU_ITEM_BY_ITEM_FAILED, http.StatusBadRequest)
 		return
 	}
 

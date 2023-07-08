@@ -70,31 +70,31 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 func (h *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
 	req := new(request.SignUpRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	if req.Password != req.PasswordAgain {
-		http.Error(w, "passwords doesn't match", http.StatusBadRequest)
+		http.Error(w, PASSWORD_MISMATCH, http.StatusBadRequest)
 		return
 	}
 
 	users, err := h.userRepo.GetAll()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, GET_ALL_USERS_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	for _, user := range users {
 		if user.Email == req.Email {
-			http.Error(w, "email already in use", http.StatusBadRequest)
+			http.Error(w, EMAIL_TAKEN, http.StatusBadRequest)
 			return
 		}
 	}
 
 	password, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
-		http.Error(w, "couldn't generate password", http.StatusBadRequest)
+		http.Error(w, PASSWORD_GENERATION_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -106,7 +106,7 @@ func (h *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = h.userRepo.Create(user); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, CREATING_USER_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -118,19 +118,19 @@ func (h *AuthHandler) Refresh(w http.ResponseWriter, r *http.Request) {
 
 	claims, err := token.GetClaimsFromContext(r)
 	if err != nil {
-		http.Error(w, "invalid credentials", http.StatusUnauthorized)
+		http.Error(w, INVALID_CREDENTIALS, http.StatusUnauthorized)
 		return
 	}
 
 	accessString, err := tokenService.GenerateAccessToken(claims.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, TOKEN_GENERATION_FAILED, http.StatusInternalServerError)
 		return
 	}
 
 	refreshString, err := tokenService.GenerateRefreshToken(claims.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, TOKEN_GENERATION_FAILED, http.StatusInternalServerError)
 		return
 	}
 
@@ -146,13 +146,13 @@ func (h *AuthHandler) Refresh(w http.ResponseWriter, r *http.Request) {
 func (h *AuthHandler) GetPasswordResetKey(w http.ResponseWriter, r *http.Request) {
 	req := new(request.GetResetKeyRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	user, err := h.userRepo.GetUserByEmail(req.Email)
 	if err != nil {
-		http.Error(w, "user doesn't exist with this email", http.StatusBadRequest)
+		http.Error(w, NO_SUCH_USER, http.StatusBadRequest)
 		return
 	}
 
@@ -160,14 +160,14 @@ func (h *AuthHandler) GetPasswordResetKey(w http.ResponseWriter, r *http.Request
 
 	resetString, err := tokenService.GenerateRefreshToken(user.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, TOKEN_GENERATION_FAILED, http.StatusInternalServerError)
 		return
 	}
 
 	emailService := email.NewEmailService(h.cfg, "smtp.gmail.com", "587")
 	err = emailService.SendResetEmail(req.Email, "Subject: Password reset for Hangry Food Delivery\n", "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n", "internal/service/email/reset_password_email.html", resetString)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, SEND_RESET_FAILED, http.StatusInternalServerError)
 		return
 	}
 
@@ -177,24 +177,24 @@ func (h *AuthHandler) GetPasswordResetKey(w http.ResponseWriter, r *http.Request
 func (h *AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 	req := new(request.ResetPasswordRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	if req.Password != req.PasswordAgain {
-		http.Error(w, "passwords doesn't match", http.StatusBadRequest)
+		http.Error(w, PASSWORD_MISMATCH, http.StatusBadRequest)
 		return
 	}
 
 	user, err := h.userRepo.GetUserByEmail(req.Email)
 	if err != nil {
-		http.Error(w, "getting user failed", http.StatusBadRequest)
+		http.Error(w, GET_USER_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	resetKey := r.URL.Query().Get("reset_key")
 	if err != nil {
-		http.Error(w, "bad url, missing reset key", http.StatusBadRequest)
+		http.Error(w, MISSING_RESET_KEY, http.StatusBadRequest)
 		return
 	}
 
@@ -202,18 +202,18 @@ func (h *AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 	// TODO: fix invalid signature (invalid here in go, on jwt website it's fine for some reason)
 	claims, err := tokenService.ValidateResetToken(resetKey)
 	if err != nil {
-		http.Error(w, "invalid credentials", http.StatusUnauthorized)
+		http.Error(w, INVALID_CREDENTIALS, http.StatusUnauthorized)
 		return
 	}
 
 	if user.ID != claims.ID {
-		http.Error(w, "invalid credentials", http.StatusUnauthorized)
+		http.Error(w, INVALID_CREDENTIALS, http.StatusUnauthorized)
 		return
 	}
 
 	password, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
-		http.Error(w, "couldn't generate password", http.StatusBadRequest)
+		http.Error(w, PASSWORD_GENERATION_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -221,7 +221,7 @@ func (h *AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 
 	err = h.userRepo.Update(user)
 	if err != nil {
-		http.Error(w, "reseting password for user failed", http.StatusBadRequest)
+		http.Error(w, PASSWORD_RESET_FAILED, http.StatusBadRequest)
 		return
 	}
 

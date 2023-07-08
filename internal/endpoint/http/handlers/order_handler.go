@@ -26,7 +26,7 @@ func NewOrderHandler(orderRepo *db.OrderRepository, orderStatusRepo *db.OrderSta
 func (h *OrderHandler) MakeOrder(w http.ResponseWriter, r *http.Request) {
 	req := new(request.OrderRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -39,7 +39,7 @@ func (h *OrderHandler) MakeOrder(w http.ResponseWriter, r *http.Request) {
 
 	err := h.orderRepo.Create(order)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, CREATING_ORDER_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -49,13 +49,13 @@ func (h *OrderHandler) MakeOrder(w http.ResponseWriter, r *http.Request) {
 func (h *OrderHandler) GetOrders(w http.ResponseWriter, r *http.Request) {
 	claims, err := token.GetClaimsFromContext(r)
 	if err != nil {
-		http.Error(w, "invalid credentials", http.StatusUnauthorized)
+		http.Error(w, INVALID_CREDENTIALS, http.StatusUnauthorized)
 		return
 	}
 
 	orders, err := h.orderRepo.GetAll()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, GET_ALL_ORDER_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -85,7 +85,7 @@ func (h *OrderHandler) GetOrders(w http.ResponseWriter, r *http.Request) {
 func (h *OrderHandler) UpdateOrder(w http.ResponseWriter, r *http.Request) {
 	req := new(request.OrderRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -98,7 +98,7 @@ func (h *OrderHandler) UpdateOrder(w http.ResponseWriter, r *http.Request) {
 
 	err := h.orderRepo.Update(order)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, UPDATING_ORDER_FAILED, http.StatusBadRequest)
 		return
 	}
 

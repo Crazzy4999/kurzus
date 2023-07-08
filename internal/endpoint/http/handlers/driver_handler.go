@@ -22,7 +22,7 @@ func NewDriverHandler(driverRepo *db.DriverRepository) *DriverHandler {
 func (h *DriverHandler) AddDriver(w http.ResponseWriter, r *http.Request) {
 	req := new(request.DriverRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -36,7 +36,7 @@ func (h *DriverHandler) AddDriver(w http.ResponseWriter, r *http.Request) {
 
 	err := h.driverRepo.Create(driver)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, CREATING_DRIVER_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -46,7 +46,7 @@ func (h *DriverHandler) AddDriver(w http.ResponseWriter, r *http.Request) {
 func (h *DriverHandler) GetDrivers(w http.ResponseWriter, r *http.Request) {
 	drivers, err := h.driverRepo.GetAll()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, GET_ALL_DRIVER_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -71,7 +71,7 @@ func (h *DriverHandler) GetDrivers(w http.ResponseWriter, r *http.Request) {
 func (h *DriverHandler) UpdateDriver(w http.ResponseWriter, r *http.Request) {
 	req := new(request.DriverRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -85,7 +85,7 @@ func (h *DriverHandler) UpdateDriver(w http.ResponseWriter, r *http.Request) {
 
 	err := h.driverRepo.Update(driver)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, UPDATING_DRIVER_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -95,13 +95,13 @@ func (h *DriverHandler) UpdateDriver(w http.ResponseWriter, r *http.Request) {
 func (h *DriverHandler) RemoveDriver(w http.ResponseWriter, r *http.Request) {
 	req := new(request.DriverRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	err := h.driverRepo.Delete(req.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, DELETING_DRIVER_FAILED, http.StatusBadRequest)
 		return
 	}
 

@@ -24,13 +24,13 @@ func NewAddressHandler(addressRepo *db.AddressRepository) *AddressHandler {
 func (h *AddressHandler) AddAddress(w http.ResponseWriter, r *http.Request) {
 	req := new(request.AddressRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	claims, err := token.GetClaimsFromContext(r)
 	if err != nil {
-		http.Error(w, "invalid credentials", http.StatusBadRequest)
+		http.Error(w, INVALID_CREDENTIALS, http.StatusBadRequest)
 		return
 	}
 
@@ -47,7 +47,7 @@ func (h *AddressHandler) AddAddress(w http.ResponseWriter, r *http.Request) {
 
 	err = h.addressRepo.Create(address)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, CREATING_ADDRESS_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -57,13 +57,13 @@ func (h *AddressHandler) AddAddress(w http.ResponseWriter, r *http.Request) {
 func (h *AddressHandler) GetAddressesByUserID(w http.ResponseWriter, r *http.Request) {
 	claims, err := token.GetClaimsFromContext(r)
 	if err != nil {
-		http.Error(w, "invalid credentials", http.StatusUnauthorized)
+		http.Error(w, INVALID_CREDENTIALS, http.StatusUnauthorized)
 		return
 	}
 
 	addresses, err := h.addressRepo.GetAll()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, GET_ALL_ADDRESS_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -93,7 +93,7 @@ func (h *AddressHandler) GetAddressesByUserID(w http.ResponseWriter, r *http.Req
 func (h *AddressHandler) UpdateAddress(w http.ResponseWriter, r *http.Request) {
 	req := new(request.AddressRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -111,7 +111,7 @@ func (h *AddressHandler) UpdateAddress(w http.ResponseWriter, r *http.Request) {
 
 	err := h.addressRepo.Update(address)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, UPDATING_ADDRESS_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -121,13 +121,13 @@ func (h *AddressHandler) UpdateAddress(w http.ResponseWriter, r *http.Request) {
 func (h *AddressHandler) RemoveAddress(w http.ResponseWriter, r *http.Request) {
 	req := new(request.AddressRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	err := h.addressRepo.Delete(req.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, DELETING_ADDRESS_FAILED, http.StatusBadRequest)
 		return
 	}
 

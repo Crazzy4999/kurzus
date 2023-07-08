@@ -22,7 +22,7 @@ func NewCategoryHandler(categoriesRepo *db.CategoriesRepository) *CategoryHandle
 func (h *CategoryHandler) AddCategory(w http.ResponseWriter, r *http.Request) {
 	req := new(request.CategoryRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -33,7 +33,7 @@ func (h *CategoryHandler) AddCategory(w http.ResponseWriter, r *http.Request) {
 
 	err := h.categoriesRepo.Create(category)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, CREATING_CATEGORY_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -43,7 +43,7 @@ func (h *CategoryHandler) AddCategory(w http.ResponseWriter, r *http.Request) {
 func (h *CategoryHandler) GetCategories(w http.ResponseWriter, r *http.Request) {
 	categories, err := h.categoriesRepo.GetCategorieAll()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, GET_ALL_CATEGORIES_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -65,13 +65,13 @@ func (h *CategoryHandler) GetCategories(w http.ResponseWriter, r *http.Request) 
 func (h *CategoryHandler) RemoveCategory(w http.ResponseWriter, r *http.Request) {
 	req := new(request.CategoryRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	err := h.categoriesRepo.Delete(req.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, DELETING_CATEGORY_FAILED, http.StatusBadRequest)
 		return
 	}
 

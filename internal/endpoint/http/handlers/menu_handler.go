@@ -24,7 +24,7 @@ func NewMenuHandler(menuRepo *db.MenuRepository, itemsMenusRepo *db.ItemsMenusRe
 func (h *MenuHandler) AddMenu(w http.ResponseWriter, r *http.Request) {
 	req := new(request.MenuRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -38,13 +38,13 @@ func (h *MenuHandler) AddMenu(w http.ResponseWriter, r *http.Request) {
 
 	err := h.menuRepo.Create(menu)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, CREATING_MENU_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	menus, err := h.menuRepo.GetAll()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, GET_ALL_MENU_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -66,7 +66,7 @@ func (h *MenuHandler) AddMenu(w http.ResponseWriter, r *http.Request) {
 
 		err = h.itemsMenusRepo.Create(itemMenu)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, CREATING_MENU_ITEM_FAILED, http.StatusBadRequest)
 			return
 		}
 	}
@@ -77,7 +77,7 @@ func (h *MenuHandler) AddMenu(w http.ResponseWriter, r *http.Request) {
 func (h *MenuHandler) GetMenus(w http.ResponseWriter, r *http.Request) {
 	menus, err := h.menuRepo.GetAll()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, GET_ALL_MENU_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -102,19 +102,19 @@ func (h *MenuHandler) GetMenus(w http.ResponseWriter, r *http.Request) {
 func (h *MenuHandler) RemoveMenu(w http.ResponseWriter, r *http.Request) {
 	req := new(request.MenuRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	err := h.menuRepo.Delete(req.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, DELETING_MENU_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	err = h.itemsMenusRepo.DeleteByMenuID(req.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, DELETING_MENU_ITEM_BY_MENU_FAILED, http.StatusBadRequest)
 		return
 	}
 

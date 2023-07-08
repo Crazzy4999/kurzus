@@ -29,20 +29,21 @@ func (h *UserHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 	tokenService := token.NewTokenService(h.cfg)
 	claims, err := tokenService.GetClaims(r, h.cfg.AccessSecret)
 	if err != nil {
-		http.Error(w, "invalid credentials", http.StatusUnauthorized)
+		http.Error(w, INVALID_CREDENTIALS, http.StatusUnauthorized)
 		return
 	}
 
 	user, err := h.userRepo.GetUserByID(claims.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, GET_USER_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	resp := responses.UserResponse{
-		ID:    user.ID,
-		Name:  user.FirstName + " " + user.LastName,
-		Email: user.Email,
+		ID:        user.ID,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		Email:     user.Email,
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -52,20 +53,20 @@ func (h *UserHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 func (h *UserHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	req := new(request.UserRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
 		return
 	}
 
 	tokenService := token.NewTokenService(h.cfg)
 	claims, err := tokenService.GetClaims(r, h.cfg.AccessSecret)
 	if err != nil {
-		http.Error(w, "invalid credentials", http.StatusUnauthorized)
+		http.Error(w, INVALID_CREDENTIALS, http.StatusUnauthorized)
 		return
 	}
 
 	user, err := h.userRepo.GetUserByID(claims.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, GET_USER_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -79,7 +80,7 @@ func (h *UserHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 
 	err = h.userRepo.Update(&updatedUser)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, UPDATING_USER_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -89,13 +90,13 @@ func (h *UserHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 func (h *UserHandler) DeleteProfile(w http.ResponseWriter, r *http.Request) {
 	claims, err := token.GetClaimsFromContext(r)
 	if err != nil {
-		http.Error(w, "invalid credentials", http.StatusUnauthorized)
+		http.Error(w, INVALID_CREDENTIALS, http.StatusUnauthorized)
 		return
 	}
 
 	addresses, err := h.addressRepo.GetAll()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, GET_ALL_ADDRESS_FAILED, http.StatusBadRequest)
 		return
 	}
 
@@ -103,7 +104,7 @@ func (h *UserHandler) DeleteProfile(w http.ResponseWriter, r *http.Request) {
 		if a.UserID == claims.ID {
 			err = h.addressRepo.Delete(a.ID)
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
+				http.Error(w, DELETING_ADDRESS_FAILED, http.StatusBadRequest)
 				return
 			}
 		}
@@ -111,7 +112,7 @@ func (h *UserHandler) DeleteProfile(w http.ResponseWriter, r *http.Request) {
 
 	err = h.userRepo.Delete(claims.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, DELETING_USER_FAILED, http.StatusBadRequest)
 		return
 	}
 
