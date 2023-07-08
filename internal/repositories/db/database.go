@@ -10,9 +10,7 @@ import (
 
 var dbSingleton *sql.DB = nil
 
-func GetDB() *sql.DB {
-	cfg := config.NewConfig()
-
+func GetDB(cfg *config.Config) *sql.DB {
 	if dbSingleton == nil {
 		connStr := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=%s", cfg.DatabaseUser, cfg.DatabasePassword, cfg.DatabaseHost, cfg.DatabasePort, cfg.DatabaseName, cfg.DatabaseSSLMode)
 

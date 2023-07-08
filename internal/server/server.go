@@ -10,9 +10,9 @@ import (
 )
 
 func Start() {
-	cfg := config.NewConfig()
+	cfg := config.NewConfig(false)
 	router := router.NewRouter()
-	db := dbrepo.GetDB()
+	db := dbrepo.GetDB(cfg)
 	defer db.Close()
 
 	ur := dbrepo.NewUserRepository(db)

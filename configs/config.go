@@ -35,10 +35,17 @@ func STOI(envVar string) int {
 	return val
 }
 
-func NewConfig() *Config {
-	err := godotenv.Load("configs/.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
+func NewConfig(testing bool) *Config {
+	if testing {
+		err := godotenv.Load("configs/.env.testing")
+		if err != nil {
+			log.Fatal("Error loading .env.testing file")
+		}
+	} else {
+		err := godotenv.Load("configs/.env")
+		if err != nil {
+			log.Fatal("Error loading .env file")
+		}
 	}
 
 	AccessLifetime := STOI("ACCESS_LIFETIME")

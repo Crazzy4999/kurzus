@@ -12,7 +12,7 @@ type Func func(handler http.Handler) http.Handler
 
 func CheckTokenValidity(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cfg := config.NewConfig()
+		cfg := config.NewConfig(false)
 		tokenService := token.NewTokenService(cfg)
 
 		claims, err := tokenService.GetClaims(r, cfg.RefreshSecret)
