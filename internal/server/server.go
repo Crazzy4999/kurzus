@@ -52,7 +52,7 @@ func Start() {
 	router.DELETE("/profile", userHandler.DeleteProfile, middleware.CheckTokenValidity)
 
 	router.POST("/address", addressHandler.AddAddress, middleware.CheckTokenValidity)
-	router.GET("/address", addressHandler.GetAddressesByUserID, middleware.CheckTokenValidity)
+	router.GET("/addresses", addressHandler.GetAddressesByUserID, middleware.CheckTokenValidity)
 	router.PUT("/address", addressHandler.UpdateAddress, middleware.CheckTokenValidity)
 	router.DELETE("/address", addressHandler.RemoveAddress, middleware.CheckTokenValidity)
 
