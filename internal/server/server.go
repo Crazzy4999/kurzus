@@ -74,18 +74,15 @@ func Start() {
 	router.GET("/items", itemHandler.GetItems, middleware.CheckTokenValidity)
 	router.DELETE("/item", itemHandler.RemoveItem, middleware.CheckTokenValidity)
 
-	//from menus link to items_menus
 	router.POST("/menu", menuHandler.AddMenu, middleware.CheckTokenValidity)
 	router.GET("/menus", menuHandler.GetMenus, middleware.CheckTokenValidity)
 	router.DELETE("/menu", menuHandler.RemoveMenu, middleware.CheckTokenValidity)
 
-	//from orders_menus link to menus
 	router.POST("/ordermenu", orderMenuHandler.AddOrderMenu, middleware.CheckTokenValidity)
 	router.GET("/ordermenu", orderMenuHandler.GetOrderMenus, middleware.CheckTokenValidity)
 	router.PUT("/ordermenu", orderMenuHandler.UpdateOrderMenu, middleware.CheckTokenValidity)
 	router.DELETE("/ordermenu", orderMenuHandler.RemoveOrderMenu, middleware.CheckTokenValidity)
 
-	//from orders link to orders_menus
 	router.POST("/order", orderHandler.MakeOrder, middleware.CheckTokenValidity)
 	router.GET("/orders", orderHandler.GetOrders, middleware.CheckTokenValidity)
 	router.PUT("/order", orderHandler.UpdateOrder, middleware.CheckTokenValidity)
