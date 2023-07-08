@@ -1,9 +1,9 @@
-package models
+package responses
 
-type Menu struct {
+type MenuResponse struct {
 	ID         int     `json:"id"`
+	Image      string  `json:"image"`
 	SupplierID int     `json:"supplierID"`
 	CategoryID int     `json:"categoryID"`
-	Image      string  `json:"image"`
 	Price      float32 `json:"price"`
 }

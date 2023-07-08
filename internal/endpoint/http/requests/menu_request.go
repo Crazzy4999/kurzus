@@ -1,9 +1,10 @@
-package models
+package request
 
-type Menu struct {
+type MenuRequest struct {
 	ID         int     `json:"id"`
+	Items      []int   `json:"items"`
+	Image      string  `json:"image"`
 	SupplierID int     `json:"supplierID"`
 	CategoryID int     `json:"categoryID"`
-	Image      string  `json:"image"`
 	Price      float32 `json:"price"`
 }

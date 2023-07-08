@@ -22,7 +22,7 @@ func (repo *MenuRepository) Create(m *models.Menu) error {
 		return errors.New("couldn't prepare statement to create menu")
 	}
 
-	_, err = stmt.Exec(m.SupplierID, m.CategorieID, m.Image, m.Price)
+	_, err = stmt.Exec(m.SupplierID, m.CategoryID, m.Image, m.Price)
 	if err != nil {
 		return errors.New("failed to create menu")
 	}
@@ -45,7 +45,7 @@ func (repo *MenuRepository) GetAll() ([]*models.Menu, error) {
 	var menus []*models.Menu
 	for rows.Next() {
 		menu := &models.Menu{}
-		err = rows.Scan(&menu.ID, &menu.SupplierID, &menu.CategorieID, &menu.Image, &menu.Price)
+		err = rows.Scan(&menu.ID, &menu.SupplierID, &menu.CategoryID, &menu.Image, &menu.Price)
 		if err == sql.ErrNoRows {
 			return nil, nil
 		} else if err != nil {
@@ -66,7 +66,7 @@ func (repo *MenuRepository) GetMenuByID(id int) (*models.Menu, error) {
 	menu := &models.Menu{}
 
 	row := stmt.QueryRow(id)
-	err = row.Scan(&menu.ID, &menu.SupplierID, &menu.CategorieID, &menu.Image, &menu.Price)
+	err = row.Scan(&menu.ID, &menu.SupplierID, &menu.CategoryID, &menu.Image, &menu.Price)
 	if err != nil {
 		return nil, errors.New("getting menu by id failed")
 	}
