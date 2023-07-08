@@ -73,7 +73,21 @@ func (repo *OrderMenusRepository) GetMenusByOrderID(id int) ([]*models.Menu, err
 	return orderMenus, nil
 }
 
-func (repo *OrderMenusRepository) DeleteOrdersByMenuID(id int) error {
+func (repo *OrderMenusRepository) UpdateByOrderID(id int) error {
+	stmt, err := repo.db.Prepare("UPDATE orders_menus SET quantity = $1 WHERE order_id = $1")
+	if err != nil {
+		return errors.New("couldn't prepare statement to update order menu")
+	}
+
+	_, err = stmt.Exec(id)
+	if err != nil {
+		return errors.New("updating order menu failed")
+	}
+
+	return nil
+}
+
+func (repo *OrderMenusRepository) DeleteByMenuID(id int) error {
 	stmt, err := repo.db.Prepare("DELETE FROM orders_menus WHERE orders_menus.menu_id = $1")
 	if err != nil {
 		return errors.New("couldn't prepare statement to delete orders by menu id")
@@ -87,7 +101,7 @@ func (repo *OrderMenusRepository) DeleteOrdersByMenuID(id int) error {
 	return nil
 }
 
-func (repo *OrderMenusRepository) DeleteMenusByOrderID(id int) error {
+func (repo *OrderMenusRepository) DeleteByOrderID(id int) error {
 	stmt, err := repo.db.Prepare("DELETE FROM orders_menus WHERE orders_menus.order_id = $1")
 	if err != nil {
 		return errors.New("couldn't prepare statement to delete menus by order id")
