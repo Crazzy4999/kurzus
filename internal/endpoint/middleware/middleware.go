@@ -17,7 +17,7 @@ func CheckTokenValidity(next http.Handler) http.Handler {
 
 		claims, err := tokenService.GetClaims(r, cfg.RefreshSecret)
 		if err != nil {
-			http.Redirect(w, r, "/login", http.StatusUnauthorized)
+			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
