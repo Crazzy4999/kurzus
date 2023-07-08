@@ -90,7 +90,7 @@ CREATE TABLE orders (
     user_id INTEGER NOT NULL,
     supplier_id INTEGER NOT NULL,
     driver_id INTEGER NOT NULL,
-    status_id INTEGER NOT NULL,
+    status_id INTEGER DEFAULT 1,
     note VARCHAR(512),
     created_at TIMESTAMPTZ DEFAULT NOW(),
     delivered_at TIMESTAMPTZ DEFAULT '0001-01-01 00:00:00+00',
