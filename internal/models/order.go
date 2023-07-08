@@ -9,7 +9,6 @@ type Order struct {
 	DriverID    int            `json:"driverID"`
 	StatusID    int            `json:"statusID"`
 	Note        sql.NullString `json:"note"`
-	DeliveryFee float32        `json:"deliveryFee"`
 	CreatedAt   string         `json:"createdAt"`
 	DeliveredAt string         `json:"deliveredAt"`
 }

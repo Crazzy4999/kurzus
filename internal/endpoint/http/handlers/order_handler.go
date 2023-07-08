@@ -36,7 +36,6 @@ func (h *OrderHandler) MakeOrder(w http.ResponseWriter, r *http.Request) {
 		DriverID:    req.DriverID,
 		StatusID:    req.StatusID,
 		Note:        util.NullString(req.Note),
-		DeliveryFee: req.DeliveryFee,
 		CreatedAt:   req.CreatedAt,
 		DeliveredAt: req.DeliveredAt,
 	}
@@ -74,7 +73,6 @@ func (h *OrderHandler) GetOrders(w http.ResponseWriter, r *http.Request) {
 				DriverID:    o.DriverID,
 				StatusID:    o.StatusID,
 				Note:        o.Note.String,
-				DeliveryFee: o.DeliveryFee,
 				CreatedAt:   o.CreatedAt,
 				DeliveredAt: o.DeliveredAt,
 			}

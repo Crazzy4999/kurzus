@@ -41,6 +41,7 @@ CREATE TABLE suppliers (
     last_name VARCHAR(64) NOT NULL,
     email VARCHAR(64) NOT NULL,
     password VARCHAR(64) NOT NULL,
+    delivery_fee DECIMAL NOT NULL,
     opening VARCHAR(5) NOT NULL,
     closing VARCHAR(5) NOT NULL,
     CONSTRAINT fk_type FOREIGN KEY (type)
@@ -91,7 +92,6 @@ CREATE TABLE orders (
     driver_id INTEGER NOT NULL,
     status_id INTEGER NOT NULL,
     note VARCHAR(512),
-    delivery_fee DECIMAL NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     delivered_at TIMESTAMPTZ DEFAULT '0001-01-01 00:00:00+00',
     CONSTRAINT fk_user_id FOREIGN KEY (user_id)

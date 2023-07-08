@@ -34,6 +34,7 @@ func (h *SupplierHandler) AddSupplier(w http.ResponseWriter, r *http.Request) {
 		Name:         req.Name,
 		Email:        req.Email,
 		Password:     req.Password,
+		DeliveryFee:  req.DeliveryFee,
 		WorkingHours: req.WorkingHours,
 	}
 
@@ -80,6 +81,7 @@ func (h *SupplierHandler) GetSuppliers(w http.ResponseWriter, r *http.Request) {
 			Type:         *supplierType,
 			Image:        s.Image,
 			Name:         s.Name,
+			DeliveryFee:  s.DeliveryFee,
 			WorkingHours: s.WorkingHours,
 		}
 
@@ -104,6 +106,7 @@ func (h *SupplierHandler) UpdateSupplier(w http.ResponseWriter, r *http.Request)
 		Name:         req.Name,
 		Email:        req.Email,
 		Password:     req.Password,
+		DeliveryFee:  req.DeliveryFee,
 		WorkingHours: req.WorkingHours,
 	}
 
