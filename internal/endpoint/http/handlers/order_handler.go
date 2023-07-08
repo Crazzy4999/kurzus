@@ -31,12 +31,11 @@ func (h *OrderHandler) MakeOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	order := &models.Order{
-		UserID:      req.UserID,
-		SupplierID:  req.SupplierID,
-		DriverID:    req.DriverID,
-		StatusID:    req.StatusID,
-		Note:        util.NullString(req.Note),
-		DeliveredAt: req.DeliveredAt,
+		UserID:     req.UserID,
+		SupplierID: req.SupplierID,
+		DriverID:   req.DriverID,
+		StatusID:   req.StatusID,
+		Note:       util.NullString(req.Note),
 	}
 
 	err := h.orderRepo.Create(order)
