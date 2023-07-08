@@ -21,21 +21,22 @@ func Start() {
 	sr := dbrepo.NewSupplierRepository(db)
 	str := dbrepo.NewSupplierTypesRepository(db)
 	or := dbrepo.NewOrderRepository(db)
-	omr := dbrepo.NewOrderMenusRepository(db)
 	osr := dbrepo.NewOrderStatusRepository(db)
 	cr := dbrepo.NewCategoriesRepository(db)
 	ir := dbrepo.NewItemRepository(db)
 	imr := dbrepo.NewItemsMenusRepository(db)
 	mr := dbrepo.NewMenuRepository(db)
+	omr := dbrepo.NewOrderMenusRepository(db)
 
 	authHandler := handler.NewAuthHandler(ur, cfg)
 	userHandler := handler.NewUserHandler(ur, ar, cfg)
 	addressHandler := handler.NewAddressHandler(ar)
 	supplierHandler := handler.NewSupplierHandler(sr, str)
-	orderHandler := handler.NewOrderHandler(or, omr, osr)
+	orderHandler := handler.NewOrderHandler(or, osr)
 	categoryHandler := handler.NewCategoryHandler(cr)
 	itemHandler := handler.NewItemHandler(ir, imr)
 	menuHandler := handler.NewMenuHandler(mr, imr)
+	orderMenuHandler := handler.NewOrderMenuHandler(omr)
 
 	router.GET("/", nil, nil)
 
@@ -73,10 +74,10 @@ func Start() {
 	router.DELETE("/menu", menuHandler.RemoveMenu, middleware.CheckTokenValidity)
 
 	//from orders_menus link to menus
-	router.POST("/ordermenu", nil, middleware.CheckTokenValidity)
-	router.GET("/ordermenu", nil, middleware.CheckTokenValidity)
-	router.PUT("/ordermenu", nil, middleware.CheckTokenValidity)
-	router.DELETE("/ordermenu", nil, middleware.CheckTokenValidity)
+	router.POST("/ordermenu", orderMenuHandler.AddOrderMenu, middleware.CheckTokenValidity)
+	router.GET("/ordermenu", orderMenuHandler.GetOrderMenus, middleware.CheckTokenValidity)
+	router.PUT("/ordermenu", orderMenuHandler.UpdateOrderMenu, middleware.CheckTokenValidity)
+	router.DELETE("/ordermenu", orderMenuHandler.RemoveOrderMenu, middleware.CheckTokenValidity)
 
 	//from orders link to orders_menus
 	router.POST("/order", orderHandler.MakeOrder, middleware.CheckTokenValidity)

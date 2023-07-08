@@ -13,14 +13,12 @@ import (
 
 type OrderHandler struct {
 	orderRepo       *db.OrderRepository
-	orderMenusRepo  *db.OrderMenusRepository
 	orderStatusRepo *db.OrderStatusRepository
 }
 
-func NewOrderHandler(orderRepo *db.OrderRepository, orderMenusRepo *db.OrderMenusRepository, orderStatusRepo *db.OrderStatusRepository) *OrderHandler {
+func NewOrderHandler(orderRepo *db.OrderRepository, orderStatusRepo *db.OrderStatusRepository) *OrderHandler {
 	return &OrderHandler{
 		orderRepo:       orderRepo,
-		orderMenusRepo:  orderMenusRepo,
 		orderStatusRepo: orderStatusRepo,
 	}
 }
