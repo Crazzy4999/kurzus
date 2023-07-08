@@ -56,11 +56,11 @@ CREATE TABLE menus (
     id SERIAL PRIMARY KEY,
     image VARCHAR(1024) NOT NULL,
     supplier_id INTEGER NOT NULL,
-    categorie_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
     price DECIMAL DEFAULT 1.0,
     CONSTRAINT fk_supplier_id FOREIGN KEY (supplier_id)
     REFERENCES suppliers(id) ON DELETE CASCADE,
-    CONSTRAINT fk_categorie_id FOREIGN KEY (categorie_id)
+    CONSTRAINT fk_category_id FOREIGN KEY (category_id)
     REFERENCES categories(id) ON DELETE CASCADE
 );
 
