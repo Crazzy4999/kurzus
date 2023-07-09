@@ -79,7 +79,7 @@ func Start() {
 	router.DELETE("/menu", menuHandler.RemoveMenu, middleware.CheckTokenValidity)
 
 	router.POST("/ordermenu", orderMenuHandler.AddOrderMenu, middleware.CheckTokenValidity)
-	router.GET("/ordermenu", orderMenuHandler.GetOrderMenus, middleware.CheckTokenValidity)
+	router.GET("/ordermenus", orderMenuHandler.GetOrderMenus, middleware.CheckTokenValidity)
 	router.PUT("/ordermenu", orderMenuHandler.UpdateOrderMenu, middleware.CheckTokenValidity)
 	router.DELETE("/ordermenu", orderMenuHandler.RemoveOrderMenu, middleware.CheckTokenValidity)
 
