@@ -1,5 +1,5 @@
-import { LoginError, ResetError, SignUpError } from "./errors"
-import type { tokenPairResponse } from "./responses"
+import { AddressError, LoginError, OOPS, OrderError, OrderMenuError, ProfileError, ResetError, SignUpError, SupplierError, UNEXPECTED } from "./errors"
+import type { userResponse, tokenPairResponse, addressesCollectionResponse, supplierCollectionResponse, menuCollectionResponse, orderCollectionResponse } from "./responses"
 
 const root = "http://localhost:3000"
 
@@ -7,43 +7,61 @@ function apiFetch(url: string, init?: RequestInit | undefined) {
     return fetch(root+url, init)
 }
 
-function GET(url: string, data: any) {
+function GET(url: string, isProtected: boolean, data: any) {
     return apiFetch(url, {
         method: 'get',
+        headers: !isProtected ? {
+            Accept: 'application/json',
+            Authentication: 'Bearer ',
+        } : undefined,
         body: JSON.stringify(data)
     })
 }
 
-function POST(url: string, data: any) {
+function POST(url: string, isProtected: boolean, data: any) {
     return apiFetch(url, {
         method: 'post',
+        headers: !isProtected ? {
+            Accept: 'application/json',
+            Authentication: 'Bearer ',
+        } : undefined,
         body: JSON.stringify(data)
     })
 }
 
-function PUT(url: string, data: any) {
+function PUT(url: string, isProtected: boolean, data: any) {
     return apiFetch(url, {
         method: 'put',
+        headers: !isProtected ? {
+            Accept: 'application/json',
+            Authentication: 'Bearer ',
+        } : undefined,
         body: JSON.stringify(data)
     })
 }
 
-function DELETE(url: string, data: any) {
+function DELETE(url: string, isProtected: boolean, data: any) {
     return apiFetch(url, {
         method: 'delete',
+        headers: !isProtected ? {
+            Accept: 'application/json',
+            Authentication: 'Bearer ',
+        } : undefined,
         body: JSON.stringify(data)
     })
 }
+
+
 
 
 
 export async function login(email: string, password: string) {
-    return POST("/login", { email, password }).then(async response => {
+    return POST("/login", false, { email, password }).then(async response => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
                 case LoginError.invalidCredentials: throw "Invalid credentials!"
-                default: throw "An unexpected error has occured!"
+                default: throw UNEXPECTED
             }
         }
         return response.json() as Promise<tokenPairResponse>
@@ -51,14 +69,14 @@ export async function login(email: string, password: string) {
 }
 
 export async function signUp(firstName: string, lastName: string, email: string, password: string, passwordAgain: string) {
-    return POST("/signup", { firstName, lastName, email, password, passwordAgain }).then(async response => {
+    return POST("/signup", false, { firstName, lastName, email, password, passwordAgain }).then(async response => {
             if(!response.ok) {
                 let err = (await response.text()).replace("\n", "")
                 switch(err) {
                     case SignUpError.passwordMismatch: throw "The passwords doesn't match!"
                     case SignUpError.emailTaken: throw "Email is already in use!"
-                    case SignUpError.passwordFailed: throw "Oops, something went wrong!"
-                    default: throw "An unexpected error has occured!"
+                    case SignUpError.passwordFailed: throw OOPS
+                    default: throw UNEXPECTED
                 }
             }
             return response.json()
@@ -66,12 +84,12 @@ export async function signUp(firstName: string, lastName: string, email: string,
 }
 
 export async function getResetKey(email: string) {
-    return POST("/reset", { email }).then(async response => {
+    return POST("/reset", false, { email }).then(async response => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
                 case ResetError.userNotExist: throw "There is no user registered with this email!"
-                default: throw "An unexpected error has occured!"
+                default: throw UNEXPECTED
             }
         }
         return response.json()
@@ -79,17 +97,17 @@ export async function getResetKey(email: string) {
 }
 
 export async function resetPassword(email: string, password: string, passwordAgain: string) {
-    return PUT("/reset", { email, password, passwordAgain }).then(async response => {
+    return PUT("/reset", false, { email, password, passwordAgain }).then(async response => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
                 case ResetError.passwordMismatch: throw "The passwords doesn't match!"
-                case ResetError.getUserFailed: throw "Oops something went wrong!"
+                case ResetError.getUserFailed: throw OOPS
                 case ResetError.resetKeyMissing: throw "Reset key is missing! Request a new reset!"
                 case ResetError.invalidCredentials: throw "Invalid credentials!"
-                case ResetError.passwordFailed: throw "Oops something went wrong!"
+                case ResetError.passwordFailed: throw OOPS
                 case ResetError.resetFailed: throw "Reseting password failed!"
-                default: throw "An unexpected error has occured!"
+                default: throw UNEXPECTED
             }
         }
         return response.json()
@@ -97,14 +115,215 @@ export async function resetPassword(email: string, password: string, passwordAga
 }
 
 export async function refresh() {
-    return GET("/refresh", {}).then(async response => {
+    return GET("/refresh", true, {}).then(async response => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
                 case LoginError.invalidCredentials: throw "Invalid credentials!"
-                default: throw "An unexpected error has occured!"
+                default: throw UNEXPECTED
             }
         }
         return response.json()
+    })
+}
+
+
+
+export async function getProfile() {
+    return GET("/profile", true, {}).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case ProfileError.invalidCredentials: throw "Invalid credentials!"
+                case ProfileError.getUserFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json() as Promise<userResponse>
+    })
+}
+
+export async function updateProfile(firstName: string, lastName: string) {
+    return PUT("/profile", true, { firstName, lastName }).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case ProfileError.invalidCredentials: throw "Invalid credentials!"
+                case ProfileError.getUserFailed: throw OOPS
+                case ProfileError.updatingUserFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json()
+    })
+}
+
+export async function deleteProfile() {
+    return DELETE("/profile", true, {}).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case ProfileError.invalidCredentials: throw "Invalid credentials!"
+                case ProfileError.getAllAddressFailed: throw OOPS
+                case ProfileError.deletingAddressFailed: throw OOPS
+                case ProfileError.deletingUserFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json()
+    })
+}
+
+
+
+export async function addAddress(isActive: boolean, city: string, street: string, houseNumber: string, zipCode: string, floorNumber: string, apartment: string) {
+    return POST("/address", true, { isActive, city, street, houseNumber, zipCode, floorNumber, apartment }).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case AddressError.invalidCredentials: throw "Invalid credentials!"
+                case AddressError.creatingAddressFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json()
+    })
+}
+
+export async function getAddresses() {
+    return GET("/addresses", true, {}).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case AddressError.invalidCredentials: throw "Invalid credentials!"
+                case AddressError.getAllAddressFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json() as Promise<addressesCollectionResponse>
+    })
+}
+
+export async function updateAddress(isActive: boolean, city: string, street: string, houseNumber: string, zipCode: string, floorNumber: string, apartment: string) {
+    return PUT("/address", true, { isActive, city, street, houseNumber, zipCode, floorNumber, apartment }).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case AddressError.updatingAddressFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json()
+    })
+}
+
+export async function deleteAddress(id: number) {
+    return DELETE("/address", true, { id }).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case AddressError.deletingAddressFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json()
+    })
+}
+
+
+
+export async function getSuppliers() {
+    return GET("/suppliers", true, {}).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case SupplierError.getAllSupplierFailed: throw OOPS
+                case SupplierError.getSupplierTypeFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json() as Promise<supplierCollectionResponse>
+    })
+}
+
+
+
+export async function addOrderMenu() {
+    return POST("/ordermenu", true, {}).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case OrderMenuError.creatingOrderMenuFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json()
+    })
+}
+
+export async function getOrderMenus(orderID: number) {
+    return GET("/ordermenus", true, { orderID }).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case OrderMenuError.getAllMenuByOrderFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json() as Promise<menuCollectionResponse>
+    })
+}
+
+export async function updateOrderMenu(quantity: number) {
+    return PUT("/ordermenu", true, { quantity }).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case OrderMenuError.updatingOrderMenuByOrderFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json()
+    })
+}
+
+export async function deleteOrderMenu(orderID: number) {
+    return DELETE("/ordermenu", true, { orderID }).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case OrderMenuError.deletingOrderMenuByOrderFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json()
+    })
+}
+
+
+
+export async function makeOrder(userID: number, supplierID: number, note: string) {
+    return POST("/order", true, { userID, supplierID, note }).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case OrderError.creatingOrderFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json()
+    })
+}
+
+export async function getOrders() {
+    return GET("/orders", true, {}).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case OrderError.getAllOrderFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json() as Promise<orderCollectionResponse>
     })
 }
