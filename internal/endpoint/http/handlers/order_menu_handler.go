@@ -7,6 +7,8 @@ import (
 	"hangryAPI/internal/models"
 	"hangryAPI/internal/repositories/db"
 	"net/http"
+	"regexp"
+	"strconv"
 )
 
 type OrderMenuHandler struct {
@@ -42,13 +44,16 @@ func (h *OrderMenuHandler) AddOrderMenu(w http.ResponseWriter, r *http.Request) 
 }
 
 func (h *OrderMenuHandler) GetOrderMenus(w http.ResponseWriter, r *http.Request) {
-	req := new(request.OrderMenuRequest)
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, JSON_TRANSFORM_FAILED, http.StatusBadRequest)
+	regex := regexp.MustCompile("\\d+")
+	match := regex.FindString(r.URL.Path)
+
+	orderID, err := strconv.Atoi(match)
+	if err != nil {
+		http.Error(w, STRING_CONVERSION_FAILED, http.StatusBadRequest)
 		return
 	}
 
-	menus, err := h.orderMenuRepo.GetMenusByOrderID(req.OrderID)
+	menus, err := h.orderMenuRepo.GetMenusByOrderID(orderID)
 	if err != nil {
 		http.Error(w, GET_ALL_MENU_BY_ORDER_FAILED, http.StatusBadRequest)
 		return

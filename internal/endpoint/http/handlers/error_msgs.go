@@ -1,8 +1,9 @@
 package handler
 
 const (
-	JSON_TRANSFORM_FAILED = "transforming request from json failed"
-	INVALID_CREDENTIALS   = "invalid credentials"
+	JSON_TRANSFORM_FAILED    = "transforming request from json failed"
+	INVALID_CREDENTIALS      = "invalid credentials"
+	STRING_CONVERSION_FAILED = "converting string to integer failed"
 
 	CREATING_ADDRESS_FAILED = "creating address failed"
 	GET_ALL_ADDRESS_FAILED  = "getting all addresses failed"
