@@ -66,7 +66,15 @@ watch(deleting, (newVal, oldVal) => {
         </div>
         <div v-if="deleting" class="block-screen">
             <div class="modal-body">
-                
+                <h4>Are you sure you want to delete this address?</h4>
+                <span class="modal-address-container">
+                    <div class="modal-address-text">{{ address.street }} {{ address.houseNumber }} {{ address.floorNumber }} {{ address.apartment }}</div>
+                    <div class="modal-address-text">{{ address.zipCode }} {{ address.city }}</div>
+                </span>
+                <span class="btn-container">
+                    <button class="modal-btn" @click.prevent="deleting = !deleting">Cancel</button>
+                    <button class="modal-btn" @click.prevent="">Delete</button>
+                </span>
             </div>
         </div>
     </li>
@@ -139,6 +147,15 @@ body.modal-open {
     color: var(--second-hover);
 }
 
+.modal-address-container {
+    margin-block: var(--h4-size);
+    margin-left: var(--h4-size);
+}
+
+.modal-address-text {
+    font-size: var(--p-size);
+}
+
 .action-btn {
     cursor: pointer;
     width: var(--h4-size);
@@ -189,6 +206,12 @@ body.modal-open {
 
 .modal-btn:hover {
     background-color: var(--second-hover);
+}
+
+h4 {
+    text-align: center;
+    width: 85%;
+    margin-inline: auto;
 }
 
 @media only screen and (hover: none) and (pointer: coarse) {
