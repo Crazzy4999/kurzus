@@ -12,16 +12,16 @@ export const useAuthStore = defineStore("authentication", {
         email: ""
     }),
     actions: {
-        async setTokens(tokenPair: tokenPairResponse) {
-            this.$state.accessToken = tokenPair.accessToken
-            this.$state.refreshToken = tokenPair.refreshToken
+        async setTokens(accessToken: string, refreshToken: string) {
+            this.$state.accessToken = accessToken
+            this.$state.refreshToken = refreshToken
         },
 
-        async setUser(userData: userResponse) {
-            this.$state.id = userData.id
-            this.$state.firstName = userData.firstName
-            this.$state.lastName = userData.lastName
-            this.$state.email = userData.email
+        async setUser(id: number, firstName: string, lastName: string, email: string) {
+            this.$state.id = id
+            this.$state.firstName = firstName
+            this.$state.lastName = lastName
+            this.$state.email = email
         }
     }
 })

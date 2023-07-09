@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import Header from "@/components/Header.vue"
-import { ref } from "vue";
+import { reactive, ref, watch } from "vue";
 import AddressCard from '@/components/order/AddressCard.vue'
 import type { addressInfo } from "./OrderView.vue";
+import { useAuthStore } from "@/store";
 
 let addresses: addressInfo[] = [
     { city: "Budapest", street: "Szamos utca", houseNumber: "8", zipCode: "1039", floorNumber: "2", apartment: ""},
@@ -11,7 +12,17 @@ let addresses: addressInfo[] = [
     { city: "Budapest", street: "Szamos utca", houseNumber: "11", zipCode: "1039", floorNumber: "2", apartment: ""},
 ]
 
-let hasChanged = ref(false)
+const useAuth = useAuthStore()
+
+const firstName = ref(useAuth.firstName)
+const lastName = ref(useAuth.lastName)
+
+let hasChanged = ref(firstName.value !== useAuth.firstName)
+
+watch(firstName, (n, o) => {
+    console.log(firstName.value, useAuth.firstName, hasChanged.value)
+})
+
 </script>
 
 <template>
@@ -20,8 +31,8 @@ let hasChanged = ref(false)
         <form>
             <h2 class="title">Profile settings</h2>
             <h3>Name</h3>
-            <input type="text" placeholder="First name">
-            <input type="text" placeholder="Last name">
+            <input type="text" placeholder="First name" v-model="firstName">
+            <input type="text" placeholder="Last name" v-model="lastName">
             <h3>Addresses</h3>
             <p>
                 <AddressCard v-for="a in addresses" :address="a"/>

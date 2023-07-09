@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/store';
+
 defineProps<{
     toggle: boolean
 }>()
+
+const useAuth = useAuthStore()
 </script>
 
 <template>
@@ -10,14 +14,15 @@ defineProps<{
             <li>
                 <div class="dummy-nav-item"></div>
             </li>
-            <li>
-                <RouterLink to="/login"  class="nav-item">Login</RouterLink>
+            <li v-if="useAuth.email !== ''">
+                <RouterLink to="/profile" class="nav-item">Profile</RouterLink>
             </li>
-            <li>
-                <RouterLink to="/signup"  class="nav-item">Sign up</RouterLink>
+            <li v-if="useAuth.email === ''">
+                <RouterLink to="/login" class="nav-item">Login</RouterLink>
             </li>
-
-            <!--in release only show if user is signed in!!!-->
+            <li v-if="useAuth.email === ''">
+                <RouterLink to="/signup" class="nav-item">Sign Up</RouterLink>
+            </li>
             <li>
                 <RouterLink to="/suppliers"  class="nav-item">Suppliers</RouterLink>
             </li>

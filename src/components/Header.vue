@@ -3,6 +3,9 @@ import CartImg from "@/assets/icons/8679184_shopping_basket_shop_icon.svg"
 import MenuImg from "@/assets/icons/134216_menu_lines_hamburger_icon.svg"
 import Sidebar from "@/components/Sidebar.vue"
 import { ref } from "vue";
+import { useAuthStore } from "@/store";
+
+const useAuth = useAuthStore()
 
 let toggleSidebar = ref(false)
 </script>
@@ -18,10 +21,13 @@ let toggleSidebar = ref(false)
         </RouterLink>
         <nav>
             <ul>
-                <li>
+                <li v-if="useAuth.email !== ''">
+                    <RouterLink to="/profile" class="nav-item">Profile</RouterLink>
+                </li>
+                <li v-if="useAuth.email === ''">
                     <RouterLink to="/login" class="nav-item">Login</RouterLink>
                 </li>
-                <li>
+                <li v-if="useAuth.email === ''">
                     <RouterLink to="/signup" class="nav-item">Sign Up</RouterLink>
                 </li>
                 <li>

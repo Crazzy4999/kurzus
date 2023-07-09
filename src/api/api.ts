@@ -8,35 +8,30 @@ function apiFetch(url: string, init?: RequestInit | undefined) {
     return fetch(root+url, init)
 }
 
-function GET(url: string, isProtected: boolean, data: any) {
+function GET(url: string, isProtected: boolean) {
     return apiFetch(url, {
         method: 'get',
-        headers: !isProtected ? {
-            Accept: 'application/json',
-            Authentication: 'Bearer ' + useAuthStore().accessToken,
-        } : undefined,
-        body: JSON.stringify(data)
+        headers: isProtected ? {
+            Authorization: 'Bearer ' + useAuthStore().accessToken,
+        } : {},
     })
 }
 
-function GET_REFRESH(url: string, isProtected: boolean, data: any) {
+function GET_REFRESH(url: string, isProtected: boolean) {
     return apiFetch(url, {
         method: 'get',
-        headers: !isProtected ? {
-            Accept: 'application/json',
-            Authentication: 'Bearer ' + useAuthStore().refreshToken,
-        } : undefined,
-        body: JSON.stringify(data)
+        headers: isProtected ? {
+            Authorization: 'Bearer ' + useAuthStore().refreshToken,
+        } : {},
     })
 }
 
 function POST(url: string, isProtected: boolean, data: any) {
     return apiFetch(url, {
         method: 'post',
-        headers: !isProtected ? {
-            Accept: 'application/json',
-            Authentication: 'Bearer ' + useAuthStore().accessToken,
-        } : undefined,
+        headers: isProtected ? {
+            Authorization: 'Bearer ' + useAuthStore().refreshToken,
+        } : {},
         body: JSON.stringify(data)
     })
 }
@@ -44,10 +39,9 @@ function POST(url: string, isProtected: boolean, data: any) {
 function PUT(url: string, isProtected: boolean, data: any) {
     return apiFetch(url, {
         method: 'put',
-        headers: !isProtected ? {
-            Accept: 'application/json',
-            Authentication: 'Bearer ' + useAuthStore().accessToken,
-        } : undefined,
+        headers: isProtected ? {
+            Authorization: 'Bearer ' + useAuthStore().accessToken,
+        } : {},
         body: JSON.stringify(data)
     })
 }
@@ -55,10 +49,9 @@ function PUT(url: string, isProtected: boolean, data: any) {
 function DELETE(url: string, isProtected: boolean, data: any) {
     return apiFetch(url, {
         method: 'delete',
-        headers: !isProtected ? {
-            Accept: 'application/json',
-            Authentication: 'Bearer ' + useAuthStore().accessToken,
-        } : undefined,
+        headers: isProtected ? {
+            Authorization: 'Bearer ' + useAuthStore().accessToken,
+        } : {},
         body: JSON.stringify(data)
     })
 }
@@ -127,7 +120,7 @@ export async function resetPassword(email: string, password: string, passwordAga
 }
 
 export async function refresh() {
-    return GET_REFRESH("/refresh", true, {}).then(async response => {
+    return GET_REFRESH("/refresh", true).then(async response => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -142,7 +135,7 @@ export async function refresh() {
 
 
 export async function getProfile() {
-    return GET("/profile", true, {}).then(async response => {
+    return GET("/profile", true).then(async response => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -203,7 +196,7 @@ export async function addAddress(isActive: boolean, city: string, street: string
 }
 
 export async function getAddresses() {
-    return GET("/addresses", true, {}).then(async response => {
+    return GET("/addresses", true).then(async response => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -245,7 +238,7 @@ export async function deleteAddress(id: number) {
 
 
 export async function getSuppliers() {
-    return GET("/suppliers", true, {}).then(async response => {
+    return GET("/suppliers", true).then(async response => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -274,10 +267,11 @@ export async function addOrderMenu() {
 }
 
 export async function getOrderMenus(orderID: number) {
-    return GET("/ordermenus", true, { orderID }).then(async response => {
+    return GET("/ordermenus/" + orderID, true).then(async response => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
+                case OrderMenuError.stringConversionFailed: throw OOPS
                 case OrderMenuError.getAllMenuByOrderFailed: throw OOPS
                 default: throw UNEXPECTED
             }
@@ -328,7 +322,7 @@ export async function makeOrder(userID: number, supplierID: number, note: string
 }
 
 export async function getOrders() {
-    return GET("/orders", true, {}).then(async response => {
+    return GET("/orders", true).then(async response => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
