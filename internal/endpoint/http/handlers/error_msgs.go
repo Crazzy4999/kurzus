@@ -37,7 +37,7 @@ const (
 
 	CREATING_MENU_FAILED              = "creating menu failed"
 	GET_ALL_MENU_FAILED               = "getting all menus failed"
-	CREATING_MENU_ITEM_FAILED         = "creating menu item failed"
+	CREATING_MENU_ITEM_FAILED         = "creating menu_item failed"
 	DELETING_MENU_FAILED              = "deleting menu failed"
 	DELETING_MENU_ITEM_BY_MENU_FAILED = "deleting menu_item by menu id failed"
 
