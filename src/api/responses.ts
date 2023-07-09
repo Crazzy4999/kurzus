@@ -4,7 +4,7 @@ export type tokenPairResponse = {
 } & Response
 
 export type userResponse = {
-    id: string
+    id: number
     firstName: string
     lastName: string
     email: string
