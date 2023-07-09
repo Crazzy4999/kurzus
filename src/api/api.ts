@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/store"
 import { AddressError, LoginError, OOPS, OrderError, OrderMenuError, ProfileError, ResetError, SignUpError, SupplierError, UNEXPECTED } from "./errors"
 import type { userResponse, tokenPairResponse, addressesCollectionResponse, supplierCollectionResponse, menuCollectionResponse, orderCollectionResponse } from "./responses"
 
@@ -12,7 +13,18 @@ function GET(url: string, isProtected: boolean, data: any) {
         method: 'get',
         headers: !isProtected ? {
             Accept: 'application/json',
-            Authentication: 'Bearer ',
+            Authentication: 'Bearer ' + useAuthStore().accessToken,
+        } : undefined,
+        body: JSON.stringify(data)
+    })
+}
+
+function GET_REFRESH(url: string, isProtected: boolean, data: any) {
+    return apiFetch(url, {
+        method: 'get',
+        headers: !isProtected ? {
+            Accept: 'application/json',
+            Authentication: 'Bearer ' + useAuthStore().refreshToken,
         } : undefined,
         body: JSON.stringify(data)
     })
@@ -23,7 +35,7 @@ function POST(url: string, isProtected: boolean, data: any) {
         method: 'post',
         headers: !isProtected ? {
             Accept: 'application/json',
-            Authentication: 'Bearer ',
+            Authentication: 'Bearer ' + useAuthStore().accessToken,
         } : undefined,
         body: JSON.stringify(data)
     })
@@ -34,7 +46,7 @@ function PUT(url: string, isProtected: boolean, data: any) {
         method: 'put',
         headers: !isProtected ? {
             Accept: 'application/json',
-            Authentication: 'Bearer ',
+            Authentication: 'Bearer ' + useAuthStore().accessToken,
         } : undefined,
         body: JSON.stringify(data)
     })
@@ -45,7 +57,7 @@ function DELETE(url: string, isProtected: boolean, data: any) {
         method: 'delete',
         headers: !isProtected ? {
             Accept: 'application/json',
-            Authentication: 'Bearer ',
+            Authentication: 'Bearer ' + useAuthStore().accessToken,
         } : undefined,
         body: JSON.stringify(data)
     })
@@ -115,7 +127,7 @@ export async function resetPassword(email: string, password: string, passwordAga
 }
 
 export async function refresh() {
-    return GET("/refresh", true, {}).then(async response => {
+    return GET_REFRESH("/refresh", true, {}).then(async response => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -123,7 +135,7 @@ export async function refresh() {
                 default: throw UNEXPECTED
             }
         }
-        return response.json()
+        return response.json() as Promise<tokenPairResponse>
     })
 }
 
