@@ -158,7 +158,7 @@ func (h *AuthHandler) GetPasswordResetKey(w http.ResponseWriter, r *http.Request
 
 	tokenService := token.NewTokenService(h.cfg)
 
-	resetString, err := tokenService.GenerateRefreshToken(user.ID)
+	resetString, err := tokenService.GenerateResetToken(user.ID)
 	if err != nil {
 		http.Error(w, TOKEN_GENERATION_FAILED, http.StatusInternalServerError)
 		return
@@ -193,7 +193,6 @@ func (h *AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tokenService := token.NewTokenService(h.cfg)
-	// TODO: fix invalid signature (invalid here in go, on jwt website it's fine for some reason)
 	claims, err := tokenService.ValidateResetToken(resetKey)
 	if err != nil {
 		http.Error(w, INVALID_CREDENTIALS, http.StatusUnauthorized)
