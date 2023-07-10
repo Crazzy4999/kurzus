@@ -16,6 +16,34 @@ let addresses: addressInfo[] = [
 
 const useAuth = useAuthStore()
 
+const addingAddress = ref(false)
+const city = ref("")
+const street = ref("")
+const zipCode = ref("")
+const houseNumber = ref("")
+const floorNumber = ref("")
+const apartment = ref("")
+const errorMsg = ref("")
+
+function filter(e: KeyboardEvent) {
+    if(!/\d/.test(e.key)) return e.preventDefault()
+}
+
+function addNewAddress() {
+
+}
+
+
+
+const emailSent = ref("")
+
+function getResetEmail() {
+    if(useAuth.email !== "") getResetKey(useAuth.email).then(() => emailSent.value = "Reset email succesfully sent, check your email!").catch(err => emailSent.value = err)
+    else emailSent.value = "You must be signed in!"
+}
+
+
+
 const firstName = ref(useAuth.firstName)
 const lastName = ref(useAuth.lastName)
 
@@ -31,12 +59,7 @@ function updateUser(firstName: string, lastName: string) {
     })
 }
 
-const emailSent = ref("")
 
-function getResetEmail() {
-    if(useAuth.email !== "") getResetKey(useAuth.email).then(() => emailSent.value = "Reset email succesfully sent, check your email!").catch(err => emailSent.value = err)
-    else emailSent.value = "You must be signed in!"
-}
 
 const showDeleteModal = ref(false)
 const deleteErr = ref("")
@@ -60,6 +83,7 @@ function deleteUser() {
             <h3>Addresses</h3>
             <p>
                 <AddressCard v-for="a in addresses" :address="a"/>
+                <button class="btn" @click.prevent="addingAddress = !addingAddress">New address</button>
             </p>
             <h3>Password</h3>
             <p>Incase you forgot your password or you want to change it you can do it here.</p>
@@ -70,6 +94,7 @@ function deleteUser() {
             <p>This action can not be undone, are you sure you want to delete your Hangry profile?</p>
             <button class="delete-btn" @click.prevent="showDeleteModal = !showDeleteModal">Delete profile</button>
             <p class="info-msg">{{ deleteErr }}</p>
+
             <div class="block-screen" v-if="showDeleteModal">
                 <div class="modal-body">
                     <h3 class="modal-header">Delete user profile</h3>
@@ -77,6 +102,23 @@ function deleteUser() {
                     <span class="modal-flex">
                         <button class="btn" @click.prevent="showDeleteModal = !showDeleteModal">Cancel</button>
                         <button class="btn" @click.prevent="deleteUser()">Delete profile</button>
+                    </span>
+                </div>
+            </div>
+
+            <div class="block-screen" v-if="addingAddress">
+                <div class="modal-body">
+                    <h3 class="modal-header">Add new address</h3>
+                    <input class="address-input" type="text" placeholder="city" v-model="city">
+                    <input class="address-input" type="text" placeholder="street" v-model="street">
+                    <input class="address-input" type="text" placeholder="house number" v-model="houseNumber" @keypress="(e) => filter(e)">
+                    <input class="address-input" type="text" placeholder="zip code" v-model="zipCode" @keypress="(e) => filter(e)">
+                    <input class="address-input" type="text" placeholder="floor number" v-model="floorNumber" @keypress="(e) => filter(e)">
+                    <input class="address-input" type="text" placeholder="apartment" v-model="apartment" @keypress="(e) => filter(e)">
+                    <span class="error-msg">{{ errorMsg }}</span>
+                    <span class="modal-flex">
+                        <button class="btn" @click.prevent="addingAddress = !addingAddress">Cancel</button>
+                        <button class="btn" @click.prevent="addNewAddress()">Add address</button>
                     </span>
                 </div>
             </div>
@@ -173,6 +215,13 @@ function deleteUser() {
     .delete-btn:hover {
         border: var(--sub-border-size) solid var(--second-hover);
         background-color: var(--second-hover);
+    }
+
+    .error-msg {
+        text-align: center;
+        font-size: var(--p-size);
+        color: var(--error-color);
+        margin: var(--sub-p-size) 0;
     }
 
     @media only screen and (hover: none) and (pointer: coarse) {
