@@ -1,6 +1,7 @@
 import { useAuthStore } from "@/store"
 import { AddressError, LoginError, OOPS, OrderError, OrderMenuError, ProfileError, ResetError, SignUpError, SupplierError, UNEXPECTED } from "./errors"
 import type { userResponse, tokenPairResponse, addressesCollectionResponse, supplierCollectionResponse, menuCollectionResponse, orderCollectionResponse } from "./responses"
+import { useRoute } from "vue-router"
 
 const root = "http://localhost:3000"
 
@@ -84,7 +85,6 @@ export async function signUp(firstName: string, lastName: string, email: string,
                     default: throw UNEXPECTED
                 }
             }
-            return response.json()
         })
 }
 
@@ -97,12 +97,11 @@ export async function getResetKey(email: string) {
                 default: throw UNEXPECTED
             }
         }
-        return response.json()
     })
 }
 
-export async function resetPassword(email: string, password: string, passwordAgain: string) {
-    return PUT("/reset", false, { email, password, passwordAgain }).then(async response => {
+export async function resetPassword(password: string, passwordAgain: string) {
+    return PUT("/reset?reset_key=" + useRoute().query.reset_key, false, { password, passwordAgain }).then(async response => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -115,7 +114,6 @@ export async function resetPassword(email: string, password: string, passwordAga
                 default: throw UNEXPECTED
             }
         }
-        return response.json()
     })
 }
 
@@ -159,7 +157,6 @@ export async function updateProfile(firstName: string, lastName: string) {
                 default: throw UNEXPECTED
             }
         }
-        return response.json()
     })
 }
 
@@ -175,7 +172,6 @@ export async function deleteProfile() {
                 default: throw UNEXPECTED
             }
         }
-        return response.json()
     })
 }
 
@@ -191,7 +187,6 @@ export async function addAddress(isActive: boolean, city: string, street: string
                 default: throw UNEXPECTED
             }
         }
-        return response.json()
     })
 }
 
@@ -218,7 +213,6 @@ export async function updateAddress(isActive: boolean, city: string, street: str
                 default: throw UNEXPECTED
             }
         }
-        return response.json()
     })
 }
 
@@ -231,7 +225,6 @@ export async function deleteAddress(id: number) {
                 default: throw UNEXPECTED
             }
         }
-        return response.json()
     })
 }
 
@@ -262,7 +255,6 @@ export async function addOrderMenu() {
                 default: throw UNEXPECTED
             }
         }
-        return response.json()
     })
 }
 
@@ -289,7 +281,6 @@ export async function updateOrderMenu(quantity: number) {
                 default: throw UNEXPECTED
             }
         }
-        return response.json()
     })
 }
 
@@ -302,7 +293,6 @@ export async function deleteOrderMenu(orderID: number) {
                 default: throw UNEXPECTED
             }
         }
-        return response.json()
     })
 }
 
@@ -317,7 +307,6 @@ export async function makeOrder(userID: number, supplierID: number, note: string
                 default: throw UNEXPECTED
             }
         }
-        return response.json()
     })
 }
 
