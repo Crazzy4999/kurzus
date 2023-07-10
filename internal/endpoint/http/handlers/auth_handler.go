@@ -116,7 +116,7 @@ func (h *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
 func (h *AuthHandler) Refresh(w http.ResponseWriter, r *http.Request) {
 	tokenService := token.NewTokenService(h.cfg)
 
-	claims, err := token.GetClaimsFromContext(r)
+	claims, err := tokenService.GetClaims(r, h.cfg.RefreshSecret)
 	if err != nil {
 		http.Error(w, INVALID_CREDENTIALS, http.StatusUnauthorized)
 		return

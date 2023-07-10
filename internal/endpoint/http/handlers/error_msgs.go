@@ -3,6 +3,8 @@ package handler
 const (
 	JSON_TRANSFORM_FAILED    = "transforming request from json failed"
 	INVALID_CREDENTIALS      = "invalid credentials"
+	ACCESS_TOKEN_EXPIRED     = "access token expired"
+	REFRESH_TOKEN_EXPIRED    = "refresh token expired"
 	STRING_CONVERSION_FAILED = "converting string to integer failed"
 
 	CREATING_ADDRESS_FAILED = "creating address failed"

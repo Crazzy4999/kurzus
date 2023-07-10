@@ -2,11 +2,14 @@ package middleware
 
 import (
 	"context"
+	"fmt"
 	config "hangryAPI/configs"
 	handler "hangryAPI/internal/endpoint/http/handlers"
 	"hangryAPI/internal/service/token"
 	"hangryAPI/internal/util"
 	"net/http"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type Func func(handler http.Handler) http.Handler
@@ -18,6 +21,10 @@ func CheckAccessTokenValidity(next http.Handler) http.Handler {
 
 		claims, err := tokenService.GetClaims(r, cfg.AccessSecret)
 		if err != nil {
+			if fmt.Errorf("%w: %w", jwt.ErrTokenInvalidClaims, jwt.ErrTokenExpired).Error() == err.Error() {
+				http.Error(w, handler.ACCESS_TOKEN_EXPIRED, http.StatusUnauthorized)
+				return
+			}
 			http.Error(w, handler.INVALID_CREDENTIALS, http.StatusUnauthorized)
 			return
 		}
@@ -39,6 +46,10 @@ func CheckRefreshTokenValidity(next http.Handler) http.Handler {
 
 		claims, err := tokenService.GetClaims(r, cfg.RefreshSecret)
 		if err != nil {
+			if fmt.Errorf("%w: %w", jwt.ErrTokenInvalidClaims, jwt.ErrTokenExpired).Error() == err.Error() {
+				http.Error(w, handler.REFRESH_TOKEN_EXPIRED, http.StatusUnauthorized)
+				return
+			}
 			http.Error(w, handler.INVALID_CREDENTIALS, http.StatusUnauthorized)
 			return
 		}
