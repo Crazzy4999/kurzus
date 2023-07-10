@@ -186,14 +186,8 @@ func (h *AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.userRepo.GetUserByEmail(req.Email)
-	if err != nil {
-		http.Error(w, GET_USER_FAILED, http.StatusBadRequest)
-		return
-	}
-
 	resetKey := r.URL.Query().Get("reset_key")
-	if err != nil {
+	if resetKey == "" {
 		http.Error(w, MISSING_RESET_KEY, http.StatusBadRequest)
 		return
 	}
@@ -203,6 +197,12 @@ func (h *AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 	claims, err := tokenService.ValidateResetToken(resetKey)
 	if err != nil {
 		http.Error(w, INVALID_CREDENTIALS, http.StatusUnauthorized)
+		return
+	}
+
+	user, err := h.userRepo.GetUserByID(claims.ID)
+	if err != nil {
+		http.Error(w, GET_USER_FAILED, http.StatusBadRequest)
 		return
 	}
 
