@@ -21,6 +21,18 @@
     margin: auto;
 }
 
+.modal-header {
+    text-align: center;
+}
+
+.modal-text {
+    text-align: center;
+}
+
+.modal-flex {
+    display: flex;
+}
+
 @media only screen and (hover: none) and (pointer: coarse) {
     .modal-body {
         width: 100%;

@@ -4,6 +4,8 @@ import { reactive, ref, watch } from "vue";
 import AddressCard from '@/components/order/AddressCard.vue'
 import type { addressInfo } from "./OrderView.vue";
 import { useAuthStore } from "@/store";
+import { deleteProfile, getResetKey, resetPassword, updateProfile } from "@/api/api";
+import router from "@/router";
 
 let addresses: addressInfo[] = [
     { city: "Budapest", street: "Szamos utca", houseNumber: "8", zipCode: "1039", floorNumber: "2", apartment: ""},
@@ -17,12 +19,34 @@ const useAuth = useAuthStore()
 const firstName = ref(useAuth.firstName)
 const lastName = ref(useAuth.lastName)
 
-let hasChanged = ref(firstName.value !== useAuth.firstName)
+function hasChanged(): boolean {
+    return firstName.value !== useAuth.firstName || lastName.value !== useAuth.lastName
+}
 
-watch(firstName, (n, o) => {
-    console.log(firstName.value, useAuth.firstName, hasChanged.value)
-})
+function updateUser(firstName: string, lastName: string) {
+    if(hasChanged()) updateProfile(firstName, lastName).then(() => {
+        useAuth.firstName = firstName
+        useAuth.lastName = lastName
+        router.push("/")
+    })
+}
 
+const emailSent = ref("")
+
+function getResetEmail() {
+    if(useAuth.email !== "") getResetKey(useAuth.email).then(() => emailSent.value = "Reset email succesfully sent, check your email!").catch(err => emailSent.value = err)
+    else emailSent.value = "You must be signed in!"
+}
+
+const showDeleteModal = ref(false)
+const deleteErr = ref("")
+
+function deleteUser() {
+    deleteProfile().then(() => {
+        useAuth.setUser(-1, "", "", "")
+        router.push("/")
+    }).catch(err => deleteErr.value = err)
+}
 </script>
 
 <template>
@@ -39,16 +63,30 @@ watch(firstName, (n, o) => {
             </p>
             <h3>Password</h3>
             <p>Incase you forgot your password or you want to change it you can do it here.</p>
-            <button class="btn" @click.prevent="">New password</button>
-            <button class="btn save-btn" @click.prevent="hasChanged = !hasChanged" :changed="hasChanged" :disabled="!hasChanged">Save Changes</button>
+            <button class="btn" @click.prevent="getResetEmail()">New password</button>
+            <p class="info-msg">{{ emailSent }}</p>
+            <button class="btn save-btn" @click.prevent="updateUser(firstName, lastName)" :changed="hasChanged()" :disabled="!hasChanged()">Save Changes</button>
             <h3>Delete Profile</h3>
             <p>This action can not be undone, are you sure you want to delete your Hangry profile?</p>
-            <button class="delete-btn" @click.prevent="">Delete profile</button>
+            <button class="delete-btn" @click.prevent="showDeleteModal = !showDeleteModal">Delete profile</button>
+            <p class="info-msg">{{ deleteErr }}</p>
+            <div class="block-screen" v-if="showDeleteModal">
+                <div class="modal-body">
+                    <h3 class="modal-header">Delete user profile</h3>
+                    <p class="modal-text">Are you sure you want to delete your user profile?</p>
+                    <span class="modal-flex">
+                        <button class="btn" @click.prevent="showDeleteModal = !showDeleteModal">Cancel</button>
+                        <button class="btn" @click.prevent="deleteUser()">Delete profile</button>
+                    </span>
+                </div>
+            </div>
         </form>
     </main>
 </template>
 
 <style scoped>
+    @import url("@/assets/modal.css");
+
     main {
         display: grid;
         width: 100%;
@@ -101,6 +139,11 @@ watch(firstName, (n, o) => {
     
     .btn:hover {
         background-color: var(--second-hover);
+    }
+
+    .info-msg {
+        text-align: center;
+        margin: var(--h3-size) auto;
     }
 
     .save-btn[changed=false] {

@@ -16,7 +16,6 @@ function loginUser(email: string, password: string) {
     if(email !== "" && password !== "") {
         login(email, password).then(resp => {
             useAuth.setTokens(resp.accessToken, resp.refreshToken)
-            console.log(useAuth.accessToken)
             getProfile().then(resp => useAuth.setUser(resp.id, resp.firstName, resp.lastName, resp.email))
             router.push("/")
         }).catch(err => errMsg.value = err)
@@ -32,6 +31,8 @@ function loginUser(email: string, password: string) {
             <input class="form-auth-input" name="email" type="email" placeholder="email" :required="true" v-model="email">
             <input class="form-auth-input" name="password" type="password" placeholder="password" :required="true" v-model="password">
             <span class="error-msg-box">{{ errMsg }}</span>
+            <span class="info-text">Forgot your password?</span>
+            <RouterLink class="auth-nav-link" to="/forgot">Reset password!</RouterLink>
             <span class="info-text">Don't have an account yet?</span>
             <RouterLink class="auth-nav-link" to="/signup">Sign up now!</RouterLink>
             <button @click.prevent="loginUser(email, password)">Login</button>

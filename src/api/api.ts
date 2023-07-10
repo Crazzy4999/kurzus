@@ -2,6 +2,7 @@ import { useAuthStore } from "@/store"
 import { AddressError, LoginError, OOPS, OrderError, OrderMenuError, ProfileError, ResetError, SignUpError, SupplierError, UNEXPECTED } from "./errors"
 import type { userResponse, tokenPairResponse, addressesCollectionResponse, supplierCollectionResponse, menuCollectionResponse, orderCollectionResponse } from "./responses"
 import { useRoute } from "vue-router"
+import router from "@/router"
 
 const root = "http://localhost:3000"
 
@@ -101,7 +102,7 @@ export async function getResetKey(email: string) {
 }
 
 export async function resetPassword(password: string, passwordAgain: string) {
-    return PUT("/reset?reset_key=" + useRoute().query.reset_key, false, { password, passwordAgain }).then(async response => {
+    return PUT("/reset?reset_key=" + router.currentRoute.value.query.reset_key, false, { password, passwordAgain }).then(async response => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {

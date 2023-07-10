@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from "@/views/HomeView.vue"
 import LoginView from "@/views/LoginView.vue"
+import ForgotPasswordView from "@/views/ForgotPasswordView.vue"
 import SignUpView from "@/views/SignUpView.vue"
 import ProfileView from "@/views/ProfileView.vue"
 import ResetView from "@/views/ResetView.vue"
@@ -36,6 +37,14 @@ const router = createRouter({
       component: SignUpView,
       meta: {
         title: 'Hangry - Sign up'
+      }
+    },
+    {
+      path: '/forgot',
+      name: 'forgot',
+      component: ForgotPasswordView,
+      meta: {
+        title: 'Hangry - Forgot password'
       }
     },
     {
