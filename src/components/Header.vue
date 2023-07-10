@@ -8,11 +8,13 @@ import { useAuthStore } from "@/store";
 const useAuth = useAuthStore()
 
 let toggleSidebar = ref(false)
+
+let cartRouting = useAuth.email !== "" ? "/cart" : "/login"
 </script>
 
 <template>
     <header>
-        <RouterLink to="/cart" class="cart-wrapper-mobile">
+        <RouterLink :to="cartRouting" class="cart-wrapper-mobile">
             <!--Icon by RmixIcon - https://www.iconfinder.com/remix-icon-->
             <img :src="CartImg" alt="cart">
         </RouterLink>
