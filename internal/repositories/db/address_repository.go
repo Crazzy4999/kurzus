@@ -77,7 +77,6 @@ func (repo *AddressRepository) GetAddressByID(id int) (*models.Address, error) {
 func (repo *AddressRepository) Update(a *models.Address) error {
 	stmt, err := repo.db.Prepare("UPDATE addresses SET is_active = $1, city = $2, street = $3, house_number = $4, zip_code = $5, floor_number = $6, apartment = $7 WHERE addresses.id = $8")
 	if err != nil {
-		fmt.Println(err)
 		return errors.New("couldn't prepare statement to update address")
 	}
 
