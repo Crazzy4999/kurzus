@@ -17,7 +17,7 @@ func NewSupplierTypesRepository(db *sql.DB) *SupplierTypesRepository {
 }
 
 func (repo *SupplierTypesRepository) GetTypeByID(id int) (*string, error) {
-	stmt, err := repo.db.Prepare("SELECT id, type FROM supplier_types WHERE = $1")
+	stmt, err := repo.db.Prepare("SELECT id, type FROM supplier_types WHERE supplier_types.id = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement to get supplier type by id")
 	}
