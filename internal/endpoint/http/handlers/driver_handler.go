@@ -42,7 +42,7 @@ func (h *DriverHandler) AddDriver(w http.ResponseWriter, r *http.Request) {
 		Password:  string(password),
 	}
 
-	err := h.driverRepo.Create(driver)
+	err = h.driverRepo.Create(driver)
 	if err != nil {
 		http.Error(w, CREATING_DRIVER_FAILED, http.StatusBadRequest)
 		return
