@@ -6,14 +6,7 @@ import (
 	"hangryAPI/internal/util"
 	"net/http"
 	"strings"
-
-	"github.com/golang-jwt/jwt/v5"
 )
-
-type JwtCustomClaims struct {
-	ID int `json:"id"`
-	jwt.RegisteredClaims
-}
 
 type TokenService struct {
 	cfg *config.Config
@@ -43,7 +36,7 @@ func GetTokenFromBearerString(bearerString string) string {
 	return token
 }
 
-func (s *TokenService) GetClaims(r *http.Request, secret string) (*JwtCustomClaims, error) {
+func (s *TokenService) GetClaims(r *http.Request, secret string) (*util.JwtCustomClaims, error) {
 	authHeader := r.Header.Get("Authorization")
 	tokenString := GetTokenFromBearerString(authHeader)
 
@@ -51,8 +44,8 @@ func (s *TokenService) GetClaims(r *http.Request, secret string) (*JwtCustomClai
 	return claims, err
 }
 
-func GetClaimsFromContext(r *http.Request) (*JwtCustomClaims, error) {
-	claims, ok := r.Context().Value(util.ContextKey("claims")).(*JwtCustomClaims)
+func GetClaimsFromContext(r *http.Request) (*util.JwtCustomClaims, error) {
+	claims, ok := r.Context().Value(util.ContextKey("claims")).(*util.JwtCustomClaims)
 	if !ok {
 		return nil, errors.New("type assertion failed")
 	}

@@ -1,13 +1,14 @@
 package token
 
 import (
+	"hangryAPI/internal/util"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
 func (s *TokenService) GenerateToken(tokenSecret string, tokenLifetime uint, userID int) (string, error) {
-	claims := &JwtCustomClaims{
+	claims := &util.JwtCustomClaims{
 		userID,
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * time.Duration(tokenLifetime))),
