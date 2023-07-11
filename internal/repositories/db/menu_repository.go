@@ -17,12 +17,12 @@ func NewMenuRepository(db *sql.DB) *MenuRepository {
 }
 
 func (repo *MenuRepository) Create(m *models.Menu) error {
-	stmt, err := repo.db.Prepare("INSERT INTO menus (supplier_id, categorie_id, image, price) VALUES ($1, $2, $3, $4)")
+	stmt, err := repo.db.Prepare("INSERT INTO menus (name, image, supplier_id, categorie_id, price) VALUES ($1, $2, $3, $4, $5)")
 	if err != nil {
 		return errors.New("couldn't prepare statement to create menu")
 	}
 
-	_, err = stmt.Exec(m.Name, m.SupplierID, m.CategoryID, m.Image, m.Price)
+	_, err = stmt.Exec(m.Name, m.Image, m.SupplierID, m.CategoryID, m.Price)
 	if err != nil {
 		return errors.New("failed to create menu")
 	}
