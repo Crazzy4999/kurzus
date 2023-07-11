@@ -30,6 +30,7 @@ func (h *MenuHandler) AddMenu(w http.ResponseWriter, r *http.Request) {
 
 	menu := &models.Menu{
 		ID:         req.ID,
+		Name:       req.Name,
 		Image:      req.Image,
 		SupplierID: req.SupplierID,
 		CategoryID: req.CategoryID,
@@ -86,6 +87,7 @@ func (h *MenuHandler) GetMenus(w http.ResponseWriter, r *http.Request) {
 	for _, menu := range menus {
 		menuResponse := &responses.MenuResponse{
 			ID:         menu.ID,
+			Name:       menu.Name,
 			Image:      menu.Image,
 			SupplierID: menu.SupplierID,
 			CategoryID: menu.CategoryID,
