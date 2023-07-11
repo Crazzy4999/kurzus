@@ -56,7 +56,7 @@ function updateUser(firstName: string, lastName: string) {
         useAuth.firstName = firstName
         useAuth.lastName = lastName
         router.push("/")
-    }).catch(err => console.log(err)) // RETURNS INVALID CREDENTIALS, in dev tools it shows the error code ACCESS_TOKEN_EXPIRED error
+    })
 }
 
 

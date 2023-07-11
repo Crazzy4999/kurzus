@@ -152,10 +152,6 @@ export async function updateProfile(firstName: string, lastName: string) {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
-                case ACCESS_TOKEN_EXPIRED: await refresh().then(async resp => {
-                    useAuthStore().setTokens(resp.accessToken, resp.refreshToken)
-                    await updateProfile(firstName, lastName)
-                })
                 case ProfileError.invalidCredentials: throw "Invalid credentials!"
                 case ProfileError.getUserFailed: throw OOPS
                 case ProfileError.updatingUserFailed: throw OOPS
