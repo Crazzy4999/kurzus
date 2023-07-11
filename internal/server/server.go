@@ -37,6 +37,7 @@ func Start() {
 	categoryHandler := handler.NewCategoryHandler(cr)
 	itemHandler := handler.NewItemHandler(ir, imr)
 	menuHandler := handler.NewMenuHandler(mr, imr)
+	itemsMenusHandler := handler.NewItemsMenusHandler(imr)
 	orderMenuHandler := handler.NewOrderMenuHandler(omr)
 
 	router.GET("/", nil, nil)
@@ -79,7 +80,7 @@ func Start() {
 	router.GET("/menus", menuHandler.GetMenus, nil)
 	router.DELETE("/menu", menuHandler.RemoveMenu, middleware.CheckAccessTokenValidity)
 
-	router.GET("/itemsmenus/\\d+", nil, nil)
+	router.GET("/itemsmenus/\\d+", itemsMenusHandler.GetItemsByMenuID, nil)
 
 	router.POST("/ordermenu", orderMenuHandler.AddOrderMenu, middleware.CheckAccessTokenValidity)
 	router.GET("/ordermenus/\\d+", orderMenuHandler.GetOrderMenus, middleware.CheckAccessTokenValidity)

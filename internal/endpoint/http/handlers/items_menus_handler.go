@@ -11,13 +11,11 @@ import (
 
 type ItemsMenusHandler struct {
 	itemsMenusRepo *db.ItemsMenusRepository
-	menuRepo       *db.MenuRepository
 }
 
-func NewItemsMenusHandler(itemsMenusRepo *db.ItemsMenusRepository, menuRepo *db.MenuRepository) *ItemsMenusHandler {
+func NewItemsMenusHandler(itemsMenusRepo *db.ItemsMenusRepository) *ItemsMenusHandler {
 	return &ItemsMenusHandler{
 		itemsMenusRepo: itemsMenusRepo,
-		menuRepo:       menuRepo,
 	}
 }
 
