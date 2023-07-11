@@ -25,7 +25,7 @@ func (repo *SupplierTypesRepository) GetTypeByID(id int) (*string, error) {
 	supplierType := &models.SupplierType{}
 
 	row := stmt.QueryRow(id)
-	err = row.Scan()
+	err = row.Scan(&supplierType.ID, &supplierType.Type)
 	if err != nil {
 		return nil, errors.New("getting supplier type by id failed")
 	}
