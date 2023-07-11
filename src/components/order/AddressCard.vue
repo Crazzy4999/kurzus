@@ -7,6 +7,13 @@ const props = defineProps<{
     address: addressInfo
 }>()
 
+const city = ref(props.address.city)
+const street = ref(props.address.street)
+const houseNumber = ref(props.address.houseNumber)
+const zipCode = ref(props.address.zipCode)
+const floorNumber = ref(props.address.floorNumber)
+const apartment = ref(props.address.apartment)
+
 function setToActive() {
     getAddresses().then(resp => {
         resp.addresses.forEach(address => {
@@ -14,6 +21,13 @@ function setToActive() {
         })
     })
     updateAddress(props.address.id, props.address.userID, true, props.address.city, props.address.street, props.address.houseNumber, props.address.zipCode, props.address.floorNumber, props.address.apartment)
+}
+
+const addressEditErrorMsg = ref("") 
+
+function updateUserAddress() {
+    if(city.value !== "" && street.value !== "" && houseNumber.value !== "" && zipCode.value !== "") updateAddress(props.address.id, props.address.userID, props.address.isActive, city.value, street.value, houseNumber.value, zipCode.value, floorNumber.value, apartment.value)
+    else addressEditErrorMsg.value = "The fields city, street, house number and zip code mustn't be empty!"
 }
 
 let editing = ref(false)
@@ -61,15 +75,16 @@ watch(deleting, (newVal, oldVal) => {
         <div v-if="editing" class="block-screen">
             <div class="modal-body">
                 <h3 class="title">Edit address</h3>
-                <input class="edit-input" type="text" placeholder="City">
-                <input class="edit-input" type="text" placeholder="Street">
-                <input class="edit-input" type="text" placeholder="House number">
-                <input class="edit-input" type="text" placeholder="Zip code">
-                <input class="edit-input" type="text" placeholder="Floor number">
-                <input class="edit-input" type="text" placeholder="Apartment">
+                <input class="edit-input" type="text" placeholder="City" v-model="city">
+                <input class="edit-input" type="text" placeholder="Street" v-model="street">
+                <input class="edit-input" type="text" placeholder="House number" v-model="houseNumber">
+                <input class="edit-input" type="text" placeholder="Zip code" v-model="zipCode">
+                <input class="edit-input" type="text" placeholder="Floor number" v-model="floorNumber">
+                <input class="edit-input" type="text" placeholder="Apartment" v-model="apartment">
+                <p class="error-msg">{{ addressEditErrorMsg }}</p>
                 <span class="btn-container">
                     <button class="modal-btn" @click.prevent="editing = !editing">Cancel</button>
-                    <button class="modal-btn" @click.prevent="">Edit</button>
+                    <button class="modal-btn" @click.prevent="updateUserAddress()">Edit</button>
                 </span>
             </div>
         </div>
@@ -195,6 +210,14 @@ body.modal-open {
 .edit-input:hover {
     border: var(--sub-border-size) solid var(--second-hover);
     box-shadow: 0 0 var(--tiny-size) 1px var(--second-color);
+}
+
+.error-msg {
+    text-align: center;
+    font-size: var(--p-size);
+    color: var(--error-color);
+    width: 75%;
+    margin: auto;
 }
 
 .btn-container {
