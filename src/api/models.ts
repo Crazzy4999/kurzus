@@ -1,4 +1,7 @@
 export type addressInfo = {
+    id: number
+    userID: number
+    isActive: boolean
     city: string,
     street: string,
     houseNumber: string,

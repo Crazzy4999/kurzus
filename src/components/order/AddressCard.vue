@@ -1,11 +1,20 @@
 <script setup lang="ts">
-import type { addressInfo } from '@/views/OrderView.vue';
+import { getAddresses, updateAddress } from '@/api/api';
+import type { addressInfo } from '@/api/models';
 import { ref, watch, type Ref } from 'vue';
 
-defineProps<{
+const props = defineProps<{
     address: addressInfo
-    checked?: boolean
 }>()
+
+function setToActive() {
+    getAddresses().then(resp => {
+        resp.addresses.forEach(address => {
+            if(props.address.id !== address.id) updateAddress(address.id, address.userID, false, address.city, address.street, address.houseNumber, address.zipCode, address.floorNumber, address.apartment)
+        })
+    })
+    updateAddress(props.address.id, props.address.userID, true, props.address.city, props.address.street, props.address.houseNumber, props.address.zipCode, props.address.floorNumber, props.address.apartment)
+}
 
 let editing = ref(false)
 let deleting = ref(false)
@@ -31,9 +40,9 @@ watch(deleting, (newVal, oldVal) => {
 </script>
 
 <template>
-    <li class="address-list-item">
+    <li class="address-list-item" @click="setToActive()">
         <span class="separator-container">
-            <input class="address-radio" type="radio" name="selected-address" id="" :checked="checked">
+            <input class="address-radio" type="radio" name="selected-address" :id="address.id+''" :checked="address.isActive">
             <span class="address-container">
                 <div class="address-text">{{ address.street }} {{ address.houseNumber }} {{ address.floorNumber }} {{ address.apartment }}</div>
                 <div class="address-text">{{ address.zipCode }} {{ address.city }}</div>

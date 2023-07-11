@@ -1,18 +1,11 @@
 <script setup lang="ts">
 import Header from "@/components/Header.vue"
-import { ref } from "vue";
+import { ref, watch, watchEffect } from "vue";
 import AddressCard from '@/components/order/AddressCard.vue'
 import { useAuthStore } from "@/store";
-import { addAddress, deleteProfile, getResetKey, updateProfile } from "@/api/api";
+import { addAddress, deleteProfile, getAddresses, getResetKey, updateProfile } from "@/api/api";
 import router from "@/router";
 import type { addressInfo } from "@/api/models";
-
-let addresses: addressInfo[] = [
-    { city: "Budapest", street: "Szamos utca", houseNumber: "8", zipCode: "1039", floorNumber: "2", apartment: ""},
-    { city: "Budapest", street: "Szamos utca", houseNumber: "9", zipCode: "1039", floorNumber: "2", apartment: ""},
-    { city: "Budapest", street: "Szamos utca", houseNumber: "10", zipCode: "1039", floorNumber: "2", apartment: ""},
-    { city: "Budapest", street: "Szamos utca", houseNumber: "11", zipCode: "1039", floorNumber: "2", apartment: ""},
-]
 
 const useAuth = useAuthStore()
 
@@ -30,8 +23,44 @@ function filter(e: KeyboardEvent) {
 }
 
 function addNewAddress() {
-    addAddress(false, city.value, street.value, houseNumber.value, zipCode.value, floorNumber.value, apartment.value)
+    if(city.value !== "" && street.value !== "" && houseNumber.value !== "" && zipCode.value !== "") {
+        addAddress(false, city.value, street.value, houseNumber.value, zipCode.value, floorNumber.value, apartment.value)
+    } else errorMsg.value = "city, street, house number and zipcode mustn't be empty!"
 }
+
+function getUserAddresses() {
+    let _addresses: addressInfo[] = []
+
+    getAddresses().then(resp => {
+        resp.addresses.forEach(a => {
+            let address: addressInfo = {
+                id: a.id,
+                userID: a.userID,
+                isActive: a.isActive,
+                city: a.city,
+                street: a.street,
+                houseNumber: a.houseNumber,
+                zipCode: a.zipCode,
+                floorNumber: a.floorNumber,
+                apartment: a.apartment,
+            }
+
+            _addresses.push(address)
+        })
+    })
+
+    useAuth.addresses = _addresses
+
+    useAuth.setAddresses(useAuth.addresses)
+}
+
+watchEffect(() => {
+    getUserAddresses()
+})
+
+watch(useAuth.addresses, (n, o) => {
+    getUserAddresses()
+})
 
 
 
@@ -82,7 +111,7 @@ function deleteUser() {
             <input type="text" placeholder="Last name" v-model="lastName">
             <h3>Addresses</h3>
             <p>
-                <AddressCard v-for="a in addresses" :address="a"/>
+                <AddressCard v-for="a in useAuth.addresses" :address="a"/>
                 <button class="btn" @click.prevent="addingAddress = !addingAddress">New address</button>
             </p>
             <h3>Password</h3>

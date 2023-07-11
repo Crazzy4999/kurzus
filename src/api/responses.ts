@@ -19,11 +19,11 @@ type addressesResponse = {
     houseNumber: string
     zipCode: string
     floorNumber: string
-    apartament: string
+    apartment: string
 } & Response
 
 export type addressesCollectionResponse = {
-    addressess: addressesResponse[]
+    addresses: addressesResponse[]
 } & Response
 
 type workingHours = {

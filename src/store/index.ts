@@ -1,5 +1,6 @@
-import type { tokenPairResponse, userResponse } from "@/api/responses"
+import type { addressInfo } from "@/api/models"
 import { defineStore } from "pinia"
+import { ref } from "vue"
 
 export const useAuthStore = defineStore("authentication", {
     state: () => ({
@@ -9,7 +10,9 @@ export const useAuthStore = defineStore("authentication", {
         id: -1,
         firstName: "",
         lastName: "",
-        email: ""
+        email: "",
+
+        addresses: [] as addressInfo[]
     }),
     actions: {
         async setTokens(accessToken: string, refreshToken: string) {
@@ -22,6 +25,10 @@ export const useAuthStore = defineStore("authentication", {
             this.$state.firstName = firstName
             this.$state.lastName = lastName
             this.$state.email = email
+        },
+
+        async setAddresses(addresses: addressInfo[]) {
+            this.$state.addresses = addresses
         }
     }
 })

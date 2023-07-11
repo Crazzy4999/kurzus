@@ -205,8 +205,8 @@ export async function getAddresses() {
     })
 }
 
-export async function updateAddress(isActive: boolean, city: string, street: string, houseNumber: string, zipCode: string, floorNumber: string, apartment: string) {
-    return PUT("/address", true, { isActive, city, street, houseNumber, zipCode, floorNumber, apartment }).then(async response => {
+export async function updateAddress(id: number, userID: number, isActive: boolean, city: string, street: string, houseNumber: string, zipCode: string, floorNumber: string, apartment: string) {
+    return PUT("/address", true, { id, userID, isActive, city, street, houseNumber, zipCode, floorNumber, apartment }).then(async response => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {

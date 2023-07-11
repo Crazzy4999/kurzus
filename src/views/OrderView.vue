@@ -21,7 +21,6 @@ let deliveryFee = ref(500)
 let addingAddress = ref(false)
 let selectingAddress = ref(false)
 
-
 let city = ref("")
 let street = ref("")
 let houseNumber = ref("")
@@ -31,15 +30,6 @@ let apartment = ref("")
 
 function filter(e: KeyboardEvent) {
     if(!/\d/.test(e.key)) return e.preventDefault()
-}
-
-let address: addressInfo = {
-    city: city.value,
-    street: street.value,
-    houseNumber: houseNumber.value,
-    zipCode: zipCode.value,
-    floorNumber: floorNumber.value,
-    apartment: apartment.value
 }
 
 let errorMsg = ref("")
@@ -56,15 +46,6 @@ function flip() {
     if(selectingAddress.value) selectingAddress.value = !selectingAddress.value
     if(!addingAddress.value) addingAddress.value = !addingAddress.value
 }
-
-
-
-let addresses: addressInfo[] = [
-    { city: "Budapest", street: "Szamos utca", houseNumber: "8", zipCode: "1039", floorNumber: "2", apartment: ""},
-    { city: "Budapest", street: "Szamos utca", houseNumber: "9", zipCode: "1039", floorNumber: "2", apartment: ""},
-    { city: "Budapest", street: "Szamos utca", houseNumber: "10", zipCode: "1039", floorNumber: "2", apartment: ""},
-    { city: "Budapest", street: "Szamos utca", houseNumber: "11", zipCode: "1039", floorNumber: "2", apartment: ""},
-]
 
 function selecting() {
     if(addingAddress.value) addingAddress.value = !addingAddress.value
