@@ -24,14 +24,14 @@ function filter(e: KeyboardEvent) {
 
 function addNewAddress() {
     if(city.value !== "" && street.value !== "" && houseNumber.value !== "" && zipCode.value !== "") {
-        addAddress(false, city.value, street.value, houseNumber.value, zipCode.value, floorNumber.value, apartment.value)
+        addAddress(false, city.value, street.value, houseNumber.value, zipCode.value, floorNumber.value, apartment.value).then(() => addingAddress.value = false)
     } else errorMsg.value = "city, street, house number and zipcode mustn't be empty!"
 }
 
-function getUserAddresses() {
+async function getUserAddresses() {
     let _addresses: addressInfo[] = []
 
-    getAddresses().then(resp => {
+    await getAddresses().then(resp => {
         resp.addresses.forEach(a => {
             let address: addressInfo = {
                 id: a.id,
@@ -54,13 +54,11 @@ function getUserAddresses() {
     useAuth.setAddresses(useAuth.addresses)
 }
 
-watchEffect(() => {
-    getUserAddresses()
+watchEffect(async () => {
+    await getUserAddresses()
 })
 
-watch(useAuth.addresses, (n, o) => {
-    getUserAddresses()
-})
+//UPDATE ADDRESS LIST AFTER NEW ADDRESS WAS ADDED
 
 
 
@@ -107,8 +105,8 @@ function deleteUser() {
         <form>
             <h2 class="title">Profile settings</h2>
             <h3>Name</h3>
-            <input type="text" placeholder="First name" v-model="firstName">
-            <input type="text" placeholder="Last name" v-model="lastName">
+            <input class="profile-input" type="text" placeholder="First name" v-model="firstName">
+            <input class="profile-input" type="text" placeholder="Last name" v-model="lastName">
             <h3>Addresses</h3>
             <p>
                 <AddressCard v-for="a in useAuth.addresses" :address="a"/>
@@ -176,7 +174,7 @@ function deleteUser() {
         margin: var(--p-size);
     }
 
-    input {
+    .profile-input {
         display: block;
         text-align: left;
         font-size: var(--h4-size);
@@ -191,6 +189,18 @@ function deleteUser() {
 
     input:hover {
         box-shadow: 0 0 var(--border-size) calc(var(--sub-border-size) * 0.25) var(--second-hover);
+    }
+
+    .address-input {
+        display: block;
+        text-align: left;
+        font-size: var(--h4-size);
+        border: solid var(--border-size) var(--second-color);
+        color: var(--second-color);
+        width: 75%;
+        margin: var(--sub-p-size) auto;
+        padding: var(--tiny-size) var(--p-size);
+        transition: box-shadow var(--tran);
     }
 
     button {
@@ -262,7 +272,7 @@ function deleteUser() {
             font-size: calc(var(--h2-size) * 0.95);
         }
 
-        input {
+        .profile-input {
             width: calc(100% - 2 * var(--sub-border-size) - 4 * var(--p-size));
         }
     }
