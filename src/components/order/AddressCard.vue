@@ -1,11 +1,29 @@
 <script setup lang="ts">
-import { getAddresses, updateAddress } from '@/api/api';
+import { deleteAddress, getAddresses, updateAddress } from '@/api/api';
 import type { addressInfo } from '@/api/models';
 import { ref, watch, type Ref } from 'vue';
 
 const props = defineProps<{
     address: addressInfo
 }>()
+
+
+
+let editing = ref(false)
+let deleting = ref(false)
+
+function controlScroll(val: boolean) {
+    window.scrollTo(0, 0)
+    if(val) {
+        window.onscroll = () => window.scrollTo(0, 0)
+        document.body.classList.add("modal-open")
+    } else {
+        window.onscroll = () => {}
+        document.body.classList.remove("modal-open")
+    }
+}
+
+
 
 const city = ref(props.address.city)
 const street = ref(props.address.street)
@@ -23,26 +41,24 @@ function setToActive() {
     updateAddress(props.address.id, props.address.userID, true, props.address.city, props.address.street, props.address.houseNumber, props.address.zipCode, props.address.floorNumber, props.address.apartment)
 }
 
-const addressEditErrorMsg = ref("") 
+
+
+const addressEditErrorMsg = ref("")
 
 function updateUserAddress() {
     if(city.value !== "" && street.value !== "" && houseNumber.value !== "" && zipCode.value !== "") updateAddress(props.address.id, props.address.userID, props.address.isActive, city.value, street.value, houseNumber.value, zipCode.value, floorNumber.value, apartment.value)
     else addressEditErrorMsg.value = "The fields city, street, house number and zip code mustn't be empty!"
 }
 
-let editing = ref(false)
-let deleting = ref(false)
 
-function controlScroll(val: boolean) {
-    window.scrollTo(0, 0)
-    if(val) {
-        window.onscroll = () => window.scrollTo(0, 0)
-        document.body.classList.add("modal-open")
-    } else {
-        window.onscroll = () => {}
-        document.body.classList.remove("modal-open")
-    }
+
+const addressDeletingErrorMsg = ref("")
+
+function deleteUserAddress() {
+    deleteAddress(props.address.id).then(() => deleting.value = false).catch(err => addressDeletingErrorMsg.value = err)
 }
+
+
 
 watch(editing, (newVal, oldVal) => {
     controlScroll(newVal)
@@ -91,13 +107,14 @@ watch(deleting, (newVal, oldVal) => {
         <div v-if="deleting" class="block-screen">
             <div class="modal-body">
                 <h4>Are you sure you want to delete this address?</h4>
+                <p class="error-msg">{{ addressDeletingErrorMsg }}</p>
                 <span class="modal-address-container">
                     <div class="modal-address-text">{{ address.street }} {{ address.houseNumber }} {{ address.floorNumber }} {{ address.apartment }}</div>
                     <div class="modal-address-text">{{ address.zipCode }} {{ address.city }}</div>
                 </span>
                 <span class="btn-container">
                     <button class="modal-btn" @click.prevent="deleting = !deleting">Cancel</button>
-                    <button class="modal-btn" @click.prevent="">Delete</button>
+                    <button class="modal-btn" @click.prevent="deleteUserAddress()">Delete</button>
                 </span>
             </div>
         </div>
