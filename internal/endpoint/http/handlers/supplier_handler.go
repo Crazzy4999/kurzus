@@ -7,6 +7,8 @@ import (
 	"hangryAPI/internal/models"
 	"hangryAPI/internal/repositories/db"
 	"net/http"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type SupplierHandler struct {
@@ -28,12 +30,18 @@ func (h *SupplierHandler) AddSupplier(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	password, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		http.Error(w, PASSWORD_GENERATION_FAILED, http.StatusBadRequest)
+		return
+	}
+
 	supplier := &models.Supplier{
 		Type:         req.Type,
 		Image:        req.Image,
 		Name:         req.Name,
 		Email:        req.Email,
-		Password:     req.Password,
+		Password:     string(password),
 		Description:  req.Description,
 		DeliveryTime: req.DeliveryTime,
 		DeliveryFee:  req.DeliveryFee,

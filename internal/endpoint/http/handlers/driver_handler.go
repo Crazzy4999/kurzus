@@ -7,6 +7,8 @@ import (
 	"hangryAPI/internal/models"
 	"hangryAPI/internal/repositories/db"
 	"net/http"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type DriverHandler struct {
@@ -26,12 +28,18 @@ func (h *DriverHandler) AddDriver(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	password, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		http.Error(w, PASSWORD_GENERATION_FAILED, http.StatusBadRequest)
+		return
+	}
+
 	driver := &models.Driver{
 		ID:        req.ID,
 		FirstName: req.FirstName,
 		LastName:  req.LastName,
 		Email:     req.Email,
-		Password:  req.Password,
+		Password:  string(password),
 	}
 
 	err := h.driverRepo.Create(driver)
