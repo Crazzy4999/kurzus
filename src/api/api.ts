@@ -1,6 +1,6 @@
 import { useAuthStore } from "@/store"
 import { ACCESS_TOKEN_EXPIRED, AddressError, ItemsMenusError, LoginError, MenuError, OOPS, OrderError, OrderMenuError, ProfileError, RefreshError, ResetError, SignUpError, SupplierError, UNEXPECTED } from "./errors"
-import type { userResponse, tokenPairResponse, addressesCollectionResponse, supplierCollectionResponse, menuCollectionResponse, orderCollectionResponse, supplierResponse } from "./responses"
+import type { userResponse, tokenPairResponse, addressesCollectionResponse, supplierCollectionResponse, menuCollectionResponse, orderCollectionResponse, supplierResponse, itemCollectionResponse } from "./responses"
 import router from "@/router"
 
 const root = "http://localhost:3000"
@@ -270,7 +270,7 @@ export async function getMenusBySupplierID(id: number) {
                 default: throw UNEXPECTED
             }
         }
-        return response.json() as Promise<supplierCollectionResponse>
+        return response.json() as Promise<menuCollectionResponse>
     })
 }
 
@@ -285,7 +285,7 @@ export async function getItemsByMenuID(id: number) {
                 default: throw UNEXPECTED
             }
         }
-        return response.json() as Promise<supplierCollectionResponse>
+        return response.json() as Promise<itemCollectionResponse>
     })
 }
 
