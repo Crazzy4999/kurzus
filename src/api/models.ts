@@ -21,7 +21,6 @@ export type supplierInfo = {
     type: string
     image: string
     name: string
-    email: string
     description: string
     deliveryTime: number
     deliveryFee: number
