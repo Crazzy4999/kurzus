@@ -2,6 +2,7 @@ export const UNEXPECTED = "An unexpected error has occured!"
 export const OOPS = "Oops something went wrong!"
 
 const INVALID_CREDENTIALS = "invalid credentials"
+export const ACCESS_TOKEN_EXPIRED = "access token expired"
 const GET_USER_FAILED = "getting user failed"
 const PASSWORD_MISMATCH = "passwords doesn't match"
 const PASSWORD_GENERATION_FAILED = "couldn't generate password"
@@ -18,6 +19,11 @@ export enum SignUpError {
     passwordMismatch = PASSWORD_MISMATCH,
     emailTaken = "email already in use",
     passwordFailed = PASSWORD_GENERATION_FAILED
+}
+
+export enum RefreshError {
+    invalidCredentials = INVALID_CREDENTIALS,
+    refreshTokenExpired = "refresh token expired"
 }
 
 export enum ResetError {

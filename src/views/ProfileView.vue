@@ -4,7 +4,7 @@ import { reactive, ref, watch } from "vue";
 import AddressCard from '@/components/order/AddressCard.vue'
 import type { addressInfo } from "./OrderView.vue";
 import { useAuthStore } from "@/store";
-import { deleteProfile, getResetKey, resetPassword, updateProfile } from "@/api/api";
+import { addAddress, deleteProfile, getResetKey, resetPassword, updateProfile } from "@/api/api";
 import router from "@/router";
 
 let addresses: addressInfo[] = [
@@ -30,7 +30,7 @@ function filter(e: KeyboardEvent) {
 }
 
 function addNewAddress() {
-
+    addAddress(false, city.value, street.value, houseNumber.value, zipCode.value, floorNumber.value, apartment.value)
 }
 
 
@@ -56,7 +56,7 @@ function updateUser(firstName: string, lastName: string) {
         useAuth.firstName = firstName
         useAuth.lastName = lastName
         router.push("/")
-    })
+    }).catch(err => console.log(err)) // RETURNS INVALID CREDENTIALS, in dev tools it shows the error code ACCESS_TOKEN_EXPIRED error
 }
 
 

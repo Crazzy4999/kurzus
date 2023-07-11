@@ -1,7 +1,6 @@
 import { useAuthStore } from "@/store"
-import { AddressError, LoginError, OOPS, OrderError, OrderMenuError, ProfileError, ResetError, SignUpError, SupplierError, UNEXPECTED } from "./errors"
+import { ACCESS_TOKEN_EXPIRED, AddressError, LoginError, OOPS, OrderError, OrderMenuError, ProfileError, RefreshError, ResetError, SignUpError, SupplierError, UNEXPECTED } from "./errors"
 import type { userResponse, tokenPairResponse, addressesCollectionResponse, supplierCollectionResponse, menuCollectionResponse, orderCollectionResponse } from "./responses"
-import { useRoute } from "vue-router"
 import router from "@/router"
 
 const root = "http://localhost:3000"
@@ -32,7 +31,7 @@ function POST(url: string, isProtected: boolean, data: any) {
     return apiFetch(url, {
         method: 'post',
         headers: isProtected ? {
-            Authorization: 'Bearer ' + useAuthStore().refreshToken,
+            Authorization: 'Bearer ' + useAuthStore().accessToken,
         } : {},
         body: JSON.stringify(data)
     })
@@ -123,7 +122,8 @@ export async function refresh() {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
-                case LoginError.invalidCredentials: throw "Invalid credentials!"
+                case RefreshError.invalidCredentials: throw "Invalid credentials!"
+                case RefreshError.refreshTokenExpired: throw RefreshError.refreshTokenExpired
                 default: throw UNEXPECTED
             }
         }
@@ -152,6 +152,10 @@ export async function updateProfile(firstName: string, lastName: string) {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
+                case ACCESS_TOKEN_EXPIRED: await refresh().then(async resp => {
+                    useAuthStore().setTokens(resp.accessToken, resp.refreshToken)
+                    await updateProfile(firstName, lastName)
+                })
                 case ProfileError.invalidCredentials: throw "Invalid credentials!"
                 case ProfileError.getUserFailed: throw OOPS
                 case ProfileError.updatingUserFailed: throw OOPS
