@@ -44,6 +44,8 @@ const (
 	DELETING_MENU_FAILED              = "deleting menu failed"
 	DELETING_MENU_ITEM_BY_MENU_FAILED = "deleting menu_item by menu id failed"
 
+	GET_ALL_ITEM_MENU_FAILED = "getting all items_menus failed"
+
 	CREATING_ORDER_FAILED = "creating order failed"
 	GET_ALL_ORDER_FAILED  = "getting all orders failed"
 	UPDATING_ORDER_FAILED = "updaing order failed"

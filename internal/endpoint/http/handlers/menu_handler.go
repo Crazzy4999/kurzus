@@ -7,6 +7,8 @@ import (
 	"hangryAPI/internal/models"
 	"hangryAPI/internal/repositories/db"
 	"net/http"
+	"regexp"
+	"strconv"
 )
 
 type MenuHandler struct {
@@ -73,6 +75,43 @@ func (h *MenuHandler) AddMenu(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *MenuHandler) GetMenusBySupplierID(w http.ResponseWriter, r *http.Request) {
+	regex := regexp.MustCompile("\\d+")
+	match := regex.FindString(r.URL.Path)
+
+	supplierID, err := strconv.Atoi(match)
+	if err != nil {
+		http.Error(w, STRING_CONVERSION_FAILED, http.StatusBadRequest)
+		return
+	}
+
+	menus, err := h.menuRepo.GetAll()
+	if err != nil {
+		http.Error(w, GET_ALL_MENU_FAILED, http.StatusBadRequest)
+		return
+	}
+
+	menusResponse := &responses.MenuCollectionResponse{}
+
+	for _, menu := range menus {
+		if menu.SupplierID == supplierID {
+			menuResponse := &responses.MenuResponse{
+				ID:         menu.ID,
+				Name:       menu.Name,
+				SupplierID: menu.SupplierID,
+				CategoryID: menu.CategoryID,
+				Image:      menu.Image,
+				Price:      menu.Price,
+			}
+
+			menusResponse.Menus = append(menusResponse.Menus, menuResponse)
+		}
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(menusResponse)
 }
 
 func (h *MenuHandler) GetMenus(w http.ResponseWriter, r *http.Request) {

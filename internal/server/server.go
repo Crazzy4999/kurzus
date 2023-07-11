@@ -77,6 +77,7 @@ func Start() {
 	router.DELETE("/item", itemHandler.RemoveItem, middleware.CheckAccessTokenValidity)
 
 	router.POST("/menu", menuHandler.AddMenu, middleware.CheckAccessTokenValidity)
+	router.GET("/menus/\\d+", menuHandler.GetMenusBySupplierID, nil)
 	router.GET("/menus", menuHandler.GetMenus, nil)
 	router.DELETE("/menu", menuHandler.RemoveMenu, middleware.CheckAccessTokenValidity)
 

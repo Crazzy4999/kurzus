@@ -32,6 +32,7 @@ func (h *ItemsMenusHandler) GetItemsByMenuID(w http.ResponseWriter, r *http.Requ
 	items, err := h.itemsMenusRepo.GetItemsByMenuID(menuID)
 	if err != nil {
 		http.Error(w, GET_ALL_MENU_FAILED, http.StatusBadRequest)
+		return
 	}
 
 	itemsResponse := &responses.ItemCollectionResponse{}

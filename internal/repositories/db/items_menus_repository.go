@@ -30,6 +30,33 @@ func (repo *ItemsMenusRepository) Create(im *models.ItemsMenusIDPair) error {
 	return nil
 }
 
+func (repo *ItemsMenusRepository) GetAll() ([]*models.ItemsMenusIDPair, error) {
+	stmt, err := repo.db.Prepare("SELECT item_id, menu_id FROM items_menus")
+	if err != nil {
+		return nil, errors.New("couldn't prepare statement for getting all menus")
+	}
+
+	rows, err := stmt.Query()
+	if err != nil {
+		return nil, errors.New("getting all menus failed")
+	}
+	defer rows.Close()
+
+	var itemsMenusCollection []*models.ItemsMenusIDPair
+	for rows.Next() {
+		itemsMenus := &models.ItemsMenusIDPair{}
+		err = rows.Scan(&itemsMenus.ItemID, &itemsMenus.MenuID)
+		if err == sql.ErrNoRows {
+			return nil, nil
+		} else if err != nil {
+			return nil, errors.New("types mismatch during the scanning")
+		}
+		itemsMenusCollection = append(itemsMenusCollection, itemsMenus)
+	}
+
+	return itemsMenusCollection, nil
+}
+
 func (repo *ItemsMenusRepository) GetItemsByMenuID(id int) ([]*models.Item, error) {
 	stmt, err := repo.db.Prepare("SELECT id, ingredient FROM items_menus WHERE items_menus.id = $1")
 	if err != nil {
