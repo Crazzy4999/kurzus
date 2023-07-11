@@ -38,7 +38,6 @@ CREATE TABLE suppliers (
     type INTEGER NOT NULL,
     image VARCHAR(1024) NOT NULL,
     name VARCHAR(64) NOT NULL,
-    last_name VARCHAR(64) NOT NULL,
     email VARCHAR(64) NOT NULL,
     password VARCHAR(64) NOT NULL,
     description VARCHAR(1024) NOT NULL,
