@@ -62,20 +62,20 @@ func Start() {
 	router.DELETE("/driver", driverHandler.RemoveDriver, middleware.CheckAccessTokenValidity)
 
 	router.POST("/supplier", supplierHandler.AddSupplier, middleware.CheckAccessTokenValidity)
-	router.GET("/suppliers", supplierHandler.GetSuppliers, middleware.CheckAccessTokenValidity)
+	router.GET("/suppliers", supplierHandler.GetSuppliers, nil)
 	router.PUT("/supplier", supplierHandler.UpdateSupplier, middleware.CheckAccessTokenValidity)
 	router.DELETE("/supplier", supplierHandler.RemoveSupplier, middleware.CheckAccessTokenValidity)
 
 	router.POST("/category", categoryHandler.AddCategory, middleware.CheckAccessTokenValidity)
-	router.GET("/categories", categoryHandler.GetCategories, middleware.CheckAccessTokenValidity)
+	router.GET("/categories", categoryHandler.GetCategories, nil)
 	router.DELETE("/category", categoryHandler.RemoveCategory, middleware.CheckAccessTokenValidity)
 
 	router.POST("/item", itemHandler.AddItem, middleware.CheckAccessTokenValidity)
-	router.GET("/items", itemHandler.GetItems, middleware.CheckAccessTokenValidity)
+	router.GET("/items", itemHandler.GetItems, nil)
 	router.DELETE("/item", itemHandler.RemoveItem, middleware.CheckAccessTokenValidity)
 
 	router.POST("/menu", menuHandler.AddMenu, middleware.CheckAccessTokenValidity)
-	router.GET("/menus", menuHandler.GetMenus, middleware.CheckAccessTokenValidity)
+	router.GET("/menus", menuHandler.GetMenus, nil)
 	router.DELETE("/menu", menuHandler.RemoveMenu, middleware.CheckAccessTokenValidity)
 
 	router.POST("/ordermenu", orderMenuHandler.AddOrderMenu, middleware.CheckAccessTokenValidity)
