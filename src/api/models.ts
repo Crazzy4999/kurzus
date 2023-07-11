@@ -27,3 +27,12 @@ export type supplierInfo = {
     opening: string
     closing: string
 }
+
+export type menuInfo = {
+    id: number,
+    name: string,
+    image: string,
+    supplierID: number,
+    categoryID: number,
+    price: number,
+}

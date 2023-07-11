@@ -57,6 +57,7 @@ export type itemCollectionResponse = {
 
 type menuResponse = {
     id: number
+    name: string
     image: string
     supplierID: number
     categoryID: number

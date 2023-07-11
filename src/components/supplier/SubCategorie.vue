@@ -1,15 +1,10 @@
 <script setup lang="ts">
-export type productVal = {
-    img: string
-    name: string
-    ingredients: string[]
-    price: number
-}
+import type { menuInfo } from '@/api/models'
 
 defineProps<{
     categorieId: string
     categorieText: string
-    products: productVal[]
+    menu: menuInfo
 }>()
 
 function foramtIngredients(ingredients: string[]): string {

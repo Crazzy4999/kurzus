@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import CategoriesSelector, { type categorieVal } from "@/components/supplier/CategoriesSelector.vue"
 import SubCategorie, { type productVal } from "./SubCategorie.vue";
-import type { supplierInfo } from "@/api/models";
-import { getSupplierByID } from "@/api/api";
-import { ref, watch, watchEffect } from "vue";
+import type { menuInfo, supplierInfo } from "@/api/models";
+import { getMenusBySupplierID, getSupplierByID } from "@/api/api";
+import { ref, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute()
 const supplier = ref({} as supplierInfo)
+const menus = ref([] as menuInfo[])
 
 watchEffect(async () => {
     await getSupplierByID(+route.params.id).then(resp => {
@@ -23,6 +24,25 @@ watchEffect(async () => {
             closing: resp.workingHours.closing
         }
     })
+
+    await getMenusBySupplierID(supplier.value.id).then(resp => {
+        let _menus: menuInfo[] = []
+        
+        resp.menus.forEach(m => {
+            let menu: menuInfo = {
+                id: m.id,
+                name: m.name,
+                image: m.image,
+                supplierID: m.supplierID,
+                categoryID: m.categoryID,
+                price: m.price
+            }
+
+            _menus.push(menu)
+        })
+
+        menus.value = _menus
+    })
 })
 
 let selectorCategories: categorieVal[] = [
@@ -35,7 +55,7 @@ let categories: { subCategorie: categorieVal, products: productVal[] }[] = [
 
 /*
 <CategoriesSelector :categories="selectorCategories"/>
-<SubCategorie v-for="c in categories" :categorieId="c.subCategorie.id" :categorieText="c.subCategorie.text" :products="c.products"/>
+
 */
 </script>
 
@@ -52,7 +72,7 @@ let categories: { subCategorie: categorieVal, products: productVal[] }[] = [
                 <li v-for="c in categories" class="supplier-categorie">{{ c }}</li>
             </ul>
 
-            
+            <SubCategorie v-for="c in categories" :categorieId="c.subCategorie.id" :categorieText="c.subCategorie.text" :products="c.products"/>
         </section>
     </main>
 </template>
