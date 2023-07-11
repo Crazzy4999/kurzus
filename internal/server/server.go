@@ -62,6 +62,7 @@ func Start() {
 	router.DELETE("/driver", driverHandler.RemoveDriver, middleware.CheckAccessTokenValidity)
 
 	router.POST("/supplier", supplierHandler.AddSupplier, middleware.CheckAccessTokenValidity)
+	router.GET("/supplier/\\d+", supplierHandler.GetSupplierByID, nil)
 	router.GET("/suppliers", supplierHandler.GetSuppliers, nil)
 	router.PUT("/supplier", supplierHandler.UpdateSupplier, middleware.CheckAccessTokenValidity)
 	router.DELETE("/supplier", supplierHandler.RemoveSupplier, middleware.CheckAccessTokenValidity)

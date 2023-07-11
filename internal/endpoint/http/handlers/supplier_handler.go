@@ -7,6 +7,8 @@ import (
 	"hangryAPI/internal/models"
 	"hangryAPI/internal/repositories/db"
 	"net/http"
+	"regexp"
+	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -68,6 +70,51 @@ func (h *SupplierHandler) AddSupplier(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *SupplierHandler) GetSupplierByID(w http.ResponseWriter, r *http.Request) {
+	suppliers, err := h.supplierRepo.GetAll()
+	if err != nil {
+		http.Error(w, GET_ALL_SUPPLIER_FAILED, http.StatusBadRequest)
+		return
+	}
+
+	regex := regexp.MustCompile("\\d+")
+	match := regex.FindString(r.URL.Path)
+
+	supplierID, err := strconv.Atoi(match)
+	if err != nil {
+		http.Error(w, STRING_CONVERSION_FAILED, http.StatusBadRequest)
+		return
+	}
+
+	var supplier *responses.SupplierResponse
+
+	for _, s := range suppliers {
+		if s.ID == supplierID {
+			supplierType, err := h.supplierTypesRepo.GetTypeByID(s.Type)
+			if err != nil {
+				http.Error(w, GET_SUPPLIER_TYPE_FAILED, http.StatusBadRequest)
+				return
+			}
+
+			supplier = &responses.SupplierResponse{
+				ID:           s.ID,
+				Type:         *supplierType,
+				Image:        s.Image,
+				Name:         s.Name,
+				Description:  s.Description,
+				DeliveryTime: s.DeliveryTime,
+				DeliveryFee:  s.DeliveryFee,
+				WorkingHours: s.WorkingHours,
+			}
+
+			break
+		}
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(supplier)
 }
 
 func (h *SupplierHandler) GetSuppliers(w http.ResponseWriter, r *http.Request) {
