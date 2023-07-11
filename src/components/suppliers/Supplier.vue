@@ -1,12 +1,8 @@
 <script setup lang="ts">
-export type supplierVal = { name: string, description: string, img: string, deliveryTime: number, deliveryFee: number }
+import type { supplierInfo } from '@/api/models';
 
 defineProps<{
-    name: string
-    description: string
-    img: string
-    deliveryTime: number
-    deliveryFee: number
+    supplier: supplierInfo
 }>()
 </script>
 
@@ -14,15 +10,15 @@ defineProps<{
     <li class="supplier">
         <RouterLink to="/suppliers"> <!--TODO ADD ROUTING TO SUPPLIERS-->
             <div class="supplier-img-container">
-                <img class="supplier-img" :src="img" :alt="name">
+                <img class="supplier-img" :src="supplier.image" :alt="supplier.name">
                 <span class="delivery-time-wrapper">
-                    <span class="delivery-time">{{ deliveryTime }} min</span>
+                    <span class="delivery-time">{{ supplier.deliveryTime }} min</span>
                 </span>
             </div>
-            <h2 class="supplier-name">{{ name }}</h2>
-            <p class="supplier-description">{{ description }}</p>
+            <h2 class="supplier-name">{{ supplier.name }}</h2>
+            <p class="supplier-description">{{ supplier.description }}</p>
             <span class="supplier-rates"></span>
-            <span class="supplier-delivery-fee">{{ deliveryFee === 0 ? "Free delivery" : deliveryFee }}</span>
+            <span class="supplier-delivery-fee">{{ supplier.deliveryFee === 0 ? "Free delivery" : supplier.deliveryFee }}</span>
         </RouterLink>
     </li>
 </template>

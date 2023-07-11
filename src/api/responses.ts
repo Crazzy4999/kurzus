@@ -36,6 +36,8 @@ type supplierResponse = {
     type: string
     image: string
     name: string
+    description: string
+    deliveryTime: number
     deliveryFee: number
     workingHours: workingHours
 } & Response

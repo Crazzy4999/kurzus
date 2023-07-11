@@ -1,10 +1,19 @@
 <script setup lang="ts">
+import { getSuppliers } from "@/api/api";
+import type { supplierInfo } from "@/api/models";
 import SearchBar from "@/components/searchbar/SearchBar.vue"
-import Supplier, { type supplierVal} from "@/components/suppliers/Supplier.vue"
+import Supplier from "@/components/suppliers/Supplier.vue"
+import { watchEffect } from "vue";
 
-let suppliers: supplierVal[] = [
+let suppliers: supplierInfo[] = [
 
 ]
+
+watchEffect(() => {
+    getSuppliers().then(resp => {
+
+    })
+})
 </script>
 
 <template>
@@ -27,7 +36,7 @@ let suppliers: supplierVal[] = [
         </nav>
         <section class="content-container">
             <ul class="suppliers-container">
-                <Supplier v-for="s in suppliers" :name="s.name" :description="s.description" :img="s.img" :delivery-time="s.deliveryTime" :delivery-fee="s.deliveryFee"/>
+                <Supplier v-for="s in suppliers" :supplier="s"/>
             </ul>
         </section>
     </main>
