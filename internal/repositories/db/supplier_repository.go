@@ -44,7 +44,7 @@ func (repo *SupplierRepository) GetAll() ([]*models.Supplier, error) {
 	var suppliers []*models.Supplier
 	for rows.Next() {
 		supplier := &models.Supplier{}
-		err = rows.Scan(&supplier.Type, &supplier.Image, &supplier.Name, &supplier.Email, &supplier.Password, &supplier.Description, &supplier.DeliveryTime, &supplier.DeliveryFee, &supplier.WorkingHours.Opening, &supplier.WorkingHours.Closing)
+		err = rows.Scan(&supplier.ID, &supplier.Type, &supplier.Image, &supplier.Name, &supplier.Email, &supplier.Password, &supplier.Description, &supplier.DeliveryTime, &supplier.DeliveryFee, &supplier.WorkingHours.Opening, &supplier.WorkingHours.Closing)
 		if err == sql.ErrNoRows {
 			return nil, nil
 		} else if err != nil {
