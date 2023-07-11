@@ -1,3 +1,11 @@
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(64) NOT NULL,
+    last_name VARCHAR(64) NOT NULL,
+    email VARCHAR(64) NOT NULL,
+    password VARCHAR(64) NOT NULL
+);
+
 CREATE TABLE addresses (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
@@ -10,14 +18,6 @@ CREATE TABLE addresses (
     apartment VARCHAR(64),
     CONSTRAINT fk_user_id FOREIGN KEY (user_id)
     REFERENCES users(id)
-);
-
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    first_name VARCHAR(64) NOT NULL,
-    last_name VARCHAR(64) NOT NULL,
-    email VARCHAR(64) NOT NULL,
-    password VARCHAR(64) NOT NULL
 );
 
 CREATE TABLE drivers (
