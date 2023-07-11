@@ -17,7 +17,7 @@ func NewMenuRepository(db *sql.DB) *MenuRepository {
 }
 
 func (repo *MenuRepository) Create(m *models.Menu) error {
-	stmt, err := repo.db.Prepare("INSERT INTO menus (name, image, supplier_id, categorie_id, price) VALUES ($1, $2, $3, $4, $5)")
+	stmt, err := repo.db.Prepare("INSERT INTO menus (name, image, supplier_id, category_id, price) VALUES ($1, $2, $3, $4, $5)")
 	if err != nil {
 		return errors.New("couldn't prepare statement to create menu")
 	}
@@ -31,7 +31,7 @@ func (repo *MenuRepository) Create(m *models.Menu) error {
 }
 
 func (repo *MenuRepository) GetAll() ([]*models.Menu, error) {
-	stmt, err := repo.db.Prepare("SELECT id, name, supplier_id, categorie_id, image, price FROM menus")
+	stmt, err := repo.db.Prepare("SELECT id, name, supplier_id, category_id, image, price FROM menus")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting all menus")
 	}
@@ -58,7 +58,7 @@ func (repo *MenuRepository) GetAll() ([]*models.Menu, error) {
 }
 
 func (repo *MenuRepository) GetMenuByID(id int) (*models.Menu, error) {
-	stmt, err := repo.db.Prepare("SELECT id, name, supplier_id, categorie_id, image, price FROM menus WHERE menus.id = $1")
+	stmt, err := repo.db.Prepare("SELECT id, name, supplier_id, category_id, image, price FROM menus WHERE menus.id = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting all menus")
 	}
