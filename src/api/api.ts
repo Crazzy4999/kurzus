@@ -1,6 +1,6 @@
 import { useAuthStore } from "@/store"
-import { ACCESS_TOKEN_EXPIRED, AddressError, LoginError, OOPS, OrderError, OrderMenuError, ProfileError, RefreshError, ResetError, SignUpError, SupplierError, UNEXPECTED } from "./errors"
-import type { userResponse, tokenPairResponse, addressesCollectionResponse, supplierCollectionResponse, menuCollectionResponse, orderCollectionResponse } from "./responses"
+import { ACCESS_TOKEN_EXPIRED, AddressError, ItemsMenusError, LoginError, MenuError, OOPS, OrderError, OrderMenuError, ProfileError, RefreshError, ResetError, SignUpError, SupplierError, UNEXPECTED } from "./errors"
+import type { userResponse, tokenPairResponse, addressesCollectionResponse, supplierCollectionResponse, menuCollectionResponse, orderCollectionResponse, supplierResponse } from "./responses"
 import router from "@/router"
 
 const root = "http://localhost:3000"
@@ -231,6 +231,20 @@ export async function deleteAddress(id: number) {
 
 
 
+export async function getSupplierByID(id: number) {
+    return GET("/supplier/" + id, true).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case SupplierError.getAllSupplierFailed: throw OOPS
+                case SupplierError.getSupplierTypeFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json() as Promise<supplierResponse>
+    })
+}
+
 export async function getSuppliers() {
     return GET("/suppliers", true).then(async response => {
         if(!response.ok) {
@@ -238,6 +252,36 @@ export async function getSuppliers() {
             switch(err) {
                 case SupplierError.getAllSupplierFailed: throw OOPS
                 case SupplierError.getSupplierTypeFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json() as Promise<supplierCollectionResponse>
+    })
+}
+
+
+
+export async function getMenusBySupplierID(id: number) {
+    return GET("/menus/" + id, true).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case MenuError.getAllMenuFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json() as Promise<supplierCollectionResponse>
+    })
+}
+
+
+
+export async function getItemsByMenuID(id: number) {
+    return GET("/itemsmenus/" + id, true).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case ItemsMenusError.getAllMenuFailed: throw OOPS
                 default: throw UNEXPECTED
             }
         }

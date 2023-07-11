@@ -80,11 +80,11 @@ const router = createRouter({
       }
     },
     {
-      path: '/supplier',
+      path: '/supplier/:id',
       name: 'supplier',
       component: SupplierView,
       meta: {
-        title: 'Hangry' //might need some other approach if possible
+        title: 'Hangry'
       }
     },
     {

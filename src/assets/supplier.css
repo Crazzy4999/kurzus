@@ -17,27 +17,6 @@
     margin-block: var(--tiny-size);
 }
 
-.supplier-rates-container {
-    display: flex;
-}
-
-.supplier-rate-img {
-    width: calc(var(--p-size) * 0.95);
-    margin-right: var(--tiny-size);
-}
-
-.supplier-rate {
-    font-size: var(--p-size);
-}
-
-.supplier-rate-max {
-    font-size: var(--p-size);
-}
-
-.supplier-rates-count {
-    font-size: var(--p-size);
-}
-
 .supplier-delivery-text {
     font-size: var(--p-size);
 }

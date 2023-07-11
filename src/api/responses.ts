@@ -31,7 +31,7 @@ type workingHours = {
     closing: string
 }
 
-type supplierResponse = {
+export type supplierResponse = {
     id: number
     type: string
     image: string
@@ -44,6 +44,15 @@ type supplierResponse = {
 
 export type supplierCollectionResponse = {
     suppliers: supplierResponse[]
+} & Response
+
+type itemResponse = {
+    id: number,
+    ingredient: string
+} & Response
+
+export type itemCollectionResponse = {
+    items: itemResponse[]
 } & Response
 
 type menuResponse = {

@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import type { supplierInfo } from '@/api/models';
 
-defineProps<{
+const props = defineProps<{
     showIf: string
     supplier: supplierInfo
 }>()
+
+const supplierLink = "/supplier/" + props.supplier.id
 </script>
 
 <template>
     <li class="supplier" v-if="showIf === supplier.type || showIf === 'all'">
-        <RouterLink to="/suppliers"> <!--TODO ADD ROUTING TO SUPPLIERS-->
+        <RouterLink :to="supplierLink"> <!--TODO ADD ROUTING TO SUPPLIERS-->
             <div class="supplier-img-container">
                 <img class="supplier-img" :src="supplier.image" :alt="supplier.name">
                 <span class="delivery-time-wrapper">
@@ -19,7 +21,7 @@ defineProps<{
             <h2 class="supplier-name">{{ supplier.name }}</h2>
             <p class="supplier-description">{{ supplier.description }}</p>
             <span class="supplier-rates"></span>
-            <span class="supplier-delivery-fee">{{ supplier.deliveryFee === 0 ? "Free delivery" : supplier.deliveryFee }}</span>
+            <span class="supplier-delivery-fee">{{ supplier.deliveryFee === 0 ? "Free delivery" : supplier.deliveryFee + " Ft" }}</span>
         </RouterLink>
     </li>
 </template>
