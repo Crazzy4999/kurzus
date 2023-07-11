@@ -2,6 +2,7 @@ package responses
 
 type MenuResponse struct {
 	ID         int     `json:"id"`
+	Name       string  `json:"name"`
 	Image      string  `json:"image"`
 	SupplierID int     `json:"supplierID"`
 	CategoryID int     `json:"categoryID"`

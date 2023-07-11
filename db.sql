@@ -56,6 +56,7 @@ CREATE TABLE categories (
 
 CREATE TABLE menus (
     id SERIAL PRIMARY KEY,
+    name VARCHAR(256) NOT NULL,
     image VARCHAR(1024) NOT NULL,
     supplier_id INTEGER NOT NULL,
     category_id INTEGER NOT NULL,

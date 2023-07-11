@@ -22,7 +22,7 @@ func (repo *MenuRepository) Create(m *models.Menu) error {
 		return errors.New("couldn't prepare statement to create menu")
 	}
 
-	_, err = stmt.Exec(m.SupplierID, m.CategoryID, m.Image, m.Price)
+	_, err = stmt.Exec(m.Name, m.SupplierID, m.CategoryID, m.Image, m.Price)
 	if err != nil {
 		return errors.New("failed to create menu")
 	}
@@ -31,7 +31,7 @@ func (repo *MenuRepository) Create(m *models.Menu) error {
 }
 
 func (repo *MenuRepository) GetAll() ([]*models.Menu, error) {
-	stmt, err := repo.db.Prepare("SELECT id, supplier_id, categorie_id, image, price FROM menus")
+	stmt, err := repo.db.Prepare("SELECT id, name, supplier_id, categorie_id, image, price FROM menus")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting all menus")
 	}
@@ -45,7 +45,7 @@ func (repo *MenuRepository) GetAll() ([]*models.Menu, error) {
 	var menus []*models.Menu
 	for rows.Next() {
 		menu := &models.Menu{}
-		err = rows.Scan(&menu.ID, &menu.SupplierID, &menu.CategoryID, &menu.Image, &menu.Price)
+		err = rows.Scan(&menu.ID, &menu.Name, &menu.SupplierID, &menu.CategoryID, &menu.Image, &menu.Price)
 		if err == sql.ErrNoRows {
 			return nil, nil
 		} else if err != nil {
@@ -58,7 +58,7 @@ func (repo *MenuRepository) GetAll() ([]*models.Menu, error) {
 }
 
 func (repo *MenuRepository) GetMenuByID(id int) (*models.Menu, error) {
-	stmt, err := repo.db.Prepare("SELECT id, supplier_id, categorie_id, image, price FROM menus WHERE menus.id = $1")
+	stmt, err := repo.db.Prepare("SELECT id, name, supplier_id, categorie_id, image, price FROM menus WHERE menus.id = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting all menus")
 	}
@@ -66,7 +66,7 @@ func (repo *MenuRepository) GetMenuByID(id int) (*models.Menu, error) {
 	menu := &models.Menu{}
 
 	row := stmt.QueryRow(id)
-	err = row.Scan(&menu.ID, &menu.SupplierID, &menu.CategoryID, &menu.Image, &menu.Price)
+	err = row.Scan(&menu.ID, &menu.Name, &menu.SupplierID, &menu.CategoryID, &menu.Image, &menu.Price)
 	if err != nil {
 		return nil, errors.New("getting menu by id failed")
 	}
@@ -75,12 +75,12 @@ func (repo *MenuRepository) GetMenuByID(id int) (*models.Menu, error) {
 }
 
 func (repo *MenuRepository) Update(m *models.Menu) error {
-	stmt, err := repo.db.Prepare("UPDATE menus SET image = $1, price = $2 WHERE menus.id = $3")
+	stmt, err := repo.db.Prepare("UPDATE menus SET name = $1, image = $2, price = $3 WHERE menus.id = $4")
 	if err != nil {
 		return errors.New("couldn't prepare statement for updating menu")
 	}
 
-	_, err = stmt.Exec(m.Image, m.Price, m.ID)
+	_, err = stmt.Exec(m.Name, m.Image, m.Price, m.ID)
 	if err != nil {
 		return errors.New("updating menu failed")
 	}
