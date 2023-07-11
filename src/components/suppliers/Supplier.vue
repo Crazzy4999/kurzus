@@ -2,12 +2,13 @@
 import type { supplierInfo } from '@/api/models';
 
 defineProps<{
+    showIf: string
     supplier: supplierInfo
 }>()
 </script>
 
 <template>
-    <li class="supplier">
+    <li class="supplier" v-if="showIf === supplier.type || showIf === 'all'">
         <RouterLink to="/suppliers"> <!--TODO ADD ROUTING TO SUPPLIERS-->
             <div class="supplier-img-container">
                 <img class="supplier-img" :src="supplier.image" :alt="supplier.name">

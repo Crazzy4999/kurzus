@@ -3,16 +3,31 @@ import { getSuppliers } from "@/api/api";
 import type { supplierInfo } from "@/api/models";
 import SearchBar from "@/components/searchbar/SearchBar.vue"
 import Supplier from "@/components/suppliers/Supplier.vue"
-import { watchEffect } from "vue";
+import { reactive, ref, watchEffect } from "vue";
 
-let suppliers: supplierInfo[] = [
+const showIf = ref("all")
+let suppliers = reactive({ values: [] as supplierInfo[] })
 
-]
-
-watchEffect(() => {
-    getSuppliers().then(resp => {
-
+watchEffect(async () => {
+    let _suppliers: supplierInfo[] = []
+    await getSuppliers().then(resp => {
+        resp.suppliers.forEach(s => {
+            let supplier: supplierInfo = {
+                id: s.id,
+                type: s.type,
+                image: s.image,
+                name: s.name,
+                description: s.description,
+                deliveryTime: s.deliveryTime,
+                deliveryFee: s.deliveryFee,
+                opening: s.workingHours.opening,
+                closing: s.workingHours.closing
+            }
+            _suppliers.push(supplier)
+        })
     })
+
+    suppliers.values = _suppliers
 })
 </script>
 
@@ -21,22 +36,26 @@ watchEffect(() => {
         <SearchBar placeholder="I want to eat..."/>
 
         <nav class="suppliers-toggle-container">
-            <label class="supplier-item-wrapper" for="restaurants">
-                <input class="supplier-toggle" type="radio" name="supplier" id="restaurants" checked>
+            <label class="supplier-item-wrapper" for="restaurants" @click="showIf = 'restaurant'">
+                <input class="supplier-toggle" type="radio" name="supplier" id="restaurants">
                 <span class="supplier-item-name">Restaurants</span>
             </label>
-            <label class="supplier-item-wrapper" for="cafes">
+            <label class="supplier-item-wrapper" for="cafes" @click="showIf = 'coffee_shop'">
                 <input class="supplier-toggle" type="radio" name="supplier" id="cafes">
                 <span class="supplier-item-name">Cafés</span>
             </label>
-            <label class="supplier-item-wrapper" for="markets">
+            <label class="supplier-item-wrapper" for="markets" @click="showIf = 'supermarket'">
                 <input class="supplier-toggle" type="radio" name="supplier" id="markets">
                 <span class="supplier-item-name">Markets</span>
+            </label>
+            <label class="supplier-item-wrapper" for="all" @click="showIf = 'all'">
+                <input class="supplier-toggle" type="radio" name="supplier" id="all" checked>
+                <span class="supplier-item-name">All</span>
             </label>
         </nav>
         <section class="content-container">
             <ul class="suppliers-container">
-                <Supplier v-for="s in suppliers" :supplier="s"/>
+                <Supplier v-for="s in suppliers.values" :showIf="showIf" :supplier="s"/>
             </ul>
         </section>
     </main>
@@ -47,7 +66,9 @@ watchEffect(() => {
 
 .suppliers-toggle-container {
     display: flex;
-    height: var(--h1-size);
+    position: sticky;
+    flex-wrap: wrap;
+    height: fit-content;
     border: solid var(--border-size) var(--second-hover);
     border-radius: var(--p-size);
     background-color: var(--main-color);
@@ -57,8 +78,11 @@ watchEffect(() => {
 
 .supplier-item-wrapper {
     display: grid;
+    flex: 0 0 33.3333%;
+    flex-grow: 1;
     width: 100%;
     height: 100%;
+    margin-inline: auto;
 }
 
 .supplier-toggle {
@@ -98,7 +122,9 @@ watchEffect(() => {
     .suppliers-toggle-container {
         z-index: 2;
         position: -webkit-sticky;
+        display: flex;
         position: sticky;
+        flex-wrap: wrap;
         border: none;
         border-block: solid var(--border-size) var(--second-hover);
         border-radius: unset;
