@@ -31,14 +31,14 @@ func (repo *ItemsMenusRepository) Create(im *models.ItemsMenusIDPair) error {
 }
 
 func (repo *ItemsMenusRepository) GetItemsByMenuID(id int) ([]*models.Item, error) {
-	stmt, err := repo.db.Prepare("")
+	stmt, err := repo.db.Prepare("SELECT id, ingredient FROM items_menus WHERE items_menus.id = $1")
 	if err != nil {
-		return nil, errors.New("")
+		return nil, errors.New("couldn't prepare statement to get items by menu id")
 	}
 
 	rows, err := stmt.Query(id)
 	if err != nil {
-		return nil, errors.New("")
+		return nil, errors.New("getting all items by menu id failed")
 	}
 
 	var itemIds []int
