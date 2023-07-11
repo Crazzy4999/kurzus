@@ -18,7 +18,7 @@ func NewAddressRepository(db *sql.DB) *AddressRepository {
 }
 
 func (repo *AddressRepository) Create(a *models.Address) error {
-	stmt, err := repo.db.Prepare("INSERT INTO addresses (user_id, is_active, city, street, house_number, zip_code, floor_number, apartment) VALUES ($1, $2, $3, $4, $5, $6, $7)")
+	stmt, err := repo.db.Prepare("INSERT INTO addresses (user_id, is_active, city, street, house_number, zip_code, floor_number, apartment) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)")
 	if err != nil {
 		return errors.New("couldn't prepare statement to create address")
 	}
