@@ -17,12 +17,12 @@ func NewSupplierRepository(db *sql.DB) *SupplierRepository {
 }
 
 func (repo *SupplierRepository) Create(s *models.Supplier) error {
-	stmt, err := repo.db.Prepare("INSERT INTO suppliers (type, image, name, email, password, delivery_fee, opening, closing) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)")
+	stmt, err := repo.db.Prepare("INSERT INTO suppliers (type, image, name, email, password, description, delivery_time, delivery_fee, opening, closing) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)")
 	if err != nil {
 		return errors.New("couldn't prepare statement for creating supplier")
 	}
 
-	_, err = stmt.Exec(s.Type, s.Image, s.Name, s.Email, s.Password, s.DeliveryFee, s.WorkingHours.Opening, s.WorkingHours.Closing)
+	_, err = stmt.Exec(s.Type, s.Image, s.Name, s.Email, s.Password, s.Description, s.DeliveryTime, s.DeliveryFee, s.WorkingHours.Opening, s.WorkingHours.Closing)
 	if err != nil {
 		return errors.New("insert into suppliers failed")
 	}
@@ -30,7 +30,7 @@ func (repo *SupplierRepository) Create(s *models.Supplier) error {
 }
 
 func (repo *SupplierRepository) GetAll() ([]*models.Supplier, error) {
-	stmt, err := repo.db.Prepare("SELECT id, type, image, name, email, password, delivery_fee, opening, closing FROM suppliers")
+	stmt, err := repo.db.Prepare("SELECT id, type, image, name, email, password, description, delivery_time, delivery_fee, opening, closing FROM suppliers")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting all suppliers")
 	}
@@ -44,7 +44,7 @@ func (repo *SupplierRepository) GetAll() ([]*models.Supplier, error) {
 	var suppliers []*models.Supplier
 	for rows.Next() {
 		supplier := &models.Supplier{}
-		err = rows.Scan(&supplier.Type, &supplier.Image, &supplier.Name, &supplier.Email, &supplier.Password, &supplier.DeliveryFee, &supplier.WorkingHours.Opening, &supplier.WorkingHours.Closing)
+		err = rows.Scan(&supplier.Type, &supplier.Image, &supplier.Name, &supplier.Email, &supplier.Password, &supplier.Description, &supplier.DeliveryTime, &supplier.DeliveryFee, &supplier.WorkingHours.Opening, &supplier.WorkingHours.Closing)
 		if err == sql.ErrNoRows {
 			return nil, nil
 		} else if err != nil {
@@ -57,7 +57,7 @@ func (repo *SupplierRepository) GetAll() ([]*models.Supplier, error) {
 }
 
 func (repo *SupplierRepository) GetSupplierByID(id int) (*models.Supplier, error) {
-	stmt, err := repo.db.Prepare("SELECT id, type, image, name, email, password, delivery_fee, opening, closing FROM suppliers WHERE suppliers.id = $1")
+	stmt, err := repo.db.Prepare("SELECT id, type, image, name, email, password, description, delivery_time, delivery_fee, opening, closing FROM suppliers WHERE suppliers.id = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting supplier by id")
 	}
@@ -65,7 +65,7 @@ func (repo *SupplierRepository) GetSupplierByID(id int) (*models.Supplier, error
 	supplier := &models.Supplier{}
 
 	row := stmt.QueryRow(id)
-	err = row.Scan(&supplier.ID, &supplier.Type, &supplier.Image, &supplier.Name, &supplier.Email, &supplier.Password, &supplier.DeliveryFee, &supplier.WorkingHours.Opening, &supplier.WorkingHours.Closing)
+	err = row.Scan(&supplier.ID, &supplier.Type, &supplier.Image, &supplier.Name, &supplier.Email, &supplier.Password, &supplier.Description, &supplier.DeliveryTime, &supplier.DeliveryFee, &supplier.WorkingHours.Opening, &supplier.WorkingHours.Closing)
 	if err != nil {
 		return nil, errors.New("getting supplier by id failed")
 	}
@@ -74,12 +74,12 @@ func (repo *SupplierRepository) GetSupplierByID(id int) (*models.Supplier, error
 }
 
 func (repo *SupplierRepository) Update(s *models.Supplier) error {
-	stmt, err := repo.db.Prepare("UPDATE suppliers SET type = $1, image = $2, name = $3, delivery_fee = $4, opening = $5, closing = $6 WHERE suppliers.id = $7")
+	stmt, err := repo.db.Prepare("UPDATE suppliers SET type = $1, image = $2, name = $3, description = $4, delivery_time = $5, delivery_fee = $6, opening = $7, closing = $8 WHERE suppliers.id = $9")
 	if err != nil {
 		return errors.New("couldn't prepare statement for updating supplier")
 	}
 
-	_, err = stmt.Exec(s.Type, s.Image, s.Name, s.DeliveryFee, s.WorkingHours.Opening, s.WorkingHours.Closing, s.ID)
+	_, err = stmt.Exec(s.Type, s.Image, s.Name, s.Description, s.DeliveryTime, s.DeliveryFee, s.WorkingHours.Opening, s.WorkingHours.Closing, s.ID)
 	if err != nil {
 		return errors.New("updating supplier failed")
 	}

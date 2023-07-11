@@ -41,6 +41,8 @@ CREATE TABLE suppliers (
     last_name VARCHAR(64) NOT NULL,
     email VARCHAR(64) NOT NULL,
     password VARCHAR(64) NOT NULL,
+    description VARCHAR(1024) NOT NULL,
+    delivery_time DECIMAL DEFAULT 0,
     delivery_fee DECIMAL DEFAULT 0,
     opening VARCHAR(5) NOT NULL,
     closing VARCHAR(5) NOT NULL,
