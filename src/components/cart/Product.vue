@@ -1,11 +1,7 @@
 <script setup lang="ts">
+import type { productInfo } from "@/api/models";
 import Counter from "@/components/cart/Counter.vue"
 import { ref, watch } from "vue";
-
-export type productInfo = {
-    name: string
-    price: number
-}
 
 const props = defineProps<{
     product: productInfo

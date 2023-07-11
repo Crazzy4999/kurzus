@@ -1,18 +1,11 @@
 <script setup lang="ts">
 import AuthHeader from '@/components/AuthHeader.vue';
-import Product, { type productInfo } from '@/components/order/Product.vue';
+import Product from '@/components/order/Product.vue';
 import AddressCard from '@/components/order/AddressCard.vue'
 import { ref } from 'vue';
 import PaymentCard, { type paymentInfo } from '@/components/order/PaymentCard.vue';
+import type { addressInfo, productInfo } from '@/api/models';
 
-export type addressInfo = {
-    city: string,
-    street: string,
-    houseNumber: string,
-    zipCode: string,
-    floorNumber: string,
-    apartment: string
-}
 
 let products: productInfo[] = [
     { count: 1, name: "PIZZA PIZZA PIZZA PIZZA", price: 6570 },

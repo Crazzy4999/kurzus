@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import Header from "@/components/Header.vue"
-import { reactive, ref, watch } from "vue";
+import { ref } from "vue";
 import AddressCard from '@/components/order/AddressCard.vue'
-import type { addressInfo } from "./OrderView.vue";
 import { useAuthStore } from "@/store";
-import { addAddress, deleteProfile, getResetKey, resetPassword, updateProfile } from "@/api/api";
+import { addAddress, deleteProfile, getResetKey, updateProfile } from "@/api/api";
 import router from "@/router";
+import type { addressInfo } from "@/api/models";
 
 let addresses: addressInfo[] = [
     { city: "Budapest", street: "Szamos utca", houseNumber: "8", zipCode: "1039", floorNumber: "2", apartment: ""},
