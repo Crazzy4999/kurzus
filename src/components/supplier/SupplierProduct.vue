@@ -36,16 +36,16 @@ function displayItems(): string {
 </script>
 
 <template>
-    <div v-if="menu.categoryID === categoryID" class="product-container" @click="addingToCart = true">
+    <div v-if="menu.categoryID === categoryID" class="product-container">
         <div class="product-img-wrapper">
-            <img class="product-img" :src="menu.image" :alt="menu.name">
+            <img class="product-img" :src="menu.image" :alt="menu.name" @click="addingToCart = true">
         </div>
-        <span class="product-infos-container">
+        <span class="product-infos-container" @click="addingToCart = true">
             <h3 class="product-name">{{ menu.name }}</h3>
             <p class="product-description">{{ displayItems() }}</p>
             <span class="product-price">{{ menu.price }} Ft</span>
         </span>
-        <ItemModal :addingToCart="addingToCart" :menu="menu" :items="displayItems()"/>
+        <ItemModal :addingToCart="addingToCart" :menu="menu" :items="displayItems()" @close="(val) => addingToCart = val"/>
     </div>
 </template>
 
@@ -77,6 +77,7 @@ function displayItems(): string {
 .product-infos-container {
     display: flex;
     flex-direction: column;
+    width: 100%;
     margin-left: var(--p-size);
 }
 

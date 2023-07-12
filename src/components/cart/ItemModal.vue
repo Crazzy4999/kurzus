@@ -7,12 +7,19 @@ defineProps<{
     menu: menuInfo
     items: string
 }>()
+
+const emit = defineEmits<{
+    (event: "close", val: boolean): boolean
+}>()
 </script>
 
 <template>
     <div class="block-screen" v-if="addingToCart">
-        <div class="item-modal">
-            <div class="close-btn"></div>
+        <div class="item-modal" @click="emit('close', false)">
+            <div class="close-btn">
+                <!--Icon made by https://www.flaticon.com/authors/ariefstudio-->
+                <img class="close-img" src="@/assets/icons/close.png" alt="close">
+            </div>
             <div class="img-wrapper">
                 <img class="image" :src="menu.image" :alt="menu.name">
             </div>
@@ -37,6 +44,7 @@ defineProps<{
 @import url("@/assets/modal.css");
 
 .item-modal {
+    position: relative;
     overflow: hidden;
     border-radius: var(--sub-p-size);
     background-color: var(--main-color);
@@ -47,7 +55,21 @@ defineProps<{
 }
 
 .close-btn {
+    cursor: pointer;
+    z-index: 10;
+    display: grid;
     position: absolute;
+    border-radius: var(--p-size);
+    background-color: var(--main-color);
+    width: var(--h4-size);
+    height: var(--h4-size);
+    top: calc(var(--sub-p-size));
+    left: calc(var(--sub-p-size));
+}
+
+.close-img {
+    width: 50%;
+    margin: auto;
 }
 
 .img-wrapper {
