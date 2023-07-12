@@ -33,7 +33,7 @@ function showIf() {
     if(props.showIf.search.length === 0) searchMatched = true
 
     let hasCategory = false
-    if(props.showIf.categories.length !== 0) props.showIf.categories.forEach(category => { //TODO: solve undefined issue
+    if(props.showIf.categories !== undefined && props.showIf.categories.length !== 0) props.showIf.categories.forEach(category => { //TODO: solve undefined issue
         if(props.showIf.categories.includes(category)) hasCategory = true
     })
     else hasCategory = true
@@ -76,13 +76,15 @@ const supplierLink = "/supplier/" + props.supplier.id
 
 .supplier-img-container {
     position: relative;
+    overflow: hidden;
     width: 100%;
     height: 50%;
 }
 
 .supplier-img {
-    width: 100%;
-    height: 100%;
+    width: 200%;
+    height: calc(var(--h1-size) * 2);
+    transform: translateX(-25%);
 }
 
 /*FIX THIS on desktop view*/
@@ -154,6 +156,11 @@ const supplierLink = "/supplier/" + props.supplier.id
     .supplier {
         max-width: calc(100% - var(--sub-p-size));
         margin: var(--sub-p-size) calc(var(--sub-p-size) / 2);
+    }
+
+    .supplier-img {
+        width: 100%;
+        transform: translateX(0);
     }
 
     .delivery-time {

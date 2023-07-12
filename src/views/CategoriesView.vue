@@ -6,6 +6,7 @@ import Supplier from "@/components/suppliers/Supplier.vue"
 import { ref, watchEffect } from "vue";
 import { getCategories, getSuppliers } from "@/api/api";
 import type { categoryInfo, supplierInfo } from "@/api/models";
+import { supplierType } from "@/api/util";
 
 const categories = ref([] as categoryInfo[])
 const suppliers = ref([] as supplierInfo[])
@@ -23,7 +24,7 @@ watchEffect(async () => {
         <CategoriesFilter :categories="categories"/>
         <section class="content-container">
             <ul class="suppliers-container">
-                <Supplier v-for="s in suppliers" :showIf="'all'" :supplier="s"/>
+                <Supplier v-for="s in suppliers" :showIf="{ search: '', categories: [], type: supplierType.ALL }" :supplier="s"/>
             </ul>
         </section>
     </main>

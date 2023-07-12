@@ -2,12 +2,16 @@
 import CartImg from "@/assets/icons/8679184_shopping_basket_shop_icon.svg"
 import MenuImg from "@/assets/icons/134216_menu_lines_hamburger_icon.svg"
 import Sidebar from "@/components/Sidebar.vue"
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useAuthStore } from "@/store";
 
 const useAuth = useAuthStore()
 
-let toggleSidebar = ref(false)
+const toggleSidebar = ref(false)
+
+onMounted(() => {
+    document.querySelector("#app")?.addEventListener("scroll", () => toggleSidebar.value = false)
+})
 
 let cartRouting = useAuth.email !== "" ? "/cart" : "/login"
 </script>
@@ -37,6 +41,9 @@ let cartRouting = useAuth.email !== "" ? "/cart" : "/login"
                 </li>
                 <li>
                     <RouterLink to="/categories" class="nav-item">Categories</RouterLink>
+                </li>
+                <li v-if="useAuth.email !== ''">
+                    <RouterLink to="/history" class="nav-item">history</RouterLink>
                 </li>
                 <li>
                     <RouterLink to="/cart" class="cart-wrapper">

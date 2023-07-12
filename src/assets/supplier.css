@@ -112,3 +112,10 @@
 .selected {
     font-weight: bold;
 }
+
+@media only screen and (hover: none) and (pointer: coarse) {
+    .supplier-background-img {
+        width: 200%;
+        transform: translateX(-25%);
+    }
+}

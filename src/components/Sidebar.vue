@@ -48,7 +48,7 @@ aside {
         flex-direction: column;
         background-color: var(--second-hover);
         width: 50%;
-        height: 200%;
+        height: 100%;
         top: calc(var(--h1-size) * -2 - var(--sub-p-size));
         right: 0%;
         padding-top: calc(var(--h1-size) * 2 + var(--sub-p-size));
