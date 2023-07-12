@@ -17,12 +17,12 @@ func NewOrderRepository(db *sql.DB) *OrderRepository {
 }
 
 func (repo *OrderRepository) Create(o *models.Order) error {
-	stmt, err := repo.db.Prepare("INSERT INTO orders (user_id, suppiler_id, driver_id, status_id, note, delivered_at) VALUES ($1, $2, $3, $4, $5, $6)")
+	stmt, err := repo.db.Prepare("INSERT INTO orders (user_id, suppiler_id, driver_id, status_id, note) VALUES ($1, $2, $3, $4, $5)")
 	if err != nil {
 		return errors.New("couldn't prepare statenemt to create order")
 	}
 
-	_, err = stmt.Exec(o.UserID, o.SupplierID, o.DriverID, o.StatusID, o.Note, o.DeliveredAt)
+	_, err = stmt.Exec(o.UserID, o.SupplierID, o.DriverID.Int64, models.CREATED, o.Note)
 	if err != nil {
 		return errors.New("insert into orders failed")
 	}
@@ -75,12 +75,12 @@ func (or *OrderRepository) GetOrderByID(id int) (*models.Order, error) {
 }
 
 func (or *OrderRepository) Update(o *models.Order) error {
-	stmt, err := or.db.Prepare("UPDATE orders SET status_id = $1, note = $2, delivered_at = $3 WHERE orders.id = $4")
+	stmt, err := or.db.Prepare("UPDATE orders SET driver_id = $1, status_id = $2, note = $3, delivered_at = $4 WHERE orders.id = $5")
 	if err != nil {
 		return errors.New("couldn't prepare statement for updating order")
 	}
 
-	_, err = stmt.Exec(o.StatusID, o.Note, o.DeliveredAt, o.ID)
+	_, err = stmt.Exec(o.DriverID, o.StatusID, o.Note, o.DeliveredAt, o.ID)
 	if err != nil {
 		return errors.New("updating order failed")
 	}
