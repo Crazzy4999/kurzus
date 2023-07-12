@@ -29,29 +29,7 @@ function addNewAddress() {
 }
 
 async function getUserAddresses() {
-    let _addresses: addressInfo[] = []
-
-    await getAddresses().then(resp => {
-        resp.addresses.forEach(a => {
-            let address: addressInfo = {
-                id: a.id,
-                userID: a.userID,
-                isActive: a.isActive,
-                city: a.city,
-                street: a.street,
-                houseNumber: a.houseNumber,
-                zipCode: a.zipCode,
-                floorNumber: a.floorNumber,
-                apartment: a.apartment,
-            }
-
-            _addresses.push(address)
-        })
-    })
-
-    useAuth.addresses = _addresses
-
-    useAuth.setAddresses(useAuth.addresses)
+    useAuth.setAddresses((await getAddresses()).addresses)
 }
 
 watchEffect(async () => {

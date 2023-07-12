@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CategoriesSelector, { type categorieVal } from "@/components/supplier/CategoriesSelector.vue"
+import CategoriesSelector from "@/components/supplier/CategoriesSelector.vue"
 import SubCategorie from "./SubCategorie.vue";
 import type { categoryInfo, menuInfo, supplierInfo } from "@/api/models";
 import { getCategories, getMenusBySupplierID, getSupplierByID } from "@/api/api";
@@ -12,53 +12,17 @@ const menus = ref([] as menuInfo[])
 const categories = ref([] as categoryInfo[])
 
 watchEffect(async () => {
-    await getSupplierByID(+route.params.id).then(resp => {
-        supplier.value = {
-            id: resp.id,
-            type: resp.type,
-            image: resp.image,
-            name: resp.name,
-            description: resp.description,
-            deliveryTime: resp.deliveryTime,
-            deliveryFee: resp.deliveryFee,
-            opening: resp.workingHours.opening,
-            closing: resp.workingHours.closing
-        }
-    })
-
-    await getMenusBySupplierID(supplier.value.id).then(resp => {
-        let _menus: menuInfo[] = []
-        
-        resp.menus.forEach(m => {
-            let menu: menuInfo = {
-                id: m.id,
-                name: m.name,
-                image: m.image,
-                supplierID: m.supplierID,
-                categoryID: m.categoryID,
-                price: m.price
+    supplier.value = await getSupplierByID(+route.params.id)
+    menus.value = (await getMenusBySupplierID(supplier.value.id)).menus
+    const filteredCategories: categoryInfo[] = []
+    const fetchedCategories = (await getCategories()).categories.forEach(category => {
+        menus.value.forEach(menu => {
+            if(category.id === menu.categoryID && !filteredCategories.includes(category)) {
+                filteredCategories.push(category)
             }
-
-            _menus.push(menu)
         })
-
-        menus.value = _menus
     })
-
-    await getCategories().then(resp => {
-        let _categories: categoryInfo[] = []
-
-        resp.categories.forEach(c => {
-            let category: categoryInfo = {
-                id: c.id,
-                name: c.name
-            }
-
-            _categories.push(category)
-        })
-
-        categories.value = _categories
-    })
+    categories.value = filteredCategories
 })
 
 /*

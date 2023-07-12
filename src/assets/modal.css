@@ -1,7 +1,7 @@
 .block-screen {
     z-index: 100;
     cursor: default;
-    position: absolute;
+    position: fixed;
     display: grid;
     background-color: var(--modal-background);
     width: 100%;

@@ -1,54 +1,41 @@
 <script setup lang="ts">
 import { getSuppliers } from "@/api/api";
 import type { supplierInfo } from "@/api/models";
+import { supplierType, type query } from "@/api/util";
 import SearchBar from "@/components/searchbar/SearchBar.vue"
 import Supplier from "@/components/suppliers/Supplier.vue"
 import { reactive, ref, watchEffect } from "vue";
 
-const showIf = ref("all")
-let suppliers = reactive({ values: [] as supplierInfo[] })
+const showIf = ref({
+    search: "",
+    categories: [],
+    type: supplierType.ALL
+} as query)
+const suppliers = reactive({ values: [] as supplierInfo[] })
 
 watchEffect(async () => {
-    let _suppliers: supplierInfo[] = []
-    await getSuppliers().then(resp => {
-        resp.suppliers.forEach(s => {
-            let supplier: supplierInfo = {
-                id: s.id,
-                type: s.type,
-                image: s.image,
-                name: s.name,
-                description: s.description,
-                deliveryTime: s.deliveryTime,
-                deliveryFee: s.deliveryFee,
-                opening: s.workingHours.opening,
-                closing: s.workingHours.closing
-            }
-            _suppliers.push(supplier)
-        })
-    })
-
-    suppliers.values = _suppliers
+    suppliers.values = (await getSuppliers()).suppliers
 })
 </script>
 
 <template>
     <main class="main-container">
-        <SearchBar placeholder="I want to eat..."/>
+        <SearchBar placeholder="Search"/>
 
         <nav class="suppliers-toggle-container">
-            <label class="supplier-item-wrapper" for="restaurants" @click="showIf = 'restaurant'">
+            <label class="supplier-item-wrapper" for="restaurants" @click="showIf.type = supplierType.RESTAURANT">
                 <input class="supplier-toggle" type="radio" name="supplier" id="restaurants">
                 <span class="supplier-item-name">Restaurants</span>
             </label>
-            <label class="supplier-item-wrapper" for="cafes" @click="showIf = 'coffee_shop'">
+            <label class="supplier-item-wrapper" for="cafes" @click="showIf.type = supplierType.COFFEE_SHOP">
                 <input class="supplier-toggle" type="radio" name="supplier" id="cafes">
                 <span class="supplier-item-name">Cafés</span>
             </label>
-            <label class="supplier-item-wrapper" for="markets" @click="showIf = 'supermarket'">
+            <label class="supplier-item-wrapper" for="markets" @click="showIf.type = supplierType.SUPERMARKET">
                 <input class="supplier-toggle" type="radio" name="supplier" id="markets">
                 <span class="supplier-item-name">Markets</span>
             </label>
-            <label class="supplier-item-wrapper" for="all" @click="showIf = 'all'">
+            <label class="supplier-item-wrapper" for="all" @click="showIf.type = supplierType.ALL">
                 <input class="supplier-toggle" type="radio" name="supplier" id="all" checked>
                 <span class="supplier-item-name">All</span>
             </label>

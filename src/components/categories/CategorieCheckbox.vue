@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { categorie } from '@/components/categories/CategoriesFilter.vue';
+import type { categoryInfo } from '@/api/models';
 import { ref } from 'vue';
 
 defineProps<{
-    categorie: categorie
+    categorie: categoryInfo
 }>()
 
 let checked = ref(false)
@@ -11,8 +11,8 @@ let checked = ref(false)
 
 <template>
     <li class="categorie-wrapper" @click="checked = !checked" :checked="checked">
-        <input class="categorie-chbx" type="checkbox" :name="categorie.id" :id="categorie.id">
-        <label class="categorie-name" :for="categorie.id" @click="checked = !checked">{{ categorie.name }}</label>
+        <input class="categorie-chbx" type="checkbox" :name="categorie.id+''" :id="categorie.id+''">
+        <label class="categorie-name" :for="categorie.id+''" @click="checked = !checked">{{ categorie.name }}</label>
     </li>
 </template>
 

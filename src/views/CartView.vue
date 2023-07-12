@@ -10,7 +10,8 @@ const useCart = useCartStore()
 const deliveryFee = ref(0)
 
 watchEffect(async () => {
-    await getSupplierByID(useCart.products[0].supplierID).then(resp => deliveryFee.value = resp.deliveryFee)
+    const supplier = await getSupplierByID(useCart.products[0].supplierID)
+    deliveryFee.value = supplier.deliveryFee
 })
 
 let totalCost = ref(0)

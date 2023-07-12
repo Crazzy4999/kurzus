@@ -1,26 +1,29 @@
 <script setup lang="ts">
 import Header from "@/components/Header.vue"
 import SearchBar from "@/components/searchbar/SearchBar.vue"
-import CategoriesFilter, { type categorie } from "@/components/categories/CategoriesFilter.vue"
-import Supplier, { type supplierVal } from "@/components/suppliers/Supplier.vue"
+import CategoriesFilter from "@/components/categories/CategoriesFilter.vue"
+import Supplier from "@/components/suppliers/Supplier.vue"
+import { ref, watchEffect } from "vue";
+import { getCategories, getSuppliers } from "@/api/api";
+import type { categoryInfo, supplierInfo } from "@/api/models";
 
-let categories: categorie[] = [
-    { id: "sushi", name: "sushi" }
-]
+const categories = ref([] as categoryInfo[])
+const suppliers = ref([] as supplierInfo[])
 
-let suppliers: supplierVal[] = [
-
-]
+watchEffect(async () => {
+    categories.value = (await getCategories()).categories
+    suppliers.value = (await getSuppliers()).suppliers
+})
 </script>
 
 <template>
     <Header/>
     <main class="main-container">
-        <SearchBar placeholder="I want to eat..."/>
+        <SearchBar placeholder="Search"/>
         <CategoriesFilter :categories="categories"/>
         <section class="content-container">
             <ul class="suppliers-container">
-                <Supplier v-for="s in suppliers" :name="s.name" :description="s.description" :img="s.img" :delivery-time="s.deliveryTime" :delivery-fee="s.deliveryFee"/>
+                <Supplier v-for="s in suppliers" :showIf="'all'" :supplier="s"/>
             </ul>
         </section>
     </main>

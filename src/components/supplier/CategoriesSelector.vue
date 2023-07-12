@@ -1,11 +1,8 @@
 <script setup lang="ts">
-export type categorieVal = {
-    id: string,
-    text: string
-}
+import type { categoryInfo } from '@/api/models';
 
 defineProps<{
-    categories: categorieVal[]
+    categories: categoryInfo[]
 }>()
 </script>
 
@@ -16,7 +13,7 @@ defineProps<{
         </span>
         <ul class="restaurant-sub-categories">
             <li v-for="c in categories" class="sub-categorie-item">
-                <a class="sub-categorie-link selected" :href="'#'+c.id">{{ c.text }}</a>
+                <a class="sub-categorie-link selected" :href="'#'+c.id">{{ c.name }}</a>
             </li>
         </ul>
         <span class="categories-arrow-wrapper" right>

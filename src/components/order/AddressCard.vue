@@ -7,23 +7,8 @@ const props = defineProps<{
     address: addressInfo
 }>()
 
-
-
-let editing = ref(false)
-let deleting = ref(false)
-
-function controlScroll(val: boolean) {
-    window.scrollTo(0, 0)
-    if(val) {
-        window.onscroll = () => window.scrollTo(0, 0)
-        document.body.classList.add("modal-open")
-    } else {
-        window.onscroll = () => {}
-        document.body.classList.remove("modal-open")
-    }
-}
-
-
+const editing = ref(false)
+const deleting = ref(false)
 
 const city = ref(props.address.city)
 const street = ref(props.address.street)
@@ -32,11 +17,10 @@ const zipCode = ref(props.address.zipCode)
 const floorNumber = ref(props.address.floorNumber)
 const apartment = ref(props.address.apartment)
 
-function setToActive() {
-    getAddresses().then(resp => {
-        resp.addresses.forEach(address => {
-            if(props.address.id !== address.id) updateAddress(address.id, address.userID, false, address.city, address.street, address.houseNumber, address.zipCode, address.floorNumber, address.apartment)
-        })
+async function setToActive() {
+    const addresses = await (await getAddresses()).addresses
+    addresses.forEach(address => {
+        if(props.address.id !== address.id) updateAddress(address.id, address.userID, false, address.city, address.street, address.houseNumber, address.zipCode, address.floorNumber, address.apartment)
     })
     updateAddress(props.address.id, props.address.userID, true, props.address.city, props.address.street, props.address.houseNumber, props.address.zipCode, props.address.floorNumber, props.address.apartment)
 }
@@ -57,16 +41,6 @@ const addressDeletingErrorMsg = ref("")
 function deleteUserAddress() {
     deleteAddress(props.address.id).then(() => deleting.value = false).catch(err => addressDeletingErrorMsg.value = err)
 }
-
-
-
-watch(editing, (newVal, oldVal) => {
-    controlScroll(newVal)
-})
-
-watch(deleting, (newVal, oldVal) => {
-    controlScroll(newVal)
-})
 </script>
 
 <template>

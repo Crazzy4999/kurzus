@@ -1,3 +1,15 @@
+export type tokenPairInfo = {
+    accessToken: string
+    refreshToken: string
+}
+
+export type userInfo = {
+    id: number
+    firstName: string
+    lastName: string
+    email: string
+}
+
 export type addressInfo = {
     id: number
     userID: number
@@ -10,11 +22,13 @@ export type addressInfo = {
     apartment: string
 }
 
-export type productInfo = {
-    count: number
-    supplierID: number
-    name: string
-    price: number
+export type addressCollectionInfo = {
+    addresses: addressInfo[]
+}
+
+type workingHours = {
+    opening: string
+    closing: string
 }
 
 export type supplierInfo = {
@@ -25,8 +39,26 @@ export type supplierInfo = {
     description: string
     deliveryTime: number
     deliveryFee: number
-    opening: string
-    closing: string
+    workingHours: workingHours
+}
+
+export type supplierCollectionInfo = {
+    suppliers: supplierInfo[]
+}
+
+export type itemInfo = {
+    id: number
+    ingredient: string
+}
+
+export type cartItemInfo = {
+    count: number
+    name: string
+    price: number
+}
+
+export type itemCollectionInfo = {
+    items: itemInfo[]
 }
 
 export type categoryInfo = {
@@ -34,9 +66,15 @@ export type categoryInfo = {
     name: string
 }
 
-export type itemInfo = {
-    id: number
-    ingredient: string
+export type categoriesCollectionInfo = {
+    categories: categoryInfo[]
+}
+
+export type productInfo = {
+    count: number
+    supplierID: number
+    name: string
+    price: number
 }
 
 export type menuInfo = {
@@ -46,4 +84,23 @@ export type menuInfo = {
     supplierID: number
     categoryID: number
     price: number
+}
+
+export type menuCollectionInfo = {
+    menus: menuInfo[]
+}
+
+export type orderInfo = {
+    id: number
+    userID: number
+    supplierID: number
+    driverID: number
+    statusID: number
+    note: string
+    createdAt: string
+    deliveredAt: string
+}
+
+export type orderCollectionInfo = {
+    orders: orderInfo[]
 }

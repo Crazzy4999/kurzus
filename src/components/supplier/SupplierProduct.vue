@@ -3,27 +3,35 @@ import type { menuInfo, itemInfo } from "@/api/models"
 import { getItemsByMenuID } from '@/api/api'
 import ItemModal from "@/components/cart/ItemModal.vue"
 import { ref, watchEffect } from 'vue';
+import { ItemsMenusError } from "@/api/errors";
+import { useAuthStore } from "@/store";
+import router from "@/router";
 
 const props = defineProps<{
     categoryID: number
     menu: menuInfo
 }>()
 
+const useAuth = useAuthStore()
 const addingToCart = ref(false)
 const items = ref([] as itemInfo[])
 
 watchEffect(async () => {
-    await getItemsByMenuID(props.menu.id).then(resp => {
-        resp.items.forEach(i => {
-            let item: itemInfo = {
-                id: i.id,
-                ingredient: i.ingredient
-            }
+    let itemsCollection = await getItemsByMenuID(props.menu.id)
+    itemsCollection.items.forEach(i => {
+        let item: itemInfo = {
+            id: i.id,
+            ingredient: i.ingredient
+        }
 
-            items.value.push(item)
-        })
+        items.value.push(item)
     })
 })
+
+function addToCart() {
+    if(useAuth.email !== "") addingToCart.value = true
+    else router.push("/login")
+}
 
 function displayItems(): string {
     let itemsList: string = ""
@@ -38,9 +46,9 @@ function displayItems(): string {
 <template>
     <div v-if="menu.categoryID === categoryID" class="product-container">
         <div class="product-img-wrapper">
-            <img class="product-img" :src="menu.image" :alt="menu.name" @click="addingToCart = true">
+            <img class="product-img" :src="menu.image" :alt="menu.name" @click="addToCart()">
         </div>
-        <span class="product-infos-container" @click="addingToCart = true">
+        <span class="product-infos-container" @click="addToCart()">
             <h3 class="product-name">{{ menu.name }}</h3>
             <p class="product-description">{{ displayItems() }}</p>
             <span class="product-price">{{ menu.price }} Ft</span>

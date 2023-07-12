@@ -1,14 +1,10 @@
 <script setup lang="ts">
+import type { categoryInfo } from '@/api/models';
 import CategorieCheckbox from '@/components/categories/CategorieCheckbox.vue';
 import { ref } from 'vue';
 
-export type categorie = {
-    id: string,
-    name: string
-}
-
 defineProps<{
-    categories: categorie[]
+    categories: categoryInfo[]
 }>()
 
 let isOpened = ref(false)

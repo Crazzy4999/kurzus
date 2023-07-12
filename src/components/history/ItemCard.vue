@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { itemInfo } from '@/api/models';
+import type { cartItemInfo } from '@/api/models';
 
 defineProps<{
-    items: itemInfo[]
+    items: cartItemInfo[]
 }>()
 </script>
 

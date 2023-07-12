@@ -1,17 +1,54 @@
 <script setup lang="ts">
-import type { supplierInfo } from '@/api/models';
+import { getCategories, getMenusBySupplierID } from '@/api/api';
+import type { categoryInfo, menuInfo, supplierInfo } from '@/api/models';
+import { supplierType, type query } from '@/api/util';
+import { ref, watchEffect } from 'vue';
 
 const props = defineProps<{
-    showIf: string
+    showIf: query
     supplier: supplierInfo
 }>()
+
+const menus = ref([] as menuInfo[])
+const categories = ref([] as categoryInfo[])
+
+watchEffect(async () => {
+    menus.value = (await getMenusBySupplierID(props.supplier.id)).menus
+    const filteredCategories: categoryInfo[] = []
+    const fetchedCategories = (await getCategories()).categories.forEach(category => {
+        menus.value.forEach(menu => {
+            if(category.id === menu.categoryID && !filteredCategories.includes(category)) {
+                filteredCategories.push(category)
+            }
+        })
+    })
+    categories.value = filteredCategories
+})
+
+function showIf() {
+    let searchMatched = false
+    menus.value.forEach(menu => {
+        if(menu.name.includes(props.showIf.search) || props.supplier.name.includes(props.showIf.search)) searchMatched = true
+    })
+    if(props.showIf.search.length === 0) searchMatched = true
+
+    let hasCategory = false
+    if(props.showIf.categories.length !== 0) props.showIf.categories.forEach(category => { //TODO: solve undefined issue
+        if(props.showIf.categories.includes(category)) hasCategory = true
+    })
+    else hasCategory = true
+
+    let matchesType = props.showIf.type === props.supplier.type || props.showIf.type === supplierType.ALL
+
+    return searchMatched && hasCategory && matchesType
+}
 
 const supplierLink = "/supplier/" + props.supplier.id
 </script>
 
 <template>
-    <li class="supplier" v-if="showIf === supplier.type || showIf === 'all'">
-        <RouterLink :to="supplierLink"> <!--TODO ADD ROUTING TO SUPPLIERS-->
+    <li class="supplier" v-if="showIf()">
+        <RouterLink :to="supplierLink">
             <div class="supplier-img-container">
                 <img class="supplier-img" :src="supplier.image" :alt="supplier.name">
                 <span class="delivery-time-wrapper">
@@ -21,7 +58,7 @@ const supplierLink = "/supplier/" + props.supplier.id
             <h2 class="supplier-name">{{ supplier.name }}</h2>
             <p class="supplier-description">{{ supplier.description }}</p>
             <span class="supplier-rates"></span>
-            <span class="supplier-delivery-fee">{{ supplier.deliveryFee === 0 ? "Free delivery" : supplier.deliveryFee + " Ft" }}</span>
+            <span class="supplier-delivery-fee">Delivery fee: {{ supplier.deliveryFee === 0 ? "Free delivery" : supplier.deliveryFee + " Ft" }}</span>
         </RouterLink>
     </li>
 </template>

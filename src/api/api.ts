@@ -2,58 +2,115 @@ import { useAuthStore } from "@/store"
 import { ACCESS_TOKEN_EXPIRED, AddressError, CategoriesError, ItemsMenusError, LoginError, MenuError, OOPS, OrderError, OrderMenuError, ProfileError, RefreshError, ResetError, SignUpError, SupplierError, UNEXPECTED } from "./errors"
 import type { userResponse, tokenPairResponse, addressesCollectionResponse, supplierCollectionResponse, menuCollectionResponse, orderCollectionResponse, supplierResponse, itemCollectionResponse, categoriesCollectionResponse } from "./responses"
 import router from "@/router"
+import type { addressCollectionInfo, categoriesCollectionInfo, itemCollectionInfo, menuCollectionInfo, orderCollectionInfo, supplierCollectionInfo, supplierInfo, tokenPairInfo, userInfo } from "./models"
 
 const root = "http://localhost:3000"
+let refreshTries = 0
 
-function apiFetch(url: string, init?: RequestInit | undefined) {
-    return fetch(root+url, init)
+async function apiFetch(url: string, init?: RequestInit | undefined) {
+    return await fetch(root+url, init)
 }
 
-function GET(url: string, isProtected: boolean) {
-    return apiFetch(url, {
+async function GET(url: string, isProtected: boolean) {
+    return await apiFetch(url, {
         method: 'get',
         headers: isProtected ? {
             Authorization: 'Bearer ' + useAuthStore().accessToken,
         } : {},
+    }).catch(err => {
+        console.log("GET", err, refreshTries)
+        if(err === ACCESS_TOKEN_EXPIRED) refresh().then(resp => {
+            useAuthStore().setTokens(resp.accessToken, resp.refreshToken)
+            return GET(url, isProtected)
+        })
+        else if(2 < refreshTries) {
+            refreshTries = 0
+            router.push("/")
+        }
+        else refreshTries++
     })
 }
 
-function GET_REFRESH(url: string, isProtected: boolean) {
-    return apiFetch(url, {
+async function GET_REFRESH(url: string, isProtected: boolean) {
+    return await apiFetch(url, {
         method: 'get',
         headers: isProtected ? {
             Authorization: 'Bearer ' + useAuthStore().refreshToken,
         } : {},
+    }).catch(err => {
+        console.log("GET_REFRESH", err, refreshTries)
+        if(err === ACCESS_TOKEN_EXPIRED) refresh().then(resp => {
+            useAuthStore().setTokens(resp.accessToken, resp.refreshToken)
+            return GET_REFRESH(url, isProtected)
+        })
+        else if(2 < refreshTries) {
+            refreshTries = 0
+            router.push("/")
+        }
+        else refreshTries++
     })
 }
 
-function POST(url: string, isProtected: boolean, data: any) {
-    return apiFetch(url, {
+async function POST(url: string, isProtected: boolean, data: any) {
+    return await apiFetch(url, {
         method: 'post',
         headers: isProtected ? {
             Authorization: 'Bearer ' + useAuthStore().accessToken,
         } : {},
         body: JSON.stringify(data)
+    }).catch(err => {
+        console.log("POST", err, refreshTries)
+        if(err === ACCESS_TOKEN_EXPIRED) refresh().then(resp => {
+            useAuthStore().setTokens(resp.accessToken, resp.refreshToken)
+            return POST(url, isProtected, data)
+        })
+        else if(2 < refreshTries) {
+            refreshTries = 0
+            router.push("/")
+        }
+        else refreshTries++
     })
 }
 
-function PUT(url: string, isProtected: boolean, data: any) {
-    return apiFetch(url, {
+async function PUT(url: string, isProtected: boolean, data: any) {
+    return await apiFetch(url, {
         method: 'put',
         headers: isProtected ? {
             Authorization: 'Bearer ' + useAuthStore().accessToken,
         } : {},
         body: JSON.stringify(data)
+    }).catch(err => {
+        console.log("PUT", err, refreshTries)
+        if(err === ACCESS_TOKEN_EXPIRED) refresh().then(resp => {
+            useAuthStore().setTokens(resp.accessToken, resp.refreshToken)
+            return PUT(url, isProtected, data)
+        })
+        else if(2 < refreshTries) {
+            refreshTries = 0
+            router.push("/")
+        }
+        else refreshTries++
     })
 }
 
-function DELETE(url: string, isProtected: boolean, data: any) {
-    return apiFetch(url, {
+async function DELETE(url: string, isProtected: boolean, data: any) {
+    return await apiFetch(url, {
         method: 'delete',
         headers: isProtected ? {
             Authorization: 'Bearer ' + useAuthStore().accessToken,
         } : {},
         body: JSON.stringify(data)
+    }).catch(err => {
+        console.log("DELETE", err, refreshTries)
+        if(err === ACCESS_TOKEN_EXPIRED) refresh().then(resp => {
+            useAuthStore().setTokens(resp.accessToken, resp.refreshToken)
+            return DELETE(url, isProtected, data)
+        })
+        else if(2 < refreshTries) {
+            refreshTries = 0
+            router.push("/")
+        }
+        else refreshTries++
     })
 }
 
@@ -62,7 +119,7 @@ function DELETE(url: string, isProtected: boolean, data: any) {
 
 
 export async function login(email: string, password: string) {
-    return POST("/login", false, { email, password }).then(async response => {
+    return POST("/login", false, { email, password }).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -70,12 +127,12 @@ export async function login(email: string, password: string) {
                 default: throw UNEXPECTED
             }
         }
-        return response.json() as Promise<tokenPairResponse>
+        return response.json() as Promise<tokenPairInfo>
     })
 }
 
 export async function signUp(firstName: string, lastName: string, email: string, password: string, passwordAgain: string) {
-    return POST("/signup", false, { firstName, lastName, email, password, passwordAgain }).then(async response => {
+    return POST("/signup", false, { firstName, lastName, email, password, passwordAgain }).then(async (response: any) => {
             if(!response.ok) {
                 let err = (await response.text()).replace("\n", "")
                 switch(err) {
@@ -89,7 +146,7 @@ export async function signUp(firstName: string, lastName: string, email: string,
 }
 
 export async function getResetKey(email: string) {
-    return POST("/reset", false, { email }).then(async response => {
+    return POST("/reset", false, { email }).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -101,7 +158,7 @@ export async function getResetKey(email: string) {
 }
 
 export async function resetPassword(password: string, passwordAgain: string) {
-    return PUT("/reset?reset_key=" + router.currentRoute.value.query.reset_key, false, { password, passwordAgain }).then(async response => {
+    return PUT("/reset?reset_key=" + router.currentRoute.value.query.reset_key, false, { password, passwordAgain }).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -118,7 +175,7 @@ export async function resetPassword(password: string, passwordAgain: string) {
 }
 
 export async function refresh() {
-    return GET_REFRESH("/refresh", true).then(async response => {
+    return GET_REFRESH("/refresh", true).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -127,14 +184,14 @@ export async function refresh() {
                 default: throw UNEXPECTED
             }
         }
-        return response.json() as Promise<tokenPairResponse>
+        return response.json() as Promise<tokenPairInfo>
     })
 }
 
 
 
 export async function getProfile() {
-    return GET("/profile", true).then(async response => {
+    return await GET("/profile", true).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -143,12 +200,12 @@ export async function getProfile() {
                 default: throw UNEXPECTED
             }
         }
-        return response.json() as Promise<userResponse>
+        return response.json() as Promise<userInfo>
     })
 }
 
 export async function updateProfile(firstName: string, lastName: string) {
-    return PUT("/profile", true, { firstName, lastName }).then(async response => {
+    return PUT("/profile", true, { firstName, lastName }).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -162,7 +219,7 @@ export async function updateProfile(firstName: string, lastName: string) {
 }
 
 export async function deleteProfile() {
-    return DELETE("/profile", true, {}).then(async response => {
+    return DELETE("/profile", true, {}).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -179,7 +236,7 @@ export async function deleteProfile() {
 
 
 export async function addAddress(isActive: boolean, city: string, street: string, houseNumber: string, zipCode: string, floorNumber: string, apartment: string) {
-    return POST("/address", true, { isActive, city, street, houseNumber, zipCode, floorNumber, apartment }).then(async response => {
+    return POST("/address", true, { isActive, city, street, houseNumber, zipCode, floorNumber, apartment }).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -192,7 +249,7 @@ export async function addAddress(isActive: boolean, city: string, street: string
 }
 
 export async function getAddresses() {
-    return GET("/addresses", true).then(async response => {
+    return GET("/addresses", true).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -201,12 +258,12 @@ export async function getAddresses() {
                 default: throw UNEXPECTED
             }
         }
-        return response.json() as Promise<addressesCollectionResponse>
+        return response.json() as Promise<addressCollectionInfo>
     })
 }
 
 export async function updateAddress(id: number, userID: number, isActive: boolean, city: string, street: string, houseNumber: string, zipCode: string, floorNumber: string, apartment: string) {
-    return PUT("/address", true, { id, userID, isActive, city, street, houseNumber, zipCode, floorNumber, apartment }).then(async response => {
+    return PUT("/address", true, { id, userID, isActive, city, street, houseNumber, zipCode, floorNumber, apartment }).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -218,7 +275,7 @@ export async function updateAddress(id: number, userID: number, isActive: boolea
 }
 
 export async function deleteAddress(id: number) {
-    return DELETE("/address", true, { id }).then(async response => {
+    return DELETE("/address", true, { id }).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -232,7 +289,7 @@ export async function deleteAddress(id: number) {
 
 
 export async function getSupplierByID(id: number) {
-    return GET("/supplier/" + id, true).then(async response => {
+    return GET("/supplier/" + id, true).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -241,12 +298,12 @@ export async function getSupplierByID(id: number) {
                 default: throw UNEXPECTED
             }
         }
-        return response.json() as Promise<supplierResponse>
+        return response.json() as Promise<supplierInfo>
     })
 }
 
 export async function getSuppliers() {
-    return GET("/suppliers", true).then(async response => {
+    return GET("/suppliers", true).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -255,14 +312,14 @@ export async function getSuppliers() {
                 default: throw UNEXPECTED
             }
         }
-        return response.json() as Promise<supplierCollectionResponse>
+        return response.json() as Promise<supplierCollectionInfo>
     })
 }
 
 
 
 export async function getCategories() {
-    return GET("/categories", true).then(async response => {
+    return GET("/categories", true).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -270,14 +327,14 @@ export async function getCategories() {
                 default: throw UNEXPECTED
             }
         }
-        return response.json() as Promise<categoriesCollectionResponse>
+        return response.json() as Promise<categoriesCollectionInfo>
     })
 }
 
 
 
 export async function getMenusBySupplierID(id: number) {
-    return GET("/menus/" + id, true).then(async response => {
+    return GET("/menus/" + id, true).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -285,14 +342,14 @@ export async function getMenusBySupplierID(id: number) {
                 default: throw UNEXPECTED
             }
         }
-        return response.json() as Promise<menuCollectionResponse>
+        return response.json() as Promise<menuCollectionInfo>
     })
 }
 
 
 
 export async function getItemsByMenuID(id: number) {
-    return GET("/itemsmenus/" + id, true).then(async response => {
+    return GET("/itemsmenus/" + id, true).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -300,14 +357,14 @@ export async function getItemsByMenuID(id: number) {
                 default: throw UNEXPECTED
             }
         }
-        return response.json() as Promise<itemCollectionResponse>
+        return response.json() as Promise<itemCollectionInfo>
     })
 }
 
 
 
 export async function addOrderMenu() {
-    return POST("/ordermenu", true, {}).then(async response => {
+    return POST("/ordermenu", true, {}).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -319,7 +376,7 @@ export async function addOrderMenu() {
 }
 
 export async function getOrderMenus(orderID: number) {
-    return GET("/ordermenus/" + orderID, true).then(async response => {
+    return GET("/ordermenus/" + orderID, true).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -328,12 +385,12 @@ export async function getOrderMenus(orderID: number) {
                 default: throw UNEXPECTED
             }
         }
-        return response.json() as Promise<menuCollectionResponse>
+        return response.json() as Promise<menuCollectionInfo>
     })
 }
 
 export async function updateOrderMenu(quantity: number) {
-    return PUT("/ordermenu", true, { quantity }).then(async response => {
+    return PUT("/ordermenu", true, { quantity }).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -345,7 +402,7 @@ export async function updateOrderMenu(quantity: number) {
 }
 
 export async function deleteOrderMenu(orderID: number) {
-    return DELETE("/ordermenu", true, { orderID }).then(async response => {
+    return DELETE("/ordermenu", true, { orderID }).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -359,7 +416,7 @@ export async function deleteOrderMenu(orderID: number) {
 
 
 export async function makeOrder(userID: number, supplierID: number, note: string) {
-    return POST("/order", true, { userID, supplierID, note }).then(async response => {
+    return POST("/order", true, { userID, supplierID, note }).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -371,7 +428,7 @@ export async function makeOrder(userID: number, supplierID: number, note: string
 }
 
 export async function getOrders() {
-    return GET("/orders", true).then(async response => {
+    return GET("/orders", true).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -379,6 +436,6 @@ export async function getOrders() {
                 default: throw UNEXPECTED
             }
         }
-        return response.json() as Promise<orderCollectionResponse>
+        return response.json() as Promise<orderCollectionInfo>
     })
 }
