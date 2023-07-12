@@ -33,6 +33,11 @@ export type categoryInfo = {
     name: string
 }
 
+export type itemInfo = {
+    id: number
+    ingredient: string
+}
+
 export type menuInfo = {
     id: number
     name: string

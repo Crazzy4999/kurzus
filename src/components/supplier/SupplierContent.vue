@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import CategoriesSelector, { type categorieVal } from "@/components/supplier/CategoriesSelector.vue"
-import SubCategorie, { type productVal } from "./SubCategorie.vue";
-import type { menuInfo, supplierInfo } from "@/api/models";
-import { getMenusBySupplierID, getSupplierByID } from "@/api/api";
+import SubCategorie from "./SubCategorie.vue";
+import type { categoryInfo, menuInfo, supplierInfo } from "@/api/models";
+import { getCategories, getMenusBySupplierID, getSupplierByID } from "@/api/api";
 import { ref, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute()
 const supplier = ref({} as supplierInfo)
 const menus = ref([] as menuInfo[])
+const categories = ref([] as categoryInfo[])
 
 watchEffect(async () => {
     await getSupplierByID(+route.params.id).then(resp => {
@@ -43,19 +44,25 @@ watchEffect(async () => {
 
         menus.value = _menus
     })
+
+    await getCategories().then(resp => {
+        let _categories: categoryInfo[] = []
+
+        resp.categories.forEach(c => {
+            let category: categoryInfo = {
+                id: c.id,
+                name: c.name
+            }
+
+            _categories.push(category)
+        })
+
+        categories.value = _categories
+    })
 })
-
-let selectorCategories: categorieVal[] = [
-
-]
-
-let categories: { subCategorie: categorieVal, products: productVal[] }[] = [
-    
-]
 
 /*
 <CategoriesSelector :categories="selectorCategories"/>
-
 */
 </script>
 
@@ -64,15 +71,16 @@ let categories: { subCategorie: categorieVal, products: productVal[] }[] = [
         <section class="content-container">
             <img class="supplier-background-img" :src="supplier.image" :alt="supplier.name">
             <h1 class="supplier-name">{{ supplier.name }}</h1>
+            <h2 class="supplier-description">{{ supplier.description }}</h2>
             <div class="supplier-infos">
                 <span class="supplier-delivery-text">Delivery cost:</span>
                 <span class="supplier-delivery-cost">{{ supplier.deliveryFee }}Ft</span>
             </div>
             <ul class="supplier-categories-container">
-                <li v-for="c in categories" class="supplier-categorie">{{ c }}</li>
+                <li v-for="c in categories" class="supplier-categorie">{{ c.name }}</li>
             </ul>
 
-            <SubCategorie v-for="c in categories" :categorieId="c.subCategorie.id" :categorieText="c.subCategorie.text" :products="c.products"/>
+            <SubCategorie :categories="categories" :menus="menus"/>
         </section>
     </main>
 </template>

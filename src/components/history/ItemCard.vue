@@ -1,9 +1,5 @@
 <script setup lang="ts">
-export type itemInfo = {
-    count: number,
-    name: string,
-    price: number
-}
+import type { itemInfo } from '@/api/models';
 
 defineProps<{
     items: itemInfo[]
