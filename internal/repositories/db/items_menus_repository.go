@@ -58,7 +58,7 @@ func (repo *ItemsMenusRepository) GetAll() ([]*models.ItemsMenusIDPair, error) {
 }
 
 func (repo *ItemsMenusRepository) GetItemsByMenuID(id int) ([]*models.Item, error) {
-	stmt, err := repo.db.Prepare("SELECT id, ingredient FROM items_menus WHERE items_menus.id = $1")
+	stmt, err := repo.db.Prepare("SELECT item_id FROM items_menus WHERE items_menus.menu_id = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement to get items by menu id")
 	}
