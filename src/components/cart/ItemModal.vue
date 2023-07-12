@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { menuInfo } from '@/api/models';
 import Counter from "@/components/cart/Counter.vue"
+import { useCartStore } from '@/store';
+import { ref } from 'vue';
 
-defineProps<{
+const props = defineProps<{
     addingToCart: boolean
     menu: menuInfo
     items: string
@@ -11,12 +13,20 @@ defineProps<{
 const emit = defineEmits<{
     (event: "close", val: boolean): boolean
 }>()
+
+const count = ref(0)
+const useCart = useCartStore()
+
+function addItemToCart() {
+    useCart.addToCart(count.value, props.menu.supplierID, props.menu.name, props.menu.price)
+    emit("close", false)
+}
 </script>
 
 <template>
     <div class="block-screen" v-if="addingToCart">
-        <div class="item-modal" @click="emit('close', false)">
-            <div class="close-btn">
+        <div class="item-modal">
+            <div class="close-btn" @click="emit('close', false)">
                 <!--Icon made by https://www.flaticon.com/authors/ariefstudio-->
                 <img class="close-img" src="@/assets/icons/close.png" alt="close">
             </div>
@@ -31,9 +41,9 @@ const emit = defineEmits<{
                 </div>
                 <span class="cart-flex">
                     <span class="counter-wrapper">
-                        <Counter/>
+                        <Counter :count="0" @count="(val) => count = val"/>
                     </span>
-                    <button class="btn">Add to cart</button>
+                    <button class="btn" :disabled="count < 1" :blocked="count < 1" @click="addItemToCart()">Add to cart</button>
                 </span>
             </div>
         </div>
@@ -126,8 +136,16 @@ const emit = defineEmits<{
     transition: background-color var(--tran);
 }
 
+.btn[blocked=true] {
+    background-color: var(--settings-color);
+}
+
 .btn:hover {
     background-color: var(--second-hover);
+}
+
+.btn[blocked=true]:hover {
+    background-color: var(--settings-dark);
 }
 
 @media only screen and (hover: none) and (pointer: coarse) {

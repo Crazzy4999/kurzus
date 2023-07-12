@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import AuthHeader from "@/components/AuthHeader.vue"
-import Product, { type productInfo } from "@/components/cart/Product.vue"
-import { ref } from "vue"
+import Product from "@/components/cart/Product.vue"
+import { ref, watch, watchEffect } from "vue"
 import router from "@/router/index"
+import { useCartStore } from "@/store";
+import { getSupplierByID } from "@/api/api";
 
-defineProps<{
-    products: productInfo[]
-    deliveryFee: number
-}>()
+const useCart = useCartStore()
+const deliveryFee = ref(0)
+
+watchEffect(async () => {
+    await getSupplierByID(useCart.products[0].supplierID).then(resp => deliveryFee.value = resp.deliveryFee)
+})
 
 let totalCost = ref(0)
 </script>
@@ -17,7 +21,7 @@ let totalCost = ref(0)
     <div class="main-wrapper">
         <form>
             <div class="inner-wrapper">
-                <Product v-for="p in products" :product="p" @total="(t) => totalCost += t"/>
+                <Product v-for="p in useCart.products" :product="p" @total="(t) => totalCost += t"/>
             </div>
             <div v-if="totalCost !== 0" class="prices-container">
                 <div class="pricing">Subtotal: {{ totalCost }}</div>

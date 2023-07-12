@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { ref, type InputHTMLAttributes, type ReservedProps } from "vue"
+import { ref } from "vue"
+
+const props = defineProps<{
+    count: number
+}>()
 
 const emit = defineEmits<{
     (event: "count", count: number): void
 }>()
 
-let count = ref(0)
+let count = ref(props.count)
 
 function decrement() {
     if(0 <= count.value - 1) {

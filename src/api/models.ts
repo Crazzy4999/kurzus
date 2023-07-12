@@ -12,6 +12,7 @@ export type addressInfo = {
 
 export type productInfo = {
     count: number
+    supplierID: number
     name: string
     price: number
 }

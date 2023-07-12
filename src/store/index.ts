@@ -1,6 +1,5 @@
-import type { addressInfo } from "@/api/models"
+import type { addressInfo, productInfo } from "@/api/models"
 import { defineStore } from "pinia"
-import { ref } from "vue"
 
 export const useAuthStore = defineStore("authentication", {
     state: () => ({
@@ -37,9 +36,16 @@ export const useAuthStore = defineStore("authentication", {
 
 export const useCartStore = defineStore("cart", {
     state: () => ({
-        
+        products: [] as productInfo[]
     }),
     actions: {
-
+        async addToCart(count: number, supplierID: number, name: string, price: number) {
+            let alreadyInCart = false;
+            this.products.forEach(p => {
+                if(p.name === name) alreadyInCart = true
+            })
+            if(1 <= this.$state.products.length && this.$state.products[this.$state.products.length-1].supplierID !== supplierID) this.$state.products.length = 0
+            if(!alreadyInCart) this.$state.products.push({ count: count, supplierID: supplierID, name: name, price: price })
+        }
     }
 })

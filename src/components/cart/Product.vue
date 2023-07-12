@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { productInfo } from "@/api/models";
 import Counter from "@/components/cart/Counter.vue"
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const props = defineProps<{
     product: productInfo
@@ -11,7 +11,11 @@ const emit = defineEmits<{
     (event: "total", val: number): void
 }>()
 
-let count = ref(0)
+let count = ref(props.product.count)
+
+onMounted(() => {
+    emit("total", props.product.price * count.value)
+})
 
 watch(count, (newVal, oldVal) => {
     emit("total", newVal * props.product.price - oldVal * props.product.price)
@@ -24,7 +28,7 @@ watch(count, (newVal, oldVal) => {
             <span class="name">{{ product.name }}</span>
             <div class="price">{{ product.price * count }} Ft</div>
         </span>
-        <Counter class="counter" @count="(val) => count = val"/>
+        <Counter class="counter" :count="product.count" @count="(val) => count = val"/>
     </div>
 </template>
 
