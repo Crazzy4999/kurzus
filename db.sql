@@ -22,6 +22,7 @@ CREATE TABLE addresses (
 
 CREATE TABLE drivers (
     id SERIAL PRIMARY KEY,
+    is_delivering BOOLEAN NOT NULL,
     first_name VARCHAR(64) NOT NULL,
     last_name VARCHAR(64) NOT NULL,
     email VARCHAR(64) NOT NULL,
