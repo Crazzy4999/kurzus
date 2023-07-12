@@ -1,11 +1,13 @@
 package token
 
 import (
+	"fmt"
 	config "hangryAPI/configs"
 	"hangryAPI/internal/test/util"
 	testcases "hangryAPI/internal/test/util"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -22,7 +24,7 @@ type TokenServiceTestSuite struct {
 }
 
 func (suite *TokenServiceTestSuite) SetupSuite() {
-	suite.cfg = config.NewConfig(".env.testing")
+	suite.cfg = config.NewConfig("../../../configs/.env.testing")
 	suite.tokenService = NewTokenService(suite.cfg)
 }
 
@@ -98,13 +100,22 @@ func (suite *TokenServiceTestSuite) TestGetClaims() {
 
 	for _, testCase := range testCases {
 		request := testcases.TestRequestFactory(testCase, testCase.Request.URL)
-		recorder := httptest.NewRecorder()
 
-		assert.Contains(suite.T(), recorder.Body.String(), testCase.Want.BodyPart)
+		accessToken, err := suite.tokenService.GenerateAccessToken(userID)
+		assert.NoError(suite.T(), err)
+
+		fmt.Println(accessToken)
+
+		request.Header.Set("Authorization", "Bearer "+accessToken)
 
 		claims, err := suite.tokenService.GetClaims(request, testCase.Request.AuthToken)
-		if assert.NoError(suite.T(), err) {
-			assert.Equal(suite.T(), testCase.Want.BodyPart, claims.ID)
+
+		if testCase.Request.AuthToken == "" {
+			assert.Error(suite.T(), err)
+		} else {
+			id, err := strconv.Atoi(testCase.Want.BodyPart)
+			assert.NoError(suite.T(), err)
+			assert.Equal(suite.T(), id, claims.ID)
 		}
 	}
 

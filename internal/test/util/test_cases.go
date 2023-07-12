@@ -39,10 +39,5 @@ type TestCaseHandler struct {
 
 func TestRequestFactory(test TestCaseHandler, testURL string) *http.Request {
 	request, _ := http.NewRequest(test.Request.Method, testURL+test.Request.URL, strings.NewReader(""))
-
-	if test.Request.AuthToken == "" {
-		request.Header.Set("Authorization", "Bearer "+test.Request.AuthToken)
-	}
-
 	return request
 }

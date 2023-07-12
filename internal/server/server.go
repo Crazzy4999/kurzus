@@ -10,7 +10,7 @@ import (
 )
 
 func Start() {
-	cfg := config.NewConfig(".env")
+	cfg := config.NewConfig("configs/.env")
 	router := router.NewRouter()
 	db := dbrepo.GetDB(cfg)
 	defer db.Close()

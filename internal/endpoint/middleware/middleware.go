@@ -16,7 +16,7 @@ type Func func(handler http.Handler) http.Handler
 
 func CheckAccessTokenValidity(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cfg := config.NewConfig(".env")
+		cfg := config.NewConfig("configs/.env")
 		tokenService := token.NewTokenService(cfg)
 
 		claims, err := tokenService.GetClaims(r, cfg.AccessSecret)
@@ -41,7 +41,7 @@ func CheckAccessTokenValidity(next http.Handler) http.Handler {
 
 func CheckRefreshTokenValidity(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cfg := config.NewConfig(".env")
+		cfg := config.NewConfig("configs/.env")
 		tokenService := token.NewTokenService(cfg)
 
 		claims, err := tokenService.GetClaims(r, cfg.RefreshSecret)
