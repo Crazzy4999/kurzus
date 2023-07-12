@@ -28,11 +28,16 @@ export type supplierInfo = {
     closing: string
 }
 
+export type categoryInfo = {
+    id: number
+    name: string
+}
+
 export type menuInfo = {
-    id: number,
-    name: string,
-    image: string,
-    supplierID: number,
-    categoryID: number,
-    price: number,
+    id: number
+    name: string
+    image: string
+    supplierID: number
+    categoryID: number
+    price: number
 }
