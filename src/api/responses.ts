@@ -55,6 +55,15 @@ export type itemCollectionResponse = {
     items: itemResponse[]
 } & Response
 
+type categoryResponse = {
+    id: number,
+    name: string
+} & Response
+
+export type categoriesCollectionResponse = {
+    categories: categoryResponse[]
+} & Response
+
 type menuResponse = {
     id: number
     name: string

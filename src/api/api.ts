@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/store"
-import { ACCESS_TOKEN_EXPIRED, AddressError, ItemsMenusError, LoginError, MenuError, OOPS, OrderError, OrderMenuError, ProfileError, RefreshError, ResetError, SignUpError, SupplierError, UNEXPECTED } from "./errors"
+import { ACCESS_TOKEN_EXPIRED, AddressError, CategoriesError, ItemsMenusError, LoginError, MenuError, OOPS, OrderError, OrderMenuError, ProfileError, RefreshError, ResetError, SignUpError, SupplierError, UNEXPECTED } from "./errors"
 import type { userResponse, tokenPairResponse, addressesCollectionResponse, supplierCollectionResponse, menuCollectionResponse, orderCollectionResponse, supplierResponse, itemCollectionResponse } from "./responses"
 import router from "@/router"
 
@@ -256,6 +256,21 @@ export async function getSuppliers() {
             }
         }
         return response.json() as Promise<supplierCollectionResponse>
+    })
+}
+
+
+
+export async function getCategories() {
+    return GET("/categories", true).then(async response => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case CategoriesError.getAllCategoriesFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json() as Promise<menuCollectionResponse>
     })
 }
 

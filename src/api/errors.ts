@@ -58,6 +58,10 @@ export enum SupplierError {
     getSupplierTypeFailed = "getting supplier type by id failed"
 }
 
+export enum CategoriesError {
+    getAllCategoriesFailed = "getting all categories failed"
+}
+
 export enum MenuError {
     getAllMenuFailed = "getting all menus failed"
 }
