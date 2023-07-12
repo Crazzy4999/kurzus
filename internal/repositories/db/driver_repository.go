@@ -17,12 +17,12 @@ func NewDriverRepository(db *sql.DB) *DriverRepository {
 }
 
 func (repo *DriverRepository) Create(d *models.Driver) error {
-	stmt, err := repo.db.Prepare("INSERT INTO drivers (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)")
+	stmt, err := repo.db.Prepare("INSERT INTO drivers (is_delivering, first_name, last_name, email, password) VALUES ($1, $2, $3, $4, $5)")
 	if err != nil {
 		return errors.New("couldn't prepare statement for creating driver")
 	}
 
-	_, err = stmt.Exec(d.FirstName, d.LastName, d.Email, d.Password)
+	_, err = stmt.Exec(d.IsDelivering, d.FirstName, d.LastName, d.Email, d.Password)
 	if err != nil {
 		return errors.New("creating driver failed")
 	}
@@ -31,7 +31,7 @@ func (repo *DriverRepository) Create(d *models.Driver) error {
 }
 
 func (repo *DriverRepository) GetAll() ([]*models.Driver, error) {
-	stmt, err := repo.db.Prepare("SELECT id, first_name, last_name, email, password FROM drivers")
+	stmt, err := repo.db.Prepare("SELECT id, is_delivering, first_name, last_name, email, password FROM drivers")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting all drivers")
 	}
@@ -45,7 +45,7 @@ func (repo *DriverRepository) GetAll() ([]*models.Driver, error) {
 	var drivers []*models.Driver
 	for rows.Next() {
 		driver := &models.Driver{}
-		err = rows.Scan(&driver.ID, &driver.FirstName, &driver.LastName, &driver.Email, &driver.Password)
+		err = rows.Scan(&driver.ID, &driver.IsDelivering, &driver.FirstName, &driver.LastName, &driver.Email, &driver.Password)
 		if err == sql.ErrNoRows {
 			return nil, nil
 		} else if err != nil {
@@ -57,14 +57,14 @@ func (repo *DriverRepository) GetAll() ([]*models.Driver, error) {
 }
 
 func (repo *DriverRepository) GetDriverByID(id int) (*models.Driver, error) {
-	stmt, err := repo.db.Prepare("SELECT id, first_name, last_name, email, password FROM drivers WHERE drivers.id = $1")
+	stmt, err := repo.db.Prepare("SELECT id, is_delivering, first_name, last_name, email, password FROM drivers WHERE drivers.id = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement for getting all drivers")
 	}
 
 	driver := &models.Driver{}
 	row := stmt.QueryRow(id)
-	err = row.Scan(&driver.ID, &driver.FirstName, &driver.LastName, &driver.Email, &driver.Password)
+	err = row.Scan(&driver.ID, &driver.IsDelivering, &driver.FirstName, &driver.LastName, &driver.Email, &driver.Password)
 	if err != nil {
 		return nil, errors.New("getting driver by id failed")
 	}
@@ -73,12 +73,12 @@ func (repo *DriverRepository) GetDriverByID(id int) (*models.Driver, error) {
 }
 
 func (repo *DriverRepository) Update(d *models.Driver) error {
-	stmt, err := repo.db.Prepare("UPDATE drivers SET first_name = $1, last_name = $2, password = $3 WHERE drivers.id = $4")
+	stmt, err := repo.db.Prepare("UPDATE drivers SET is_delivering = $1, first_name = $2, last_name = $3, password = $4 WHERE drivers.id = $5")
 	if err != nil {
 		return errors.New("couldn't prepare statement for updating driver")
 	}
 
-	_, err = stmt.Exec(d.FirstName, d.LastName, d.Password, d.ID)
+	_, err = stmt.Exec(d.IsDelivering, d.FirstName, d.LastName, d.Password, d.ID)
 	if err != nil {
 		return errors.New("updating driver failed")
 	}

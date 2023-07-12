@@ -1,0 +1,97 @@
+//users
+1 Álmos Fábián fabian.almos77@gmail.com $2a$10$FGzCU3hQt14pusBK7a5/IuW6XkEdZ9ydSq3YiR2ASAVRiFk/X.Fqm
+
+//suppliers
+1 1 https://images.deliveryhero.io/image/Fd-hu/LH/i5zJ-hero.jpg?width=2500&height=625&quality=45 Pizza King supplier.pizza.king@example.com PizzaPassword123 Pizza King the pizza house choice for the real kings 45 750 7:00 21:00
+2 2 https://images.deliveryhero.io/image/Fd-hu/LH/im8f-hero.jpg Tesco supplier.tesco@example.com SupermarketPassword123 Tesco to get everything you need at home 30 500 5:00 23:00
+3 3 https://images.deliveryhero.io/image/Fd-hu/LH/o4sx-hero.jpg?width=2500&height=625&quality=45 Starbucks supplier.starbucks@example.com CoffeePassword123 Starbucks, best coffee in the world! 60 1000 9:00 22:00
+
+//items
+1 coca-cola
+2 tomato-base
+3 mozzarella
+4 ham
+5 corn
+6 onion
+7 feta cheese
+8 bbq sauce
+9 mushrooms
+10 brown sugar
+11 milk
+12 pumpkin spice
+13 caramel syrup
+14 vanilla syrup
+15 red bean
+16 arabica coffee
+17 ice
+18 black olive
+19 gyros
+20 honey
+21 puff pastry
+22 walnut
+23 pistachio
+24 butter
+25 whipped cream
+26 flour
+27 egg
+28 chocolate
+29 vanilla
+30 white sugar
+
+//items menus
+1 1
+11 2
+15 3
+2 4
+3 4
+4 4
+5 4
+9 4
+2 5
+19 5
+7 5
+6 5
+18 5
+3 5
+1 6
+20 7
+21 7
+22 7
+23 7
+24 7
+14 7
+11 8
+13 8
+16 8
+17 8
+25 8
+11 9
+24 9
+26 9
+27 9
+28 9
+29 9
+30 9
+
+//menus
+1 https://images.deliveryhero.io/image/darsktores-cz/Products/5449000130389.jpg?height=480&dpi=1         6 1  599 Coca-Cola 1.75l
+2 https://images.deliveryhero.io/image/fd-hu/Products/DMART/Sole-Mizo/5998200138607.jpg?height=480&dpi=1 6 1  700 Mizo milk 2.8% 1l
+3 https://images.deliveryhero.io/image/fd-hu/Products/DMART/Bonduelle/3083680009508.jpg?height=480&dpi=1 6 5  850 Red Bean
+4 https://images.deliveryhero.io/image/fd-hu/Products/518403.png?width=1200                              4 2 2100 Songoku Pizza 24cm
+5 https://images.deliveryhero.io/image/fd-hu/Products/518420.png?width=1200%22                           4 2 3200 Diran 32cm
+6 https://images.deliveryhero.io/image/fd-hu/Products/520623.png?width=1200                              4 1  299 Coca-Cola 0,33l
+7 https://images.deliveryhero.io/image/fd-hu/Products/520546.png?width=1200                              4 4  500 Baklava
+8 https://images.deliveryhero.io/image/fd-hu/Products/233884.jpg?width=1200                              5 3 1790 Caramel Frappuccino (Tall)
+9 https://images.deliveryhero.io/image/fd-hu/Products/234111.png?width=1200                              5 4 1390 Chocolate cake
+
+//categories
+1 Drink
+2 Pizza
+3 Coffee
+4 Dessert
+5 Vegan
+
+//supplier_types
+1 restaurant
+2 supermarket
+3 coffee_shop

@@ -35,11 +35,12 @@ func (h *DriverHandler) AddDriver(w http.ResponseWriter, r *http.Request) {
 	}
 
 	driver := &models.Driver{
-		ID:        req.ID,
-		FirstName: req.FirstName,
-		LastName:  req.LastName,
-		Email:     req.Email,
-		Password:  string(password),
+		ID:           req.ID,
+		IsDelivering: false,
+		FirstName:    req.FirstName,
+		LastName:     req.LastName,
+		Email:        req.Email,
+		Password:     string(password),
 	}
 
 	err = h.driverRepo.Create(driver)
@@ -62,11 +63,12 @@ func (h *DriverHandler) GetDrivers(w http.ResponseWriter, r *http.Request) {
 
 	for _, driver := range drivers {
 		driverResponse := &responses.DriverResponse{
-			ID:        driver.ID,
-			FirstName: driver.FirstName,
-			LastName:  driver.LastName,
-			Email:     driver.Email,
-			Password:  driver.Password,
+			ID:           driver.ID,
+			IsDelivering: driver.IsDelivering,
+			FirstName:    driver.FirstName,
+			LastName:     driver.LastName,
+			Email:        driver.Email,
+			Password:     driver.Password,
 		}
 
 		driversResponse.Drivers = append(driversResponse.Drivers, driverResponse)
@@ -84,11 +86,12 @@ func (h *DriverHandler) UpdateDriver(w http.ResponseWriter, r *http.Request) {
 	}
 
 	driver := &models.Driver{
-		ID:        req.ID,
-		FirstName: req.FirstName,
-		LastName:  req.LastName,
-		Email:     req.Email,
-		Password:  req.Password,
+		ID:           req.ID,
+		IsDelivering: req.IsDelivering,
+		FirstName:    req.FirstName,
+		LastName:     req.LastName,
+		Email:        req.Email,
+		Password:     req.Password,
 	}
 
 	err := h.driverRepo.Update(driver)
