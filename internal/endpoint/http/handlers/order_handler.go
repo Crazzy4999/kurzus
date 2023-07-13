@@ -34,7 +34,6 @@ func (h *OrderHandler) MakeOrder(w http.ResponseWriter, r *http.Request) {
 		UserID:     req.UserID,
 		AddressID:  req.AddressID,
 		SupplierID: req.SupplierID,
-		DriverID:   util.NullInt64(req.DriverID),
 		Note:       util.NullString(req.Note),
 	}
 
