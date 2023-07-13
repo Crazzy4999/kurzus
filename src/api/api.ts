@@ -443,8 +443,8 @@ export async function deleteOrderMenu(orderID: number) {
 
 
 
-export async function makeOrder(userID: number, addressID: number, supplierID: number, note: string) {
-    return POST("/order", true, { userID, addressID, supplierID, note }).then(async (response: any) => {
+export async function makeOrder(userID: number, addressID: number, supplierID: number, note: string, estimatedDelivery: string) {
+    return POST("/order", true, { userID, addressID, supplierID, note, estimatedDelivery }).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {

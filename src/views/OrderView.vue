@@ -71,7 +71,7 @@ async function makeNewOrder() {
     userAddresses.forEach(address => {
         if(address.isActive) activeAddress = address
     })
-    await makeOrder(useAuth.id, activeAddress.id, useCart.products[0].supplierID, note.value)
+    await makeOrder(useAuth.id, activeAddress.id, useCart.products[0].supplierID, note.value, new Date(Date.now()+supplier.value.deliveryTime*60000+(1000*60*(-(new Date()).getTimezoneOffset()))).toISOString().replace('T',' ').replace('Z',''))
     const orders = (await getOrders()).orders
     let orderID = -1
     orders.forEach(order => {
@@ -80,6 +80,7 @@ async function makeNewOrder() {
     useCart.products.forEach(product => {
         addOrderMenu(orderID, product.menuID, product.count)
     })
+    useCart.products.length = 0
     router.push("/history")
 }
 </script>

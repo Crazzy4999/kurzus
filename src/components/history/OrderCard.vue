@@ -3,7 +3,9 @@ import DeliveryPoint, { type deliveryInfo } from "@/components/history/DeliveryP
 import { ref, watchEffect } from 'vue'
 import ItemCard from "@/components/history/ItemCard.vue"
 import type { addressInfo, menuInfo, orderMenuInfo, orderInfo, productInfo, supplierInfo } from "@/api/models";
-import { getAddressByID, GetMenusByOrderID, GetOrderMenusByOrderID, getSupplierByID } from "@/api/api";
+import { getAddressByID, GetMenusByOrderID, GetOrderMenusByOrderID, getSupplierByID, makeOrder } from "@/api/api";
+import router from "@/router";
+import { time } from "console";
 
 const props = defineProps<{
     order: orderInfo
@@ -46,9 +48,15 @@ let open = ref(false)
 
 function formatDelivering() {
     const date = new Date(Date.parse(props.order.deliveredAt))
+    const timeTillDone = new Date(Date.parse(props.order.estimatedDelivery) - Date.now())
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    if(props.order.deliveredAt === "") return "Delivery in progress"
+    if(props.order.deliveredAt === "") return "Delivery in progress - " + (timeTillDone.getMinutes() < 5 ? "any minute" : "~" + timeTillDone.getMinutes() + " mins")
     return "Delivered at " + date.getFullYear() + " " + months[date.getMonth()] + ". " + date.getDay() + ". " + date.getHours() + ":" + date.getMinutes()
+}
+
+async function reorder() {
+    /*await makeOrder(props.order.userID, props.order.addressID, props.order.supplierID, props.order.note, new Date(Date.now()+supplier.value.deliveryTime*60000+(1000*60*(-(new Date()).getTimezoneOffset()))).toISOString().replace('T',' ').replace('Z',''))
+    router.push("/")*/
 }
 </script>
 
@@ -69,7 +77,7 @@ function formatDelivering() {
                 </div>
                 <span class="reorder-info-container">
                     <span class="reorder-price">{{ total() }} Ft</span>
-                    <button class="reorder-btn">Reorder</button>
+                    <button class="reorder-btn" @click.prevent="reorder()">Reorder</button>
                 </span>
             </div>
             <div class="delivery-date">{{ formatDelivering() }}</div>
@@ -135,14 +143,17 @@ function formatDelivering() {
 }
 
 .img-wrapper {
+    overflow: hidden;
+    border-radius: var(--sub-p-size);
+    border: calc(var(--sub-border-size) * 1.5) solid var(--settings-color);
     width: var(--h2-size);
     height: var(--h2-size);
 }
 
 .supplier-img {
-    border-radius: var(--sub-p-size);
-    border: calc(var(--sub-border-size) * 1.5) solid var(--settings-color);
-    width: 100%;
+    width: 400%;
+    height: var(--h2-size);
+    transform: translateX(-37.5%);
 }
 
 .short-details-container {
@@ -306,6 +317,10 @@ function formatDelivering() {
 
     .img-wrapper {
         width: var(--h1-size);
+        height: var(--h1-size);
+    }
+
+    .supplier-img {
         height: var(--h1-size);
     }
 

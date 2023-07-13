@@ -5,12 +5,14 @@ import { ref, watch, watchEffect } from "vue"
 import router from "@/router/index"
 import { useCartStore } from "@/store";
 import { getSupplierByID } from "@/api/api";
+import type { supplierInfo } from "@/api/models";
 
 const useCart = useCartStore()
 const deliveryFee = ref(0)
 
 watchEffect(async () => {
-    const supplier = await getSupplierByID(useCart.products[0].supplierID)
+    let supplier = {} as supplierInfo
+    if(useCart.products[0] !== undefined) supplier = await getSupplierByID(useCart.products[0].supplierID)
     deliveryFee.value = supplier.deliveryFee
 })
 

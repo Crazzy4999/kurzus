@@ -110,6 +110,7 @@ export type orderInfo = {
     statusID: number
     note: string
     createdAt: string
+    estimatedDelivery: string
     deliveredAt: string
 }
 

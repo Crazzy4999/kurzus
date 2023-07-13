@@ -1,82 +1,10 @@
 <script setup lang="ts">
 import { getOrders } from '@/api/api';
 import type { orderInfo } from '@/api/models';
+import { orderStatus } from '@/api/util';
 import Header from '@/components/Header.vue';
 import OrderCard from "@/components/history/OrderCard.vue"
 import { ref, watchEffect } from 'vue';
-
-/*let orders: orderInfo[] = [
-{
-        img: "@/assets/Otp_bank_logo.svg.png",
-        supplier: "Pizza King",
-        supplierURL: "/",
-        items: [
-            { count: 1, name: "Popeye Pizza Popeye Pizza Popeye Pizza", price: 3500 },
-            { count: 25, name: "Popeye Pizza", price: 3500 },
-            { count: 10, name: "Popeye Pizza", price: 7500 }
-        ],
-        deliveryFee: 799,
-        deliveredAt: "Apr. 14. 18:35",
-        address: "1039 Budapest Szamos utca 8",
-        paymentMethod: { img: "@/assets/Otp_bank_logo.svg.png", name: "OTP" }
-    },
-    {
-        img: "@/assets/Otp_bank_logo.svg.png",
-        supplier: "Pizza King",
-        supplierURL: "/",
-        items: [
-            { count: 1, name: "Popeye Pizza", price: 3500 },
-            { count: 25, name: "Popeye Pizza", price: 3500 },
-            { count: 10, name: "Popeye Pizza", price: 7500 }
-        ],
-        deliveryFee: 799,
-        deliveredAt: "Apr. 14. 18:35",
-        address: "1039 Budapest Szamos utca 8",
-        paymentMethod: { img: "@/assets/Otp_bank_logo.svg.png", name: "OTP" }
-    },
-    {
-        img: "@/assets/Otp_bank_logo.svg.png",
-        supplier: "Pizza King",
-        supplierURL: "/",
-        items: [
-            { count: 1, name: "Popeye Pizza", price: 3500 },
-            { count: 25, name: "Popeye Pizza", price: 3500 },
-            { count: 10, name: "Popeye Pizza", price: 7500 }
-        ],
-        deliveryFee: 799,
-        deliveredAt: "Apr. 14. 18:35",
-        address: "1039 Budapest Szamos utca 8",
-        paymentMethod: { img: "@/assets/Otp_bank_logo.svg.png", name: "OTP" }
-    },
-    {
-        img: "@/assets/Otp_bank_logo.svg.png",
-        supplier: "Pizza King",
-        supplierURL: "/",
-        items: [
-            { count: 1, name: "Popeye Pizza", price: 3500 },
-            { count: 25, name: "Popeye Pizza", price: 3500 },
-            { count: 10, name: "Popeye Pizza", price: 70000 }
-        ],
-        deliveryFee: 799,
-        deliveredAt: "Apr. 14. 18:35",
-        address: "1039 Budapest Szamos utca 8",
-        paymentMethod: { img: "@/assets/Otp_bank_logo.svg.png", name: "OTP" }
-    },
-    {
-        img: "@/assets/Otp_bank_logo.svg.png",
-        supplier: "Pizza King",
-        supplierURL: "/",
-        items: [
-            { count: 1, name: "Pizza", price: 3500 },
-            { count: 25, name: "Pizza", price: 3500 },
-            { count: 10, name: "Pizza", price: 7500 }
-        ],
-        deliveryFee: 799,
-        deliveredAt: "Apr. 14. 18:35",
-        address: "1039 Budapest Szamos utca 8",
-        paymentMethod: { img: "@/assets/Otp_bank_logo.svg.png", name: "OTP" }
-    }
-]*/
 
 const orders = ref([] as orderInfo[])
 
@@ -89,7 +17,14 @@ watchEffect(async () => {
     <Header/>
     <main>
         <section>
-            <OrderCard v-for="o in orders" :order="o"/>
+            <h2>Inprogess orders</h2>
+            <span v-for="o in orders">
+                <OrderCard v-if="o.statusID === orderStatus.CREATED || o.statusID === orderStatus.DELIVERING" :order="o"/>
+            </span>
+            <h2>Previous orders</h2>
+            <span v-for="o in orders">
+                <OrderCard v-if="o.statusID === orderStatus.DONE" :order="o"/>
+            </span>
         </section>
     </main>
 </template>
@@ -105,7 +40,13 @@ main {
 section {
     position: relative;
     width: 30%;
-    margin: auto;
+    margin-inline: auto;
+}
+
+h2 {
+    color: var(--second-color);
+    font-size: var(--h3-size);
+    margin: var(--p-size) var(--sub-p-size);
 }
 
 @media only screen and (hover: none) and (pointer: coarse) {

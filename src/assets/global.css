@@ -76,9 +76,6 @@ a {
     transition: color var(--tran), text-shadow var(--tran);
 }
 
-/*a:hover {
-}*/
-
 input, button {
     border: none;
     outline: none !important;
