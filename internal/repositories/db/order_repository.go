@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"hangryAPI/internal/models"
 )
 
@@ -17,8 +18,10 @@ func NewOrderRepository(db *sql.DB) *OrderRepository {
 }
 
 func (repo *OrderRepository) Create(o *models.Order) error {
-	stmt, err := repo.db.Prepare("INSERT INTO orders (user_id, suppiler_id, driver_id, status_id, note) VALUES ($1, $2, $3, $4, $5)")
+	stmt, err := repo.db.Prepare("INSERT INTO orders (user_id, supplier_id, driver_id, status_id, note) VALUES ($1, $2, $3, $4, $5)")
 	if err != nil {
+		fmt.Println(err)
+
 		return errors.New("couldn't prepare statenemt to create order")
 	}
 
