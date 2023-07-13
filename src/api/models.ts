@@ -72,6 +72,7 @@ export type categoriesCollectionInfo = {
 
 export type productInfo = {
     count: number
+    menuID: number
     supplierID: number
     name: string
     price: number
@@ -90,9 +91,20 @@ export type menuCollectionInfo = {
     menus: menuInfo[]
 }
 
+export type orderMenuInfo = {
+    orderID: number
+    menuID: number
+    quantity: number
+}
+
+export type orderMenuCollectionInfo = {
+    orderMenus: orderMenuInfo[]
+}
+
 export type orderInfo = {
     id: number
     userID: number
+    addressID: number
     supplierID: number
     driverID: number
     statusID: number

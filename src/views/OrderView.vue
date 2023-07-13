@@ -2,31 +2,38 @@
 import AuthHeader from '@/components/AuthHeader.vue';
 import Product from '@/components/order/Product.vue';
 import AddressCard from '@/components/order/AddressCard.vue'
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 import PaymentCard, { type paymentInfo } from '@/components/order/PaymentCard.vue';
-import type { addressInfo, productInfo } from '@/api/models';
+import type { addressInfo, supplierInfo } from '@/api/models';
+import { useAuthStore, useCartStore } from '@/store';
+import { addAddress, addOrderMenu, getAddresses, getOrders, getSupplierByID, makeOrder } from '@/api/api';
+import router from '@/router';
+import { orderStatus } from '@/api/util';
 
+const useAuth = useAuthStore()
+const useCart = useCartStore()
+const supplier = ref({} as supplierInfo)
+const products = ref(useCart.products)
+const addresses = ref([] as addressInfo[])
+const activeAddress = ref({} as addressInfo)
 
-let products: productInfo[] = [
-    { count: 1, name: "PIZZA PIZZA PIZZA PIZZA", price: 6570 },
-    { count: 10, name: "PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA", price: 6570 },
-    { count: 1, name: "PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA", price: 6570 },
-    { count: 25, name: "PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA PIZZA", price: 6570 }
-]
+watchEffect(async () => {
+    supplier.value = await getSupplierByID(useCart.products[0].supplierID)
+    addresses.value = (await getAddresses()).addresses
+    addresses.value.forEach(address => {
+        if(address.isActive) activeAddress.value = address
+    })
+})
 
-let name = ref("Test étterem")
-let total = ref(6750)
-let deliveryFee = ref(500)
+const addingAddress = ref(false)
+const selectingAddress = ref(false)
 
-let addingAddress = ref(false)
-let selectingAddress = ref(false)
-
-let city = ref("")
-let street = ref("")
-let houseNumber = ref("")
-let zipCode = ref("")
-let floorNumber = ref("")
-let apartment = ref("")
+const city = ref("")
+const street = ref("")
+const houseNumber = ref("")
+const zipCode = ref("")
+const floorNumber = ref("")
+const apartment = ref("")
 
 function filter(e: KeyboardEvent) {
     if(!/\d/.test(e.key)) return e.preventDefault()
@@ -34,12 +41,10 @@ function filter(e: KeyboardEvent) {
 
 let errorMsg = ref("")
 
-function addAddress() {
-    if(selectingAddress.value) selectingAddress.value = !selectingAddress.value
-    if(address.city !== "" || address.street !== "" ||
-       address.houseNumber !== "" || address.zipCode !== "") {
-           addingAddress.value = !addingAddress.value
-    } else errorMsg.value = "Please fill out the following fields: city, street, house number, zip code."
+function addNewAddress() {
+    if(city.value !== "" && street.value !== "" && houseNumber.value !== "" && zipCode.value !== "") {
+        addAddress(false, city.value, street.value, houseNumber.value, zipCode.value, floorNumber.value, apartment.value).then(() => addingAddress.value = false)
+    } else errorMsg.value = "city, street, house number and zipcode mustn't be empty!"
 }
 
 function flip() {
@@ -53,11 +58,30 @@ function selecting() {
 }
 
 let paymentInfos: paymentInfo[] = [
-    { text: "OTP", img: "@/assets/Otp_bank_Logo.svg.png" },
-    { text: "OTP", img: "@/assets/Otp_bank_Logo.svg.png" },
-    { text: "OTP", img: "@/assets/Otp_bank_Logo.svg.png" },
+    { text: "Credit/debit card", img: "@/assets/Otp_bank_Logo.svg.png" },
     { text: "OTP", img: "@/assets/Otp_bank_Logo.svg.png" }
 ]
+
+const paymentMethod = ref({} as paymentInfo)
+const note = ref("")
+
+async function makeNewOrder() {
+    const userAddresses = (await getAddresses()).addresses
+    let activeAddress = {} as addressInfo
+    userAddresses.forEach(address => {
+        if(address.isActive) activeAddress = address
+    })
+    await makeOrder(useAuth.id, activeAddress.id, useCart.products[0].supplierID, note.value)
+    const orders = (await getOrders()).orders
+    let orderID = -1
+    orders.forEach(order => {
+        if(order.statusID === orderStatus.CREATED) orderID = order.id
+    })
+    useCart.products.forEach(product => {
+        addOrderMenu(orderID, product.menuID, product.count)
+    })
+    router.push("/history")
+}
 </script>
 
 <template>
@@ -74,7 +98,7 @@ let paymentInfos: paymentInfo[] = [
                             <span class="title">Delivery details</span>
                         </div>
                         <div class="card-text">Delivery address</div>
-                        <AddressCard v-if="!(addingAddress || selectingAddress)" :address="addresses[0]" :checked="true"/>
+                        <AddressCard v-if="!(addingAddress || selectingAddress)" :address="activeAddress" :checked="true"/>
                         <div v-if="addingAddress" class="action-container">
                             <input class="address-input" type="text" placeholder="city" v-model="city">
                             <input class="address-input" type="text" placeholder="street" v-model="street">
@@ -83,7 +107,7 @@ let paymentInfos: paymentInfo[] = [
                             <input class="address-input" type="text" placeholder="floor number" v-model="floorNumber" @keypress="(e) => filter(e)">
                             <input class="address-input" type="text" placeholder="apartment" v-model="apartment" @keypress="(e) => filter(e)">
                             <span class="error-msg">{{ errorMsg }}</span>
-                            <button class="add-address-btn" @click.prevent="addAddress">Add</button>
+                            <button class="add-address-btn" @click.prevent="addNewAddress()">Add</button>
                         </div>
                         <div v-if="selectingAddress" class="action-container">
                             <ul class="address-list">
@@ -91,8 +115,8 @@ let paymentInfos: paymentInfo[] = [
                             </ul>
                         </div>
                         <div class="action-btns-container">
-                            <button class="action-btn" @click.prevent="flip" :show="!addingAddress">Add address</button>
-                            <button class="action-btn" @click.prevent="selecting" :show="!addingAddress">Select address</button>
+                            <button class="action-btn" @click.prevent="flip()" :show="!addingAddress">Add address</button>
+                            <button class="action-btn" @click.prevent="selecting()" :show="!addingAddress">Select address</button>
                         </div>
                     </div>
                     <div class="card">
@@ -102,29 +126,40 @@ let paymentInfos: paymentInfo[] = [
                             </div>
                             <span class="title">Payment</span>
                         </div>
-                        <PaymentCard v-for="p in paymentInfos" :info="p"/>
+                        <PaymentCard v-for="p in paymentInfos" :info="p" @select="(val) => paymentMethod = val"/>
+                    </div>
+                    <div class="card">
+                        <div class="info">
+                            <div class="number-wrapper">
+                                <span class="number">3</span>
+                            </div>
+                            <span class="title">Note to driver</span>
+                        </div>
+                        <textarea class="note" name="note" id="note" placeholder="Leave a note to you delivery driver" maxlength="512" v-model="note"></textarea>
+                        <div class="note-char-count">512/{{ note.length }}</div>
                     </div>
                 </span>
                 <span class="order-flex-wrapper">
                     <div class="order-from-container">
-                        <span class="order-title">Order from: {{ name }}</span>
+                        <span class="order-title">Order from: {{ supplier.name }}</span>
                     </div>
                     <Product v-for="p in  products" :product="p"/>
                     <div class="order-price-container">
                         <span class="order-price-label">Subtotal: </span>
-                        <span class="order-price">{{ total }} Ft</span>
+                        <span class="order-price">{{ useCart.total }} Ft</span>
                     </div>
                     <div class="order-price-container">
                         <span class="order-price-label">Delivery fee: </span>
-                        <span class="order-price">{{ deliveryFee === undefined ? "Free" : deliveryFee + "Ft" }}</span>
+                        <span class="order-price">{{ supplier.deliveryFee === undefined ? "Free" : supplier.deliveryFee + "Ft" }}</span>
                     </div>
                     <div class="order-price-container">
                         <span class="total-price-label">Total: </span>
-                        <span class="total-price">{{ total + (deliveryFee === undefined ? 0 : deliveryFee) }} Ft</span>
+                        <span class="total-price">{{ useCart.total + (supplier.deliveryFee === undefined ? 0 : supplier.deliveryFee) }} Ft</span>
                     </div>
                 </span>
             </div>
-            <button class="order">Order</button>
+            <!--INSERT PAYMENT PROCESSOR HERE XD-->
+            <button class="order" @click.prevent="makeNewOrder()" :blocked="Object.keys(paymentMethod).length === 0" :disabled="Object.keys(paymentMethod).length === 0">Order</button>
         </form>
     </div>
 </template>
@@ -184,6 +219,21 @@ form {
     line-height: var(--p-size);
     margin-block: auto;
     margin-left: var(--sub-p-size);
+}
+
+.note {
+    position: relative;
+    resize: none;
+    outline: none !important;
+    border: var(--sub-border-size) solid var(--second-color);
+    width: calc(100% - var(--sub-border-size) * 4 - var(--tiny-size) * 2);
+    height: calc(var(--h1-size) * 2);
+    padding: var(--tiny-size);
+    margin-block: var(--sub-p-size);
+}
+
+.note-char-count {
+    color: var(--second-color)
 }
 
 .card-text {
@@ -306,8 +356,16 @@ form {
     transition: background-color var(--tran);
 }
 
+.order[blocked=true] {
+    background-color: var(--settings-color);   
+}
+
 .order:hover {
     background-color: var(--second-hover)
+}
+
+.order[blocked=true]:hover {
+    background-color: var(--settings-dark);   
 }
 
 @media only screen and (hover: none) and (pointer: coarse) {

@@ -2,7 +2,7 @@ import { useAuthStore } from "@/store"
 import { ACCESS_TOKEN_EXPIRED, AddressError, CategoriesError, ItemsMenusError, LoginError, MenuError, OOPS, OrderError, OrderMenuError, ProfileError, RefreshError, ResetError, SignUpError, SupplierError, UNEXPECTED } from "./errors"
 import type { userResponse, tokenPairResponse, addressesCollectionResponse, supplierCollectionResponse, menuCollectionResponse, orderCollectionResponse, supplierResponse, itemCollectionResponse, categoriesCollectionResponse } from "./responses"
 import router from "@/router"
-import type { addressCollectionInfo, categoriesCollectionInfo, itemCollectionInfo, menuCollectionInfo, orderCollectionInfo, supplierCollectionInfo, supplierInfo, tokenPairInfo, userInfo } from "./models"
+import type { addressCollectionInfo, addressInfo, categoriesCollectionInfo, itemCollectionInfo, menuCollectionInfo, orderCollectionInfo, orderMenuCollectionInfo, supplierCollectionInfo, supplierInfo, tokenPairInfo, userInfo } from "./models"
 
 const root = "http://localhost:3000"
 let refreshTries = 0
@@ -248,6 +248,20 @@ export async function addAddress(isActive: boolean, city: string, street: string
     })
 }
 
+export async function getAddressByID(id: number) {
+    return GET("/address/" + id, true).then(async (response: any) => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case AddressError.invalidCredentials: throw "Invalid credentials!"
+                case AddressError.getAllAddressFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json() as Promise<addressInfo>
+    })
+}
+
 export async function getAddresses() {
     return GET("/addresses", true).then(async (response: any) => {
         if(!response.ok) {
@@ -363,8 +377,8 @@ export async function getItemsByMenuID(id: number) {
 
 
 
-export async function addOrderMenu() {
-    return POST("/ordermenu", true, {}).then(async (response: any) => {
+export async function addOrderMenu(orderID: number, menuID: number, quantity: number) {
+    return POST("/ordermenu", true, { orderID, menuID, quantity }).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -375,8 +389,8 @@ export async function addOrderMenu() {
     })
 }
 
-export async function getOrderMenus(orderID: number) {
-    return GET("/ordermenus/" + orderID, true).then(async (response: any) => {
+export async function GetMenusByOrderID(orderID: number) {
+    return GET("/ordermenu/" + orderID, true).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {
@@ -386,6 +400,20 @@ export async function getOrderMenus(orderID: number) {
             }
         }
         return response.json() as Promise<menuCollectionInfo>
+    })
+}
+
+export async function GetOrderMenusByOrderID(orderID: number) {
+    return GET("/ordermenus/" + orderID, true).then(async (response: any) => {
+        if(!response.ok) {
+            let err = (await response.text()).replace("\n", "")
+            switch(err) {
+                case OrderMenuError.stringConversionFailed: throw OOPS
+                case OrderMenuError.getAllOrderMenuByOrderIDFailed: throw OOPS
+                default: throw UNEXPECTED
+            }
+        }
+        return response.json() as Promise<orderMenuCollectionInfo>
     })
 }
 
@@ -415,8 +443,8 @@ export async function deleteOrderMenu(orderID: number) {
 
 
 
-export async function makeOrder(userID: number, supplierID: number, note: string) {
-    return POST("/order", true, { userID, supplierID, note }).then(async (response: any) => {
+export async function makeOrder(userID: number, addressID: number, supplierID: number, note: string) {
+    return POST("/order", true, { userID, addressID, supplierID, note }).then(async (response: any) => {
         if(!response.ok) {
             let err = (await response.text()).replace("\n", "")
             switch(err) {

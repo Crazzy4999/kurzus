@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { deleteAddress, getAddresses, updateAddress } from '@/api/api';
 import type { addressInfo } from '@/api/models';
-import { ref, watch, type Ref } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps<{
     address: addressInfo
@@ -18,7 +18,7 @@ const floorNumber = ref(props.address.floorNumber)
 const apartment = ref(props.address.apartment)
 
 async function setToActive() {
-    const addresses = await (await getAddresses()).addresses
+    const addresses = (await getAddresses()).addresses
     addresses.forEach(address => {
         if(props.address.id !== address.id) updateAddress(address.id, address.userID, false, address.city, address.street, address.houseNumber, address.zipCode, address.floorNumber, address.apartment)
     })

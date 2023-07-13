@@ -73,6 +73,7 @@ export enum ItemsMenusError {
 export enum OrderMenuError {
     creatingOrderMenuFailed = "creating order_menu failed",
     stringConversionFailed = "converting string to integer failed",
+    getAllOrderMenuByOrderIDFailed = "getting all order_menus by order id failed",
     getAllMenuByOrderFailed = "getting all menus by order id failed",
     updatingOrderMenuByOrderFailed = "updating order_menu by order id failed",
     deletingOrderMenuByOrderFailed = "deleting order_menu by order id failed"

@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import { getOrders } from '@/api/api';
+import type { orderInfo } from '@/api/models';
 import Header from '@/components/Header.vue';
-import OrderCard, { type orderInfo } from "@/components/history/OrderCard.vue"
+import OrderCard from "@/components/history/OrderCard.vue"
+import { ref, watchEffect } from 'vue';
 
-let orders: orderInfo[] = [
+/*let orders: orderInfo[] = [
 {
         img: "@/assets/Otp_bank_logo.svg.png",
         supplier: "Pizza King",
@@ -73,7 +76,13 @@ let orders: orderInfo[] = [
         address: "1039 Budapest Szamos utca 8",
         paymentMethod: { img: "@/assets/Otp_bank_logo.svg.png", name: "OTP" }
     }
-]
+]*/
+
+const orders = ref([] as orderInfo[])
+
+watchEffect(async () => {
+    orders.value = (await getOrders()).orders
+})
 </script>
 
 <template>

@@ -18,7 +18,7 @@ const count = ref(0)
 const useCart = useCartStore()
 
 function addItemToCart() {
-    useCart.addToCart(count.value, props.menu.supplierID, props.menu.name, props.menu.price)
+    useCart.addToCart(count.value, props.menu.id, props.menu.supplierID, props.menu.name, props.menu.price)
     emit("close", false)
 }
 </script>

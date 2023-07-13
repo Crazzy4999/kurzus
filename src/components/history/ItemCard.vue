@@ -14,7 +14,7 @@ defineProps<{
                 <span class="times common">x</span>
                 <span class="text common">{{ i.name }}</span>
             </span>
-            <span class="price common">{{ i.price }} Ft</span>
+            <span class="price common">{{ i.price * i.count }} Ft</span>
         </div>
     </div>
 </template>

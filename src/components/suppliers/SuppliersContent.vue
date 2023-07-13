@@ -102,7 +102,6 @@ watchEffect(async () => {
 .suppliers-container {
     display: flex;
     flex-wrap: wrap;
-    /*height: calc(100% - var(--h1-size)); MAY CHANGE BACK*/
 }
 
 @media only screen and (hover: none) and (pointer: coarse) {

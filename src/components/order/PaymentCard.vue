@@ -7,10 +7,14 @@ export type paymentInfo = {
 defineProps<{
     info: paymentInfo
 }>()
+
+const emit = defineEmits<{
+    (event: "select", val: paymentInfo): void
+}>()
 </script>
 
 <template>
-    <li class="payment-card-container">
+    <li class="payment-card-container" @click="emit('select', info)">
         <div class="payment-info-container">
             <input class="payment-radio" type="radio" name="payment-processor-select" id="">
             <span class="payment-text">{{ info.text }}</span>

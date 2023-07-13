@@ -33,4 +33,9 @@ watchEffect(async () => {
 <style scoped>
 @import url("@/assets/contentLayout.css");
 @import url("@/assets/categories.css");
+
+.suppliers-container {
+    display: flex;
+    flex-wrap: wrap;
+}
 </style>

@@ -43,7 +43,10 @@ let cartRouting = useAuth.email !== "" ? "/cart" : "/login"
                     <RouterLink to="/categories" class="nav-item">Categories</RouterLink>
                 </li>
                 <li v-if="useAuth.email !== ''">
-                    <RouterLink to="/history" class="nav-item">history</RouterLink>
+                    <RouterLink to="/history" class="nav-item">History</RouterLink>
+                </li>
+                <li v-if="useAuth.email !== ''">
+                    <button to="/" class="nav-item" @click.prevent="useAuth.signOut()">Sign Out</button>
                 </li>
                 <li>
                     <RouterLink to="/cart" class="cart-wrapper">

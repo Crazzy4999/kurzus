@@ -29,6 +29,12 @@ const useAuth = useAuthStore()
             <li>
                 <RouterLink to="/categories"  class="nav-item">Categories</RouterLink>
             </li>
+            <li v-if="useAuth.email !== ''">
+                <RouterLink to="/history" class="nav-item">History</RouterLink>
+            </li>
+            <li v-if="useAuth.email !== ''">
+                <button to="/" class="nav-item" @click.prevent="useAuth.signOut()">Sign Out</button>
+            </li>
         </ul>
     </aside>
 </template>

@@ -1,40 +1,55 @@
 <script setup lang="ts">
 import DeliveryPoint, { type deliveryInfo } from "@/components/history/DeliveryPoint.vue"
-import { ref } from 'vue'
-import type { itemInfo } from "@/components/history/ItemCard.vue"
+import { ref, watchEffect } from 'vue'
 import ItemCard from "@/components/history/ItemCard.vue"
-
-export type orderInfo = {
-    img: string,
-    supplier: string,
-    supplierURL: string
-    items: itemInfo[],
-    deliveryFee: number,
-    deliveredAt: string,
-    address: string,
-    paymentMethod: { img: string, name: string }
-}
+import type { addressInfo, menuInfo, orderMenuInfo, orderInfo, productInfo, supplierInfo } from "@/api/models";
+import { getAddressByID, GetMenusByOrderID, GetOrderMenusByOrderID, getSupplierByID } from "@/api/api";
 
 const props = defineProps<{
     order: orderInfo
 }>()
 
+const menus = ref([] as menuInfo[])
+const orderMenus = ref([] as orderMenuInfo[])
+const products = ref([] as productInfo[])
+const supplier = ref({} as supplierInfo)
+const address = ref({} as addressInfo)
+const deliveryInfos = ref([] as deliveryInfo[]) 
+
+watchEffect(async () => {
+    menus.value = (await GetMenusByOrderID(props.order.id)).menus
+    orderMenus.value = (await GetOrderMenusByOrderID(props.order.id)).orderMenus
+    menus.value.forEach(menu => {
+        orderMenus.value.forEach(orderMenu => {
+            if(menu.id === orderMenu.menuID) products.value.push({ count: orderMenu.quantity, menuID: menu.id, supplierID: menu.supplierID, name: menu.name, price: menu.price })
+        })
+    })
+    supplier.value = await getSupplierByID(props.order.supplierID)
+    address.value = await getAddressByID(props.order.addressID)
+    deliveryInfos.value = [
+        { description: "Order from:", text: supplier.value.name, URL: "/supplier/" + supplier.value.id },
+        { description: "Delivery to:", text: address.value.city + " " + address.value.street + " " + address.value.houseNumber + " " + address.value.zipCode + " " + address.value.floorNumber  + " " + address.value.apartment }
+    ]
+})
+
 let subTotal = () => {
     let t = 0
-    props.order.items.forEach(i => t += i.price)
+    products.value.forEach(product => t += product.price * product.count)
     return t
 }
 
 let total = () => {
-    return subTotal() + (props.order.deliveryFee === undefined ? 0 : props.order.deliveryFee)
+    return subTotal() + (supplier.value.deliveryFee === undefined ? 0 : supplier.value.deliveryFee)
 }
 
 let open = ref(false)
 
-let deliveryInfos: deliveryInfo[] = [
-    { description: "Order from:", text: props.order.supplier, URL: props.order.supplierURL },
-    { description: "Delivery to:", text: props.order.address }
-]
+function formatDelivering() {
+    const date = new Date(Date.parse(props.order.deliveredAt))
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    if(props.order.deliveredAt === "") return "Delivery in progress"
+    return "Delivered at " + date.getFullYear() + " " + months[date.getMonth()] + ". " + date.getDay() + ". " + date.getHours() + ":" + date.getMinutes()
+}
 </script>
 
 <template>
@@ -43,12 +58,12 @@ let deliveryInfos: deliveryInfo[] = [
             <div class="order-overview">
                 <div class="supplier-order-container">
                     <span class="img-wrapper">
-                        <img class="supplier-img" src="@/assets/Otp_bank_logo.svg.png" :alt="order.supplier">
+                        <img class="supplier-img" :src="supplier.image" :alt="supplier.name">
                     </span>
                     <span class="short-details-container">
-                        <div class="supplier-name">{{ order.supplier }}</div>
+                        <div class="supplier-name">{{ supplier.name }}</div>
                         <div class="items-container">
-                            <span class="item" v-for="i in order.items">{{ i.count }} x {{ i.name }}</span>
+                            <span class="item" v-for="i in products">{{ i.count }} x {{ i.name }}</span>
                         </div>
                     </span>
                 </div>
@@ -57,7 +72,7 @@ let deliveryInfos: deliveryInfo[] = [
                     <button class="reorder-btn">Reorder</button>
                 </span>
             </div>
-            <div class="delivery-date">Delivered on {{ order.deliveredAt }}</div>
+            <div class="delivery-date">{{ formatDelivering() }}</div>
         </div>
         <div class="details-container" @click="open = !open">
             <span class="details-text">Order Details</span>
@@ -65,7 +80,7 @@ let deliveryInfos: deliveryInfo[] = [
         </div>
         <div class="order-details-container" v-if="open">
             <DeliveryPoint :deliveryInfos="deliveryInfos"/>
-            <ItemCard :items="order.items"/>
+            <ItemCard :items="products"/>
             <div class="sub-details-container">
                 <div class="pricing-container">
                     <span class="pricing-text">Subtotal</span>
@@ -73,7 +88,7 @@ let deliveryInfos: deliveryInfo[] = [
                 </div>
                 <div class="pricing-container">
                     <span class="pricing-text">Delivery Fee</span>
-                    <span class="pricing-text">{{ order.deliveryFee }} Ft</span>
+                    <span class="pricing-text">{{ supplier.deliveryFee }} Ft</span>
                 </div>
                 <div class="pricing-container">
                     <span class="pricing-text">Total</span>
@@ -85,10 +100,10 @@ let deliveryInfos: deliveryInfo[] = [
                 <span class="payment-container">
                     <span class="payment-info-container">
                         <span class="payment-img-wrapper">
-                            <img class="payment-img" src="@/assets/Otp_bank_logo.svg.png" :alt="order.paymentMethod.name">
+                            <img class="payment-img" src="@/assets/Otp_bank_logo.svg.png" alt=""> <!--order.paymentMethod.name-->
                         </span>
-                        <span class="payment-name">{{ order.paymentMethod.name }}</span>
-                        </span>
+                        <span class="payment-name">{{  }}</span> <!--order.paymentMethod.name-->
+                    </span>
                     <span class="payment-price-label">{{ total() }} Ft</span>
                 </span>
             </div>
