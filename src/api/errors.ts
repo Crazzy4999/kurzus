@@ -3,6 +3,7 @@ export const OOPS = "Oops something went wrong!"
 
 const INVALID_CREDENTIALS = "invalid credentials"
 export const ACCESS_TOKEN_EXPIRED = "access token expired"
+export const REFRESH_TOKEN_EXPIRED = "refresh token expired"
 const GET_USER_FAILED = "getting user failed"
 const PASSWORD_MISMATCH = "passwords doesn't match"
 const PASSWORD_GENERATION_FAILED = "couldn't generate password"
