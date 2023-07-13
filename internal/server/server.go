@@ -105,7 +105,8 @@ func Start() {
 	orderWorker := workers.NewOrderDriverWorkerPool(or, dr)
 	go orderWorker.Start(5)
 
-	//http.ListenAndServe(cfg.Port, router)
+	deliveryWorker := workers.NewOrderDeliveryWorkerPool(or, dr)
+	go deliveryWorker.Start(5)
 
 	srv := &http.Server{Handler: router}
 	ln, err := net.Listen("tcp", "localhost"+cfg.Port)
