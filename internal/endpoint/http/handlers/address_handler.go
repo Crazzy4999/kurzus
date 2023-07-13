@@ -68,7 +68,7 @@ func (h *AddressHandler) GetAddressByID(w http.ResponseWriter, r *http.Request) 
 
 	addresses, err := h.addressRepo.GetAll()
 	if err != nil {
-		http.Error(w, GET_ADDRESS_BY_ID_FAILED, http.StatusBadRequest)
+		http.Error(w, GET_ALL_ADDRESS_FAILED, http.StatusBadRequest)
 		return
 	}
 

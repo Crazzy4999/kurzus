@@ -7,11 +7,10 @@ const (
 	REFRESH_TOKEN_EXPIRED    = "refresh token expired"
 	STRING_CONVERSION_FAILED = "converting string to integer failed"
 
-	CREATING_ADDRESS_FAILED  = "creating address failed"
-	GET_ADDRESS_BY_ID_FAILED = "get address by id failed"
-	GET_ALL_ADDRESS_FAILED   = "getting all addresses failed"
-	UPDATING_ADDRESS_FAILED  = "updating address failed"
-	DELETING_ADDRESS_FAILED  = "deleting address failed"
+	CREATING_ADDRESS_FAILED = "creating address failed"
+	GET_ALL_ADDRESS_FAILED  = "getting all addresses failed"
+	UPDATING_ADDRESS_FAILED = "updating address failed"
+	DELETING_ADDRESS_FAILED = "deleting address failed"
 
 	PASSWORD_MISMATCH          = "passwords doesn't match"
 	GET_ALL_USERS_FAILED       = "getting all users failed"
