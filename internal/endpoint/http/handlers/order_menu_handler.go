@@ -64,6 +64,7 @@ func (h *OrderMenuHandler) GetMenusByOrderID(w http.ResponseWriter, r *http.Requ
 	for _, menu := range menus {
 		menuResponse := &responses.MenuResponse{
 			ID:         menu.ID,
+			Name:       menu.Name,
 			Image:      menu.Image,
 			SupplierID: menu.SupplierID,
 			CategoryID: menu.CategoryID,
