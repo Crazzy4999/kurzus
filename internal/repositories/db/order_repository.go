@@ -17,7 +17,7 @@ func NewOrderRepository(db *sql.DB) *OrderRepository {
 }
 
 func (repo *OrderRepository) Create(o *models.Order) error {
-	stmt, err := repo.db.Prepare("INSERT INTO orders (user_id, address_id, supplier_id, driver_id, status_id, note) VALUES ($1, $2, $3, $4, $5)")
+	stmt, err := repo.db.Prepare("INSERT INTO orders (user_id, address_id, supplier_id, driver_id, status_id, note) VALUES ($1, $2, $3, $4, $5, $6)")
 	if err != nil {
 		return errors.New("couldn't prepare statenemt to create order")
 	}
