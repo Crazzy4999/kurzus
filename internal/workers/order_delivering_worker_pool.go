@@ -5,7 +5,6 @@ import (
 	"hangryAPI/internal/repositories/db"
 	"hangryAPI/internal/workers/jobs"
 	"log"
-	"math/rand"
 	"sync"
 	"time"
 )
@@ -35,15 +34,13 @@ func (w *OrderDeliveryWorkerPool) finishDelivery(job jobs.DeliveryJob) *jobs.Del
 		DeliveredAt:       job.Order.DeliveredAt,
 	}
 
-	date, err := time.Parse("2006-01-02", order.EstimatedDelivery)
+	date, err := time.Parse("2006-01-02T15:04:05.999999Z07:00", order.EstimatedDelivery)
 	if err != nil {
 		log.Fatal("Couldn't convert date string to time type!")
 		return nil
 	}
 
-	fakeTime := date.Unix() - int64(rand.Intn(3))*int64(time.Minute)
-
-	if fakeTime < time.Now().Unix() {
+	if date.Unix() < time.Now().Unix() {
 		driver, err := w.driverRepo.GetDriverByID(int(order.DriverID.Int64))
 		if err != nil {
 			log.Fatal(err)

@@ -41,11 +41,12 @@ func (w *OrderDriverWorkerPool) assignDriver(job jobs.OrderJob) *jobs.OrderJob {
 	}
 
 	order := &models.Order{
-		ID:          job.Order.ID,
-		DriverID:    util.NullInt64(int64(job.Driver.ID)),
-		StatusID:    models.DELIVERING,
-		Note:        job.Order.Note,
-		DeliveredAt: job.Order.DeliveredAt,
+		ID:                job.Order.ID,
+		DriverID:          util.NullInt64(int64(job.Driver.ID)),
+		StatusID:          models.DELIVERING,
+		Note:              job.Order.Note,
+		EstimatedDelivery: job.Order.EstimatedDelivery,
+		DeliveredAt:       job.Order.DeliveredAt,
 	}
 
 	err = w.orderRepo.Update(order)
