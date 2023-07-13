@@ -43,7 +43,7 @@ func (h *OrderMenuHandler) AddOrderMenu(w http.ResponseWriter, r *http.Request) 
 	w.WriteHeader(http.StatusOK)
 }
 
-func (h *OrderMenuHandler) GetOrderMenus(w http.ResponseWriter, r *http.Request) {
+func (h *OrderMenuHandler) GetMenusByOrderID(w http.ResponseWriter, r *http.Request) {
 	regex := regexp.MustCompile("\\d+")
 	match := regex.FindString(r.URL.Path)
 
@@ -75,6 +75,38 @@ func (h *OrderMenuHandler) GetOrderMenus(w http.ResponseWriter, r *http.Request)
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(menusResponse)
+}
+
+func (h *OrderMenuHandler) GetOrderMenus(w http.ResponseWriter, r *http.Request) {
+	regex := regexp.MustCompile("\\d+")
+	match := regex.FindString(r.URL.Path)
+
+	orderID, err := strconv.Atoi(match)
+	if err != nil {
+		http.Error(w, STRING_CONVERSION_FAILED, http.StatusBadRequest)
+		return
+	}
+
+	orderMenus, err := h.orderMenuRepo.GetOrderMenusByOrderID(orderID)
+	if err != nil {
+		http.Error(w, GET_ALL_ORDER_MENU_BY_ORDER_ID_FAILED, http.StatusBadRequest)
+		return
+	}
+
+	orderMenusCollectionResponse := &responses.OrderMenusCollectionResponse{}
+
+	for _, orderMenu := range orderMenus {
+		orderMenusResponse := &responses.OrderMenuResponse{
+			OrderID:  orderMenu.OrderID,
+			MenuID:   orderMenu.MenuID,
+			Quantity: orderMenu.Quantity,
+		}
+
+		orderMenusCollectionResponse.OrderMenus = append(orderMenusCollectionResponse.OrderMenus, orderMenusResponse)
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(orderMenusCollectionResponse)
 }
 
 func (h *OrderMenuHandler) UpdateOrderMenu(w http.ResponseWriter, r *http.Request) {

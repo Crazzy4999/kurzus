@@ -30,6 +30,33 @@ func (repo *OrderMenusRepository) Create(om *models.OrdersMenus) error {
 	return nil
 }
 
+func (repo *OrderMenusRepository) GetOrderMenusByOrderID(id int) ([]*models.OrdersMenus, error) {
+	stmt, err := repo.db.Prepare("SELECT order_id, menu_id, quantity FROM orders_menus WHERE orders_menus.order_id = $1")
+	if err != nil {
+		return nil, errors.New("couldn't prepare statement to get all orders_menus record")
+	}
+
+	rows, err := stmt.Query(id)
+	if err != nil {
+		return nil, errors.New("getting order_menus by id failed")
+	}
+	defer rows.Close()
+
+	var orderMenus []*models.OrdersMenus
+	for rows.Next() {
+		orderMenu := &models.OrdersMenus{}
+		err = rows.Scan(&orderMenu.OrderID, &orderMenu.MenuID, &orderMenu.Quantity)
+		if err == sql.ErrNoRows {
+			return nil, nil
+		} else if err != nil {
+			return nil, errors.New("types mismatch during the scanning")
+		}
+		orderMenus = append(orderMenus, orderMenu)
+	}
+
+	return orderMenus, nil
+}
+
 func (repo *OrderMenusRepository) GetMenusByOrderID(id int) ([]*models.Menu, error) {
 	stmt, err := repo.db.Prepare("SELECT menu_id FROM orders_menus WHERE orders_menus.order_id = $1")
 	if err != nil {

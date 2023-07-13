@@ -85,6 +85,7 @@ func Start() {
 	router.GET("/itemsmenus/\\d+", itemsMenusHandler.GetItemsByMenuID, nil)
 
 	router.POST("/ordermenu", orderMenuHandler.AddOrderMenu, middleware.CheckAccessTokenValidity)
+	router.GET("/ordermenu/\\d+", orderMenuHandler.GetMenusByOrderID, middleware.CheckAccessTokenValidity)
 	router.GET("/ordermenus/\\d+", orderMenuHandler.GetOrderMenus, middleware.CheckAccessTokenValidity)
 	router.PUT("/ordermenu", orderMenuHandler.UpdateOrderMenu, middleware.CheckAccessTokenValidity)
 	router.DELETE("/ordermenu", orderMenuHandler.RemoveOrderMenu, middleware.CheckAccessTokenValidity)

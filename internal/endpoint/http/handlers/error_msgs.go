@@ -50,10 +50,11 @@ const (
 	GET_ALL_ORDER_FAILED  = "getting all orders failed"
 	UPDATING_ORDER_FAILED = "updaing order failed"
 
-	CREATING_ORDER_MENU_FAILED          = "creating order_menu failed"
-	GET_ALL_MENU_BY_ORDER_FAILED        = "getting all menus by order id failed"
-	UPDATING_ORDER_MENU_BY_ORDER_FAILED = "updating order_menu by order id failed"
-	DELETING_ORDER_MENU_BY_ORDER_FAILED = "deleting order_menu by order id failed"
+	CREATING_ORDER_MENU_FAILED            = "creating order_menu failed"
+	GET_ALL_MENU_BY_ORDER_FAILED          = "getting all menus by order id failed"
+	GET_ALL_ORDER_MENU_BY_ORDER_ID_FAILED = "getting all order_menus by order id failed"
+	UPDATING_ORDER_MENU_BY_ORDER_FAILED   = "updating order_menu by order id failed"
+	DELETING_ORDER_MENU_BY_ORDER_FAILED   = "deleting order_menu by order id failed"
 
 	GET_ALL_SUPPLIER_FAILED  = "getting all suppliers failed"
 	SUPPLIER_EXISTS          = "supplier already exists"
