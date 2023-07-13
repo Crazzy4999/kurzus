@@ -97,6 +97,7 @@ CREATE TABLE orders (
     status_id INTEGER DEFAULT 1,
     note VARCHAR(512),
     created_at TIMESTAMPTZ DEFAULT NOW(),
+    estimated_delivery TIMESTAMPTZ,
     delivered_at TIMESTAMPTZ DEFAULT NULL,
     CONSTRAINT fk_user_id FOREIGN KEY (user_id)
     REFERENCES users(id) ON DELETE CASCADE,

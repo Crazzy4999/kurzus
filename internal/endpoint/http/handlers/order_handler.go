@@ -31,10 +31,11 @@ func (h *OrderHandler) MakeOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	order := &models.Order{
-		UserID:     req.UserID,
-		AddressID:  req.AddressID,
-		SupplierID: req.SupplierID,
-		Note:       util.NullString(req.Note),
+		UserID:            req.UserID,
+		AddressID:         req.AddressID,
+		SupplierID:        req.SupplierID,
+		Note:              util.NullString(req.Note),
+		EstimatedDelivery: req.EstimatedDelivery,
 	}
 
 	err := h.orderRepo.Create(order)
@@ -64,15 +65,16 @@ func (h *OrderHandler) GetOrders(w http.ResponseWriter, r *http.Request) {
 	for _, o := range orders {
 		if o.UserID == claims.ID {
 			orderResponse := &responses.OrderResponse{
-				ID:          o.ID,
-				UserID:      o.UserID,
-				AddressID:   o.AddressID,
-				SupplierID:  o.SupplierID,
-				DriverID:    o.DriverID.Int64,
-				StatusID:    o.StatusID,
-				Note:        o.Note.String,
-				CreatedAt:   o.CreatedAt,
-				DeliveredAt: o.DeliveredAt.String,
+				ID:                o.ID,
+				UserID:            o.UserID,
+				AddressID:         o.AddressID,
+				SupplierID:        o.SupplierID,
+				DriverID:          o.DriverID.Int64,
+				StatusID:          o.StatusID,
+				Note:              o.Note.String,
+				CreatedAt:         o.CreatedAt,
+				EstimatedDelivery: o.EstimatedDelivery,
+				DeliveredAt:       o.DeliveredAt.String,
 			}
 
 			ordersResponse.Orders = append(ordersResponse.Orders, orderResponse)
@@ -91,10 +93,11 @@ func (h *OrderHandler) UpdateOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	order := &models.Order{
-		ID:          req.ID,
-		StatusID:    req.StatusID,
-		Note:        util.NullString(req.Note),
-		DeliveredAt: util.NullString(req.DeliveredAt),
+		ID:                req.ID,
+		StatusID:          req.StatusID,
+		Note:              util.NullString(req.Note),
+		EstimatedDelivery: req.EstimatedDelivery,
+		DeliveredAt:       util.NullString(req.DeliveredAt),
 	}
 
 	err := h.orderRepo.Update(order)

@@ -56,6 +56,33 @@ func (repo *DriverRepository) GetAll() ([]*models.Driver, error) {
 	return drivers, nil
 }
 
+func (repo *DriverRepository) GetAllNotDelivering() ([]*models.Driver, error) {
+	stmt, err := repo.db.Prepare("SELECT id, is_delivering, first_name, last_name, email, password FROM drivers WHERE is_delivering = $1")
+	if err != nil {
+		return nil, errors.New("couldn't prepare statement for getting all drivers")
+	}
+
+	rows, err := stmt.Query(false)
+	if err != nil {
+		return nil, errors.New("getting all drivers failed")
+	}
+	defer rows.Close()
+
+	var drivers []*models.Driver
+	for rows.Next() {
+		driver := &models.Driver{}
+		err = rows.Scan(&driver.ID, &driver.IsDelivering, &driver.FirstName, &driver.LastName, &driver.Email, &driver.Password)
+		if err == sql.ErrNoRows {
+			return nil, nil
+		} else if err != nil {
+			return nil, errors.New("types mismatch during the scanning")
+		}
+		drivers = append(drivers, driver)
+	}
+
+	return drivers, nil
+}
+
 func (repo *DriverRepository) GetDriverByID(id int) (*models.Driver, error) {
 	stmt, err := repo.db.Prepare("SELECT id, is_delivering, first_name, last_name, email, password FROM drivers WHERE drivers.id = $1")
 	if err != nil {
