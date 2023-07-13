@@ -61,6 +61,8 @@ func (w *OrderDeliveryWorkerPool) finishDelivery(job jobs.DeliveryJob) *jobs.Del
 			return nil
 		}
 
+		order.DeliveredAt.String = time.Now().Format("2006-01-02T15:04:05.999999Z07:00")
+
 		err = w.orderRepo.Update(order)
 		if err != nil {
 			log.Fatal(err)
