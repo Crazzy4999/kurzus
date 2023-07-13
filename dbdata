@@ -95,3 +95,11 @@
 1 restaurant
 2 supermarket
 3 coffee_shop
+
+//order status
+1 Created
+2 Delivering
+3 Done
+
+//drivers
+1 Driver Driver driver@driver.com DriverPassword123 f
