@@ -1,7 +1,6 @@
 package token
 
 import (
-	"fmt"
 	config "hangryAPI/configs"
 	"hangryAPI/internal/test/util"
 	testcases "hangryAPI/internal/test/util"
@@ -104,8 +103,6 @@ func (suite *TokenServiceTestSuite) TestGetClaims() {
 		accessToken, err := suite.tokenService.GenerateAccessToken(userID)
 		assert.NoError(suite.T(), err)
 
-		fmt.Println(accessToken)
-
 		request.Header.Set("Authorization", "Bearer "+accessToken)
 
 		claims, err := suite.tokenService.GetClaims(request, testCase.Request.AuthToken)
@@ -118,9 +115,5 @@ func (suite *TokenServiceTestSuite) TestGetClaims() {
 			assert.Equal(suite.T(), id, claims.ID)
 		}
 	}
-
-}
-
-func (suite *TokenServiceTestSuite) TestGetClaimsFromContext() {
 
 }
