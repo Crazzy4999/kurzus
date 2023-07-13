@@ -20,7 +20,7 @@ watchEffect(async () => {
 
 <template>
     <main class="main-container">
-        <SearchBar placeholder="Search"/>
+        <SearchBar placeholder="Search" @search="(val) => showIf.search = val"/>
 
         <nav class="suppliers-toggle-container">
             <label class="supplier-item-wrapper" for="restaurants" @click="showIf.type = supplierType.RESTAURANT">

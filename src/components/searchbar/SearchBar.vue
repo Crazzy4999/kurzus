@@ -1,7 +1,19 @@
 <script setup lang="ts">
+import { ref, watch, watchEffect } from 'vue';
+
 defineProps<{
     placeholder: string
 }>()
+
+const emit = defineEmits<{
+    (event: "search", val: string): void
+}>()
+
+const search = ref("")
+
+watchEffect(() => {
+    emit("search", search.value.toLowerCase())
+})
 </script>
 
 <template>
@@ -10,7 +22,7 @@ defineProps<{
             <!--Icon by Ionicons - https://www.iconfinder.com/iconsets/ionicons-->
             <img class="searchbar-img" src="@/assets/icons/211817_search_strong_icon.svg" alt="search">
         </span>
-        <input class="searchbar" type="text" :placeholder="placeholder">
+        <input class="searchbar" type="text" :placeholder="placeholder" v-model="search" @click="emit('search', search)">
     </span>
 </template>
 

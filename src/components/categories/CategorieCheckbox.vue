@@ -2,17 +2,27 @@
 import type { categoryInfo } from '@/api/models';
 import { ref } from 'vue';
 
-defineProps<{
+const props = defineProps<{
     categorie: categoryInfo
 }>()
 
-let checked = ref(false)
+const emit = defineEmits<{
+    (event: "filter", val: categoryInfo): void
+}>()
+
+const checked = ref(false)
+
+function toggle() {
+    checked.value = !checked.value
+    if(checked.value) emit("filter", props.categorie)
+    else emit("filter", {name: "remove"+props.categorie.name} as categoryInfo)
+}
 </script>
 
 <template>
-    <li class="categorie-wrapper" @click="checked = !checked" :checked="checked">
+    <li class="categorie-wrapper" :checked="checked">
         <input class="categorie-chbx" type="checkbox" :name="categorie.id+''" :id="categorie.id+''">
-        <label class="categorie-name" :for="categorie.id+''" @click="checked = !checked">{{ categorie.name }}</label>
+        <label class="categorie-name" :for="categorie.id+''" @click="toggle()">{{ categorie.name }}</label>
     </li>
 </template>
 

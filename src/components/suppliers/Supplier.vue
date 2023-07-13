@@ -28,13 +28,15 @@ watchEffect(async () => {
 function showIf() {
     let searchMatched = false
     menus.value.forEach(menu => {
-        if(menu.name.includes(props.showIf.search) || props.supplier.name.includes(props.showIf.search)) searchMatched = true
+        if(menu.name.toLowerCase().includes(props.showIf.search.toLowerCase()) || props.supplier.name.toLowerCase().includes(props.showIf.search.toLowerCase())) searchMatched = true
     })
     if(props.showIf.search.length === 0) searchMatched = true
 
     let hasCategory = false
     if(props.showIf.categories !== undefined && props.showIf.categories.length !== 0) props.showIf.categories.forEach(category => { //TODO: solve undefined issue
-        if(props.showIf.categories.includes(category)) hasCategory = true
+        categories.value.forEach(supplierCategory => {
+            if(supplierCategory.name.includes(category.name)) hasCategory = true
+        })
     })
     else hasCategory = true
 
