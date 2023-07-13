@@ -5,6 +5,7 @@ import (
 	"hangryAPI/internal/repositories/db"
 	"hangryAPI/internal/workers/jobs"
 	"log"
+	"math/rand"
 	"sync"
 	"time"
 )
@@ -26,20 +27,51 @@ var deliveryResults = make(chan jobs.DeliveryJob, 100)
 
 func (w *OrderDeliveryWorkerPool) finishDelivery(job jobs.DeliveryJob) *jobs.DeliveryJob {
 	order := &models.Order{
-		ID:          job.Order.ID,
-		DriverID:    job.Order.DriverID,
-		StatusID:    models.DELIVERING,
-		Note:        job.Order.Note,
-		DeliveredAt: job.Order.DeliveredAt,
+		ID:                job.Order.ID,
+		DriverID:          job.Order.DriverID,
+		StatusID:          models.DONE,
+		Note:              job.Order.Note,
+		EstimatedDelivery: job.Order.EstimatedDelivery,
+		DeliveredAt:       job.Order.DeliveredAt,
 	}
 
-	err := w.orderRepo.Update(order)
+	date, err := time.Parse("2006-01-02", order.EstimatedDelivery)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Couldn't convert date string to time type!")
 		return nil
 	}
 
-	job.Order = order
+	fakeTime := date.Unix() - int64(rand.Intn(3))*int64(time.Minute)
+
+	if fakeTime < time.Now().Unix() {
+		driver, err := w.driverRepo.GetDriverByID(int(order.DriverID.Int64))
+		if err != nil {
+			log.Fatal(err)
+			return nil
+		}
+
+		finishedDriver := &models.Driver{
+			ID:           driver.ID,
+			IsDelivering: false,
+			FirstName:    driver.FirstName,
+			LastName:     driver.LastName,
+			Password:     driver.Password,
+		}
+
+		err = w.driverRepo.Update(finishedDriver)
+		if err != nil {
+			log.Fatal(err)
+			return nil
+		}
+
+		err = w.orderRepo.Update(order)
+		if err != nil {
+			log.Fatal(err)
+			return nil
+		}
+
+		job.Order = order
+	}
 
 	return &job
 }

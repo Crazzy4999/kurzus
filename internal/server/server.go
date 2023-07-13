@@ -1,20 +1,13 @@
 package server
 
 import (
-	"context"
-	"fmt"
 	config "hangryAPI/configs"
 	handler "hangryAPI/internal/endpoint/http/handlers"
 	"hangryAPI/internal/endpoint/middleware"
 	dbrepo "hangryAPI/internal/repositories/db"
 	"hangryAPI/internal/router"
 	"hangryAPI/internal/workers"
-	"log"
-	"net"
 	"net/http"
-	"os"
-	"os/signal"
-	"time"
 )
 
 func Start() {
@@ -108,7 +101,9 @@ func Start() {
 	deliveryWorker := workers.NewOrderDeliveryWorkerPool(or, dr)
 	go deliveryWorker.Start(5)
 
-	srv := &http.Server{Handler: router}
+	http.ListenAndServe(cfg.Port, router)
+
+	/*srv := &http.Server{Handler: router}
 	ln, err := net.Listen("tcp", "localhost"+cfg.Port)
 	if err != nil {
 		panic("failed init listener")
@@ -134,5 +129,5 @@ func Start() {
 
 	if err := srv.Shutdown(ctx); err != nil {
 		log.Fatal(err)
-	}
+	}*/
 }

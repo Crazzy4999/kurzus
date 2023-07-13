@@ -25,6 +25,8 @@ func (repo *OrderRepository) Create(o *models.Order) error {
 
 	_, err = stmt.Exec(o.UserID, o.AddressID, o.SupplierID, o.DriverID, models.CREATED, o.Note, o.EstimatedDelivery)
 	if err != nil {
+		fmt.Println(err)
+
 		return errors.New("insert into orders failed")
 	}
 
@@ -32,7 +34,7 @@ func (repo *OrderRepository) Create(o *models.Order) error {
 }
 
 func (or *OrderRepository) GetAll() ([]*models.Order, error) {
-	stmt, err := or.db.Prepare("SELECT id, user_id, address_id, supplier_id, driver_id, status_id, note, created_at, delivered_at FROM orders")
+	stmt, err := or.db.Prepare("SELECT id, user_id, address_id, supplier_id, driver_id, status_id, note, created_at, estimated_delivery, delivered_at FROM orders")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement to getting all orders")
 	}
@@ -108,8 +110,6 @@ func (or *OrderRepository) GetOrdersWithDeliveringStatus() ([]*models.Order, err
 		if err == sql.ErrNoRows {
 			return nil, nil
 		} else if err != nil {
-			fmt.Println(err)
-
 			return nil, errors.New("types mismatch during the scanning")
 		}
 		orders = append(orders, order)
