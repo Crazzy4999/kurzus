@@ -72,11 +72,11 @@ func (h *AddressHandler) GetAddressByID(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	address := &models.Address{}
+	address := &responses.AddressResponse{}
 
 	for _, a := range addresses {
 		if a.ID == addressID {
-			address = &models.Address{
+			address = &responses.AddressResponse{
 				ID:          a.ID,
 				UserID:      a.ID,
 				IsActive:    a.IsActive,
@@ -84,8 +84,8 @@ func (h *AddressHandler) GetAddressByID(w http.ResponseWriter, r *http.Request) 
 				Street:      a.Street,
 				HouseNumber: a.HouseNumber,
 				ZipCode:     a.ZipCode,
-				FloorNumber: a.FloorNumber,
-				Apartment:   a.Apartment,
+				FloorNumber: a.FloorNumber.String,
+				Apartment:   a.Apartment.String,
 			}
 		}
 	}
