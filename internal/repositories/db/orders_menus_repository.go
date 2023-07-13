@@ -31,7 +31,7 @@ func (repo *OrderMenusRepository) Create(om *models.OrdersMenus) error {
 }
 
 func (repo *OrderMenusRepository) GetMenusByOrderID(id int) ([]*models.Menu, error) {
-	stmt, err := repo.db.Prepare("SELECT order_id, menu_id, quantity FROM orders_menus WHERE orders_menus.id = $1")
+	stmt, err := repo.db.Prepare("SELECT order_id, menu_id, quantity FROM orders_menus WHERE orders_menus.order_id = $1")
 	if err != nil {
 		return nil, errors.New("couldn't prepare statement to get menus by order id")
 	}
@@ -74,7 +74,7 @@ func (repo *OrderMenusRepository) GetMenusByOrderID(id int) ([]*models.Menu, err
 }
 
 func (repo *OrderMenusRepository) UpdateByOrderID(id int) error {
-	stmt, err := repo.db.Prepare("UPDATE orders_menus SET quantity = $1 WHERE order_id = $1")
+	stmt, err := repo.db.Prepare("UPDATE orders_menus SET quantity = $1 WHERE orders_menus.order_id = $1")
 	if err != nil {
 		return errors.New("couldn't prepare statement to update order menu")
 	}
