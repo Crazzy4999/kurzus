@@ -32,6 +32,7 @@ func (h *OrderHandler) MakeOrder(w http.ResponseWriter, r *http.Request) {
 
 	order := &models.Order{
 		UserID:     req.UserID,
+		AddressID:  req.AddressID,
 		SupplierID: req.SupplierID,
 		DriverID:   util.NullInt64(req.DriverID),
 		Note:       util.NullString(req.Note),
@@ -66,6 +67,7 @@ func (h *OrderHandler) GetOrders(w http.ResponseWriter, r *http.Request) {
 			orderResponse := &responses.OrderResponse{
 				ID:          o.ID,
 				UserID:      o.UserID,
+				AddressID:   o.AddressID,
 				SupplierID:  o.SupplierID,
 				DriverID:    o.DriverID.Int64,
 				StatusID:    o.StatusID,

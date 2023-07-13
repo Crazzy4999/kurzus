@@ -91,6 +91,7 @@ CREATE TABLE order_status (
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
+    address_id INTEGER NOT NULL,
     supplier_id INTEGER NOT NULL,
     driver_id INTEGER,
     status_id INTEGER DEFAULT 1,
