@@ -73,18 +73,18 @@ func (h *SupplierHandler) AddSupplier(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *SupplierHandler) GetSupplierByID(w http.ResponseWriter, r *http.Request) {
-	suppliers, err := h.supplierRepo.GetAll()
-	if err != nil {
-		http.Error(w, GET_ALL_SUPPLIER_FAILED, http.StatusBadRequest)
-		return
-	}
-
 	regex := regexp.MustCompile("\\d+")
 	match := regex.FindString(r.URL.Path)
 
 	supplierID, err := strconv.Atoi(match)
 	if err != nil {
 		http.Error(w, STRING_CONVERSION_FAILED, http.StatusBadRequest)
+		return
+	}
+
+	suppliers, err := h.supplierRepo.GetAll()
+	if err != nil {
+		http.Error(w, GET_ALL_SUPPLIER_FAILED, http.StatusBadRequest)
 		return
 	}
 

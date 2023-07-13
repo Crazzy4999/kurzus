@@ -53,6 +53,7 @@ func Start() {
 	router.DELETE("/profile", userHandler.DeleteProfile, middleware.CheckAccessTokenValidity)
 
 	router.POST("/address", addressHandler.AddAddress, middleware.CheckAccessTokenValidity)
+	router.GET("/address/\\d+", addressHandler.GetAddressByID, middleware.CheckAccessTokenValidity)
 	router.GET("/addresses", addressHandler.GetAddressesByUserID, middleware.CheckAccessTokenValidity)
 	router.PUT("/address", addressHandler.UpdateAddress, middleware.CheckAccessTokenValidity)
 	router.DELETE("/address", addressHandler.RemoveAddress, middleware.CheckAccessTokenValidity)

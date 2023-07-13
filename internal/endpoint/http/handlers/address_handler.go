@@ -9,6 +9,8 @@ import (
 	"hangryAPI/internal/service/token"
 	"hangryAPI/internal/util"
 	"net/http"
+	"regexp"
+	"strconv"
 )
 
 type AddressHandler struct {
@@ -52,6 +54,44 @@ func (h *AddressHandler) AddAddress(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *AddressHandler) GetAddressByID(w http.ResponseWriter, r *http.Request) {
+	regex := regexp.MustCompile("\\d+")
+	match := regex.FindString(r.URL.Path)
+
+	addressID, err := strconv.Atoi(match)
+	if err != nil {
+		http.Error(w, STRING_CONVERSION_FAILED, http.StatusBadRequest)
+		return
+	}
+
+	addresses, err := h.addressRepo.GetAll()
+	if err != nil {
+		http.Error(w, GET_ADDRESS_BY_ID_FAILED, http.StatusBadRequest)
+		return
+	}
+
+	address := &models.Address{}
+
+	for _, a := range addresses {
+		if a.ID == addressID {
+			address = &models.Address{
+				ID:          a.ID,
+				UserID:      a.ID,
+				IsActive:    a.IsActive,
+				City:        a.City,
+				Street:      a.Street,
+				HouseNumber: a.HouseNumber,
+				ZipCode:     a.ZipCode,
+				FloorNumber: a.FloorNumber,
+				Apartment:   a.Apartment,
+			}
+		}
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(address)
 }
 
 func (h *AddressHandler) GetAddressesByUserID(w http.ResponseWriter, r *http.Request) {
