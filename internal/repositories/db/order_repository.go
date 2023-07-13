@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"hangryAPI/internal/models"
 )
 
@@ -49,6 +50,8 @@ func (or *OrderRepository) GetAll() ([]*models.Order, error) {
 		if err == sql.ErrNoRows {
 			return nil, nil
 		} else if err != nil {
+			fmt.Println(err)
+
 			return nil, errors.New("types mismatch during the scanning")
 		}
 		orders = append(orders, order)

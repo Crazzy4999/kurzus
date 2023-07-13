@@ -72,7 +72,7 @@ func (h *OrderHandler) GetOrders(w http.ResponseWriter, r *http.Request) {
 				StatusID:    o.StatusID,
 				Note:        o.Note.String,
 				CreatedAt:   o.CreatedAt,
-				DeliveredAt: o.DeliveredAt,
+				DeliveredAt: o.DeliveredAt.String,
 			}
 
 			ordersResponse.Orders = append(ordersResponse.Orders, orderResponse)
@@ -94,7 +94,7 @@ func (h *OrderHandler) UpdateOrder(w http.ResponseWriter, r *http.Request) {
 		ID:          req.ID,
 		StatusID:    req.StatusID,
 		Note:        util.NullString(req.Note),
-		DeliveredAt: req.DeliveredAt,
+		DeliveredAt: util.NullString(req.DeliveredAt),
 	}
 
 	err := h.orderRepo.Update(order)

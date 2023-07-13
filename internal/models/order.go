@@ -11,5 +11,5 @@ type Order struct {
 	StatusID    int            `json:"statusID"`
 	Note        sql.NullString `json:"note"`
 	CreatedAt   string         `json:"createdAt"`
-	DeliveredAt string         `json:"deliveredAt"`
+	DeliveredAt sql.NullString `json:"deliveredAt"`
 }
