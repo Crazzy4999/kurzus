@@ -1,3 +1,5 @@
-.env
+configs/.env
 
-.env.testing
+configs/.env.testing
+
+*.pem
