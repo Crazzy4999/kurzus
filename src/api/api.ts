@@ -186,15 +186,7 @@ export async function refresh(): Promise<tokenPairInfo> {
         }
         return response.json() as Promise<tokenPairInfo>
     }).catch((err: Error) => {
-        if(err.message === REFRESH_TOKEN_EXPIRED) refresh().then(resp => {
-            useAuthStore().setTokens(resp.accessToken, resp.refreshToken)
-            return refresh()
-        })
-        else if(2 < refreshTries) {
-            refreshTries = 0
-            router.push("/login")
-        }
-        else refreshTries++
+        if(err.message === REFRESH_TOKEN_EXPIRED) router.push("/login")
     })
 }
 

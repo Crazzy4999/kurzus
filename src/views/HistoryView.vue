@@ -44,14 +44,19 @@ section {
 }
 
 h2 {
-    color: var(--second-color);
+    border-bottom: var(--border-size) solid var(--second-color);
     font-size: var(--h3-size);
-    margin: var(--p-size) var(--sub-p-size);
+    color: var(--second-color);
+    margin-block: var(--p-size);
 }
 
 @media only screen and (hover: none) and (pointer: coarse) {
     section {
         width: 100%;
+    }
+
+    h2 {
+        padding-inline: var(--sub-p-size);
     }
 }
 </style>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { deleteAddress, getAddresses, updateAddress } from '@/api/api';
 import type { addressInfo } from '@/api/models';
+import router from '@/router';
 import { ref } from 'vue';
 
 const props = defineProps<{
@@ -30,8 +31,10 @@ async function setToActive() {
 const addressEditErrorMsg = ref("")
 
 function updateUserAddress() {
-    if(city.value !== "" && street.value !== "" && houseNumber.value !== "" && zipCode.value !== "") updateAddress(props.address.id, props.address.userID, props.address.isActive, city.value, street.value, houseNumber.value, zipCode.value, floorNumber.value, apartment.value)
-    else addressEditErrorMsg.value = "The fields city, street, house number and zip code mustn't be empty!"
+    if(city.value !== "" && street.value !== "" && houseNumber.value !== "" && zipCode.value !== "") {
+        updateAddress(props.address.id, props.address.userID, props.address.isActive, city.value, street.value, houseNumber.value, zipCode.value, floorNumber.value, apartment.value)
+        router.push("/")
+    } else addressEditErrorMsg.value = "The fields city, street, house number and zip code mustn't be empty!"
 }
 
 
@@ -40,6 +43,7 @@ const addressDeletingErrorMsg = ref("")
 
 function deleteUserAddress() {
     deleteAddress(props.address.id).then(() => deleting.value = false).catch(err => addressDeletingErrorMsg.value = err)
+    router.push("/")
 }
 </script>
 

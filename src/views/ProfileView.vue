@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import Header from "@/components/Header.vue"
-import { ref, watch, watchEffect } from "vue";
+import { nextTick, ref, watch, watchEffect } from "vue";
 import AddressCard from '@/components/order/AddressCard.vue'
 import { useAuthStore } from "@/store";
 import { addAddress, deleteProfile, getAddresses, getResetKey, updateProfile } from "@/api/api";
 import router from "@/router";
-import type { addressInfo } from "@/api/models";
 
 const useAuth = useAuthStore()
 
@@ -22,9 +21,10 @@ function filter(e: KeyboardEvent) {
     if(!/\d/.test(e.key)) return e.preventDefault()
 }
 
-function addNewAddress() {
+async function addNewAddress() {
     if(city.value !== "" && street.value !== "" && houseNumber.value !== "" && zipCode.value !== "") {
-        addAddress(false, city.value, street.value, houseNumber.value, zipCode.value, floorNumber.value, apartment.value).then(() => addingAddress.value = false)
+        await addAddress(false, city.value, street.value, houseNumber.value, zipCode.value, floorNumber.value, apartment.value)
+        router.push("/suppliers")
     } else errorMsg.value = "city, street, house number and zipcode mustn't be empty!"
 }
 

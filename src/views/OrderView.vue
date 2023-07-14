@@ -18,7 +18,7 @@ const addresses = ref([] as addressInfo[])
 const activeAddress = ref({} as addressInfo)
 
 watchEffect(async () => {
-    supplier.value = await getSupplierByID(useCart.products[0].supplierID)
+    if(useCart.products[0] !== undefined) supplier.value = await getSupplierByID(useCart.products[0].supplierID)
     addresses.value = (await getAddresses()).addresses
     addresses.value.forEach(address => {
         if(address.isActive) activeAddress.value = address
