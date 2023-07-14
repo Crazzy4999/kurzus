@@ -1,0 +1,121 @@
+.supplier-background-img {
+    width: 100%;
+}
+
+.supplier-name {
+    font-size: var(--h3-size);
+    color: var(--second-color);
+    margin-top: var(--sub-p-size);
+}
+
+.supplier-infos {
+    display: flex;
+    align-items: center;
+    gap: var(--sub-p-size);
+    color: var(--second-hover);
+    font-size: var(--p-size);
+    margin-block: var(--tiny-size);
+}
+
+.supplier-delivery-text {
+    font-size: var(--p-size);
+}
+
+.supplier-delivery-cost {
+    font-size: var(--p-size);
+}
+
+.supplier-description {
+    font-size: calc(var(--h3-size) * 0.75);
+    color: var(--second-hover);
+    margin-block: var(--sub-p-size);
+}
+
+.supplier-categories-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: calc(var(--sub-p-size) + var(--tiny-size));
+}
+
+.supplier-categorie {
+    position: relative;
+    font-size: var(--p-size);
+    color: var(--settings-dark);
+    margin-right: var(--h4-size);
+    margin-block: var(--tiny-size) var(--sub-p-size);
+}
+
+.supplier-categorie::before {
+    content: "";
+    position: absolute;
+    background-color: var(--settings-dark);
+    border-radius: 50%;
+    width: var(--tiny-size);
+    height: var(--tiny-size);
+    top: calc(50% - var(--tiny-size) / 1.5);
+    left: calc(-1 * var(--sub-p-size));
+}
+
+.sub-categories-container {
+    z-index: 1;
+    position: sticky;
+    display: flex;
+    top: var(--h1-size)
+}
+
+.categories-arrow-wrapper {
+    border: solid var(--border-size) var(--settings-color);
+    background-color: var(--main-color);
+}
+
+.sub-categories-arrow {
+    cursor: pointer;
+    width: var(--h4-size);
+    height: 100%;
+    margin-block: auto;
+}
+
+.sub-categories-larrow {
+    rotate: 90deg;
+}
+
+.sub-categories-rarrow {
+    rotate: -90deg;
+}
+
+.supplier-sub-categories {
+    overflow-x: scroll;
+    scroll-snap-type: x;
+    display: flex;
+    border-block: solid var(--border-size) var(--settings-color);
+    height: calc(var(--h4-size) + var(--sub-p-size) * 2);
+}
+
+.supplier-sub-categories::-webkit-scrollbar {
+    display: none;
+    /*height: calc(2px + var(--sub-p-size) / 4);*/
+}
+
+.sub-categorie-item {
+    scroll-snap-align: start;
+    font-size: var(--h4-size);
+    white-space: nowrap;
+    /*border-inline: solid var(--border-size) var(--settings-color);*/
+    background-color: var(--main-color);
+    padding: var(--sub-p-size);
+}
+
+.sub-categorie-link {
+    color: var(--second-color);
+}
+
+.selected {
+    font-weight: bold;
+}
+
+@media only screen and (hover: none) and (pointer: coarse) {
+    .supplier-background-img {
+        width: 200%;
+        transform: translateX(-25%);
+    }
+}

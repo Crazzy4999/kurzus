@@ -1,0 +1,20 @@
+.main-container {
+    width: 50%;
+    margin-inline: auto;
+}
+
+.content-container {
+    display: flex;
+    flex-direction: column;
+    margin-inline: var(--sub-p-size);
+}
+
+@media only screen and (hover: none) and (pointer: coarse) {
+    .main-container {
+        width: 100%;
+    }
+    
+    .content-container {
+        /*height: 82.5%; MAY CHANGE BACK*/
+    }
+}
