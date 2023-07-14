@@ -1,10 +1,24 @@
-INSERT INTO users (id, first_name, last_name, email, password) VALUES (1 'Álmos', 'Fábián', 'fabian.almos77@gmail.com', '$2a$10$FGzCU3hQt14pusBK7a5/IuW6XkEdZ9ydSq3YiR2ASAVRiFk/X.Fqm');
+INSERT INTO users (id, first_name, last_name, email, password) VALUES (1, 'Álmos', 'Fábián', 'fabian.almos77@gmail.com', '$2a$10$FGzCU3hQt14pusBK7a5/IuW6XkEdZ9ydSq3YiR2ASAVRiFk/X.Fqm');
+
+
+
+INSERT INTO supplier_types (id, type) VALUES (1, 'restaurant');
+INSERT INTO supplier_types (id, type) VALUES (2, 'supermarket');
+INSERT INTO supplier_types (id, type) VALUES (3, 'coffee_shop');
 
 
 
 INSERT INTO suppliers (id, type, image, name, email, password, description, delivery_time, delivery_fee, opening, closing) VALUES (1, 1, 'https://images.deliveryhero.io/image/Fd-hu/LH/i5zJ-hero.jpg?width=2500&height=625&quality=45', 'Pizza King', 'supplier.pizza.king@example.com', 'PizzaPassword123', 'Pizza King the pizza house choice for the real kings', 45, 750, '7:00', '21:00');
 INSERT INTO suppliers (id, type, image, name, email, password, description, delivery_time, delivery_fee, opening, closing) VALUES (2, 2, 'https://images.deliveryhero.io/image/Fd-hu/LH/im8f-hero.jpg', 'Tesco', 'supplier.tesco@example.com', 'SupermarketPassword123', 'Tesco to get everything you need at home', 30, 500, '5:00', '23:00');
 INSERT INTO suppliers (id, type, image, name, email, password, description, delivery_time, delivery_fee, opening, closing) VALUES (3, 3, 'https://images.deliveryhero.io/image/Fd-hu/LH/o4sx-hero.jpg?width=2500&height=625&quality=45', 'Starbucks', 'supplier.starbucks@example.com', 'CoffeePassword123', 'Starbucks, best coffee in the world!', 60, 1000, '9:00', '22:00');
+
+
+
+INSERT INTO categories (id, name) VALUES (1, 'Drink');
+INSERT INTO categories (id, name) VALUES (2, 'Pizza');
+INSERT INTO categories (id, name) VALUES (3, 'Coffee');
+INSERT INTO categories (id, name) VALUES (4, 'Dessert');
+INSERT INTO categories (id, name) VALUES (5, 'Vegan');
 
 
 
@@ -38,6 +52,17 @@ INSERT INTO items (id, ingredient) VALUES (27, 'egg');
 INSERT INTO items (id, ingredient) VALUES (28, 'chocolate');
 INSERT INTO items (id, ingredient) VALUES (29, 'vanilla');
 INSERT INTO items (id, ingredient) VALUES (30, 'white sugar');
+
+
+INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (1, 'https://images.deliveryhero.io/image/darsktores-cz/Products/5449000130389.jpg?height=480&dpi=1', 2, 1,  599, 'Coca-Cola 1.75l');
+INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (2, 'https://images.deliveryhero.io/image/fd-hu/Products/DMART/Sole-Mizo/5998200138607.jpg?height=480&dpi=1', 2, 1,  700, 'Mizo milk 2.8% 1l');
+INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (3, 'https://images.deliveryhero.io/image/fd-hu/Products/DMART/Bonduelle/3083680009508.jpg?height=480&dpi=1', 2, 5,  850, 'Red Bean');
+INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (4, 'https://images.deliveryhero.io/image/fd-hu/Products/518403.png?width=1200', 1, 2, 2100, 'Songoku Pizza 24cm');
+INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (5, 'https://images.deliveryhero.io/image/fd-hu/Products/518420.png?width=1200%22', 1, 2, 3200, 'Diran 32cm');
+INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (6, 'https://images.deliveryhero.io/image/fd-hu/Products/520623.png?width=1200', 1, 1,  299, 'Coca-Cola 0,33l');
+INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (7, 'https://images.deliveryhero.io/image/fd-hu/Products/520546.png?width=1200', 1, 4,  500, 'Baklava');
+INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (8, 'https://images.deliveryhero.io/image/fd-hu/Products/233884.jpg?width=1200', 3, 3, 1790, 'Caramel Frappuccino (Tall)');
+INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (9, 'https://images.deliveryhero.io/image/fd-hu/Products/234111.png?width=1200', 3, 4, 1390, 'Chocolate cake');
 
 
 
@@ -74,32 +99,6 @@ INSERT INTO items_menus (item_id, menu_id) VALUES (27, 9);
 INSERT INTO items_menus (item_id, menu_id) VALUES (28, 9);
 INSERT INTO items_menus (item_id, menu_id) VALUES (29, 9);
 INSERT INTO items_menus (item_id, menu_id) VALUES (30, 9);
-
-
-
-INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (1, 'https://images.deliveryhero.io/image/darsktores-cz/Products/5449000130389.jpg?height=480&dpi=1', 6, 1,  599, 'Coca-Cola 1.75l');
-INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (2, 'https://images.deliveryhero.io/image/fd-hu/Products/DMART/Sole-Mizo/5998200138607.jpg?height=480&dpi=1', 6, 1,  700, 'Mizo milk 2.8% 1l');
-INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (3, 'https://images.deliveryhero.io/image/fd-hu/Products/DMART/Bonduelle/3083680009508.jpg?height=480&dpi=1', 6, 5,  850, 'Red Bean');
-INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (4, 'https://images.deliveryhero.io/image/fd-hu/Products/518403.png?width=1200', 4, 2, 2100, 'Songoku Pizza 24cm');
-INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (5, 'https://images.deliveryhero.io/image/fd-hu/Products/518420.png?width=1200%22', 4, 2, 3200, 'Diran 32cm');
-INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (6, 'https://images.deliveryhero.io/image/fd-hu/Products/520623.png?width=1200', 4, 1,  299, 'Coca-Cola 0,33l');
-INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (7, 'https://images.deliveryhero.io/image/fd-hu/Products/520546.png?width=1200', 4, 4,  500, 'Baklava');
-INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (8, 'https://images.deliveryhero.io/image/fd-hu/Products/233884.jpg?width=1200', 5, 3, 1790, 'Caramel Frappuccino (Tall)');
-INSERT INTO menus (id, image, supplier_id, category_id, price, name) VALUES (9, 'https://images.deliveryhero.io/image/fd-hu/Products/234111.png?width=1200', 5, 4, 1390, 'Chocolate cake');
-
-
-
-INSERT INTO categories (id, name) VALUES (1, 'Drink');
-INSERT INTO categories (id, name) VALUES (2, 'Pizza');
-INSERT INTO categories (id, name) VALUES (3, 'Coffee');
-INSERT INTO categories (id, name) VALUES (4, 'Dessert');
-INSERT INTO categories (id, name) VALUES (5, 'Vegan');
-
-
-
-INSERT INTO supplier_types (id, type) VALUES (1, 'restaurant');
-INSERT INTO supplier_types (id, type) VALUES (2, 'supermarket');
-INSERT INTO supplier_types (id, type) VALUES (3, 'coffee_shop');
 
 
 
