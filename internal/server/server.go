@@ -96,10 +96,10 @@ func Start() {
 	router.PUT("/order", orderHandler.UpdateOrder, middleware.CheckAccessTokenValidity)
 
 	orderWorker := workers.NewOrderDriverWorkerPool(or, dr)
-	go orderWorker.Start(5)
+	go orderWorker.Start(15)
 
 	deliveryWorker := workers.NewOrderDeliveryWorkerPool(or, dr)
-	go deliveryWorker.Start(5)
+	go deliveryWorker.Start(15)
 
 	http.ListenAndServe(cfg.Port, router)
 }
