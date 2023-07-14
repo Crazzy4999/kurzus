@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { productInfo } from "@/api/models";
 import Counter from "@/components/cart/Counter.vue"
+import { useCartStore } from "@/store";
 import { onMounted, ref, watch } from "vue";
 
 const props = defineProps<{
@@ -11,19 +12,23 @@ const emit = defineEmits<{
     (event: "total", val: number): void
 }>()
 
-let count = ref(props.product.count)
+const useCart = useCartStore()
+const count = ref(props.product.count)
 
 onMounted(() => {
     emit("total", props.product.price * count.value)
 })
 
 watch(count, (newVal, oldVal) => {
+    useCart.products.forEach((product, index) => {
+        if(count.value === 0 && product.menuID === props.product.menuID) useCart.products.splice(index, 1)
+    })
     emit("total", newVal * props.product.price - oldVal * props.product.price)
 })
 </script>
 
 <template>
-    <div class="product">
+    <div class="product" v-if="count !== 0">
         <span class="infos-container">
             <span class="name">{{ product.name }}</span>
             <div class="price">{{ product.price * count }} Ft</div>
