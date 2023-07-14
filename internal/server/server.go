@@ -102,32 +102,4 @@ func Start() {
 	go deliveryWorker.Start(5)
 
 	http.ListenAndServe(cfg.Port, router)
-
-	/*srv := &http.Server{Handler: router}
-	ln, err := net.Listen("tcp", "localhost"+cfg.Port)
-	if err != nil {
-		panic("failed init listener")
-	}
-
-	go func() {
-		fmt.Printf("Server started on port: %s\n", cfg.Port)
-
-		log.Fatal(srv.ServeTLS(ln,
-			"localhost.pem",
-			"localhost-key.pem",
-		))
-	}()
-
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt)
-	<-c
-
-	fmt.Println("Gracefully stopping the server")
-
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatal(err)
-	}*/
 }
