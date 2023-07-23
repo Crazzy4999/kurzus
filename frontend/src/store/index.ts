@@ -51,7 +51,10 @@ export const useCartStore = defineStore("cart", {
             this.products.forEach(p => {
                 if(p.name === name) alreadyInCart = true
             })
-            if(1 <= this.$state.products.length && this.$state.products[this.$state.products.length-1].supplierID !== supplierID) this.$state.products.length = 0
+            if(1 <= this.$state.products.length && this.$state.products[this.$state.products.length-1].supplierID !== supplierID) {
+                this.$state.products.length = 0
+                this.$state.total = 0
+            }
             if(!alreadyInCart) {
                 this.$state.products.push({ count: count, menuID: menuID, supplierID: supplierID, name: name, price: price })
                 this.$state.total += price * count
