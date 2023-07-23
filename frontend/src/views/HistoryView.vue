@@ -9,7 +9,7 @@ import { ref, watchEffect } from 'vue';
 const orders = ref([] as orderInfo[])
 
 watchEffect(async () => {
-    orders.value = (await getOrders()).orders
+    orders.value = (await getOrders()).orders.sort((a, b) => { return Date.parse(b.deliveredAt) - Date.parse(a.deliveredAt) })
 })
 </script>
 
