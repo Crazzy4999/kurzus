@@ -136,7 +136,7 @@ async function makeNewOrder() {
                             </div>
                             <span class="title">Note to driver</span>
                         </div>
-                        <textarea class="note" name="note" id="note" placeholder="Leave a note to you delivery driver" maxlength="512" v-model="note"></textarea>
+                        <textarea class="note" name="note" id="note" placeholder="Leave a note to your delivery driver" maxlength="512" v-model="note"></textarea>
                         <div class="note-char-count">512/{{ note.length }}</div>
                     </div>
                 </span>
