@@ -58,6 +58,13 @@ export const useCartStore = defineStore("cart", {
             if(!alreadyInCart) {
                 this.$state.products.push({ count: count, menuID: menuID, supplierID: supplierID, name: name, price: price })
                 this.$state.total += price * count
+            } else {
+                this.$state.products.forEach((p, index) => {
+                    if(p.menuID === menuID) {
+                        this.$state.products[index].count += count
+                        this.$state.total += price * count
+                    }
+                })
             }
         }
     }
